@@ -62,4 +62,10 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+  Cloudinary.config do |config|
+    config.cloud_name = Rails.application.credentials.cloudinary[:cloud_name]
+    config.api_key = Rails.application.credentials.cloudinary[:api_key]
+    config.api_secret = Rails.application.credentials.cloudinary[:api_secret]
+    config.secure = true
+  end
 end

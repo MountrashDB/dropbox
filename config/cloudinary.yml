@@ -1,0 +1,10 @@
+development:
+  cloud_name: "dghu0ntvd"
+  api_key: "288878668467479"
+  api_secret: "YTy-RU1JN9_Gucgoo-IJK_0Chag"
+  secure: true
+production:
+  cloud_name: "dghu0ntvd"
+  api_key: "288878668467479"
+  api_secret: "YTy-RU1JN9_Gucgoo-IJK_0Chag"
+  secure: true

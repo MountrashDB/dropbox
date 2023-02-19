@@ -14,6 +14,15 @@ Rails.application.routes.draw do
         patch ':uuid',             to: 'boxes#update'
       end
 
+      scope 'botol' do
+        get '',                    to: 'botols#index'
+        get ':uuid',               to: 'botols#show'
+        post 'datatable',          to: 'botols#datatable'
+        post '',                   to: 'botols#create'
+        delete ':uuid',            to: 'botols#destroy'
+        patch ':uuid',             to: 'botols#update'
+      end
+
       scope 'user' do
         get '',                    to: 'users#index'
         get ':uuid',               to: 'users#show'
