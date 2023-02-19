@@ -26,7 +26,7 @@ class Api::V1::BotolsController < ApplicationController
         botol.save
         render json: BotolBlueprint.render(botol, view: :show)
       else
-        botol.errors
+        render json: botol.errors
       end
     end
   
