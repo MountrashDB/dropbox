@@ -23,7 +23,6 @@ class Api::V1::BotolsController < ApplicationController
       botol.merk_id = params[:merk_id]
       botol.images.attach(params[:images])
       if botol.save
-        botol.save
         render json: BotolBlueprint.render(botol, view: :show)
       else
         render json: botol.errors
