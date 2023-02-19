@@ -22,8 +22,12 @@ class Api::V1::BotolsController < ApplicationController
       botol.ukuran = params[:ukuran]
       botol.merk_id = params[:merk_id]
       botol.images.attach(params[:images])
-      botol.save
-      render json: BotolBlueprint.render(botol, view: :show)
+      if botol.save
+        botol.save
+        render json: BotolBlueprint.render(botol, view: :show)
+      else
+        botol.errors
+      end
     end
   
     def update    
