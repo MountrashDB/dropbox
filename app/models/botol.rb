@@ -10,4 +10,10 @@ class Botol < ApplicationRecord
   def set_uuid
       self.uuid = SecureRandom.uuid
   end
+
+  def image
+    if self.images[0].key
+      Cloudinary::Utils.cloudinary_url(self.images[0].key, :width => 200, :height => 200, :crop => :fill)
+    end
+  end
 end

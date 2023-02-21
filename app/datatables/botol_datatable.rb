@@ -12,7 +12,8 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
       uuid: { source: "Botol.uuid", cond: :eq },
       name: { source: "Botol.name", cond: :eq },
       merk: { source: "Merk.name", cond: :eq },    
-      ukuran: { source: "Botol.ukuran", cond: :eq },      
+      ukuran: { source: "Botol.ukuran", cond: :eq },  
+      image: { source: "Botol.image" }    
     }
   end
 
@@ -24,7 +25,7 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
         name: record.name,
         merk: record.merk.name,
         ukuran: record.ukuran,
-        image: record.images[0].key != nil ? Cloudinary::Utils.cloudinary_url(record.images[0].key, :width => 200, :height => 200, :crop => :fill) : "-"
+        image: record.image
       }
     end
   end
