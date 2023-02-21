@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "admin.smartdropbox.online"
+    origins "admin.smartdropbox.online, api.smartdropbox.online"
 
     resource "*",
       headers: :any,
