@@ -1,5 +1,23 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+# == Schema Information
+#
+# Table name: botols
+#
+#  id         :bigint           not null, primary key
+#  name       :string(255)
+#  ukuran     :string(255)
+#  uuid       :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  merk_id    :bigint           not null
+#
+# Indexes
+#
+#  index_botols_on_merk_id  (merk_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (merk_id => merks.id)
+#
 one:
   name: MyString
   ukuran: MyString
