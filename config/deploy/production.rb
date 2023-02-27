@@ -8,7 +8,7 @@
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 # server 'smartdropbox.online', user: 'deploy', roles: %w{app db}
-server 'smartdropbox.online', user: 'deploy', roles: %w{app}
+server 'smartdropbox.online', user: 'deploy', roles: %w{app db}
 
 # role-based syntax
 # ==================
