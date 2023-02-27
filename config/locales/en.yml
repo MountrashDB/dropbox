@@ -4,11 +4,11 @@
 #
 # To use the locales, use `I18n.t`:
 #
-#     I18n.t "hello"
+#     I18n.t 'hello'
 #
 # In views, this is aliased to just `t`:
 #
-#     <%= t("hello") %>
+#     <%= t('hello') %>
 #
 # To use a different locale, set it with `I18n.locale`:
 #
@@ -24,10 +24,44 @@
 # Instead, surround them with single quotes.
 #
 # en:
-#   "true": "foo"
+#   'true': 'foo'
 #
 # To learn more, please read the Rails Internationalization guide
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
   hello: "Hello world"
+  error:
+    parameter_not_complete: "Parameter not complete"
+    phone_number_not_found: "Phone number not found / invalid"
+    invalid_number: "Invalid Phone Number"
+    country_not_registered: "Sorry. Your country is not registered in our database"
+    data_not_found: "Data not found"
+    admin:
+      token_error: "Token has been expired or not recognized"
+      need_login: "You have to login first"
+      cannot_delete: "This Admin cannot delete"
+    fatal: "Something error happen. Please recheck or restart this apps"
+    room:
+      still_open: "Last room not yet closed. Cannot create another room"
+      still_active: "Sorry ! You still active as an participant in another opened room"
+      position_exist: "This seat is already filled"
+      cannot_take_seat: "You cannot take a seat"
+
+  media_type:
+    title: "Title / Content"
+    news: "News"
+    image: "Image"
+    video: "Video"
+  notify:
+    room: "Started new room - %{room}"
+    follow: "Started following you"
+    receive_point: "You receive %{point} PTS from %{from_user}"
+    add_people: "You are invited as a participant in room %{room}"
+  paypal:
+    buy: "Buy %{point} pts has been added"
+    email_empty: "Your paypal email still empty. Please update it first"
+  point:
+    not_enough: "Sorry, your point not enough to give another person"
+    not_enough_withdraw: "Sorry, your point not enough to withdraw request"
+    minimum: "Sorry, minimum withdraw is 100 PTS"

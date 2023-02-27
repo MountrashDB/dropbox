@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :admins
   devise_for :users
   # Defines the root path route ("/")
 
@@ -40,6 +41,16 @@ Rails.application.routes.draw do
         post '',                   to: 'merks#create'
         delete ':uuid',            to: 'merks#destroy'
         patch ':uuid',             to: 'merks#update'
+      end
+
+      scope 'images' do
+        post 'upload/:uuid',       to: 'transaction#upload'
+      end
+
+      scope 'admin' do
+        post 'login',              to: 'login#login'
+        post 'forgot',             to: 'login#forgot'
+        post 'change-password',    to: 'login#change_password'
       end
     end
   end
