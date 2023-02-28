@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_26_173233) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_28_164502) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -75,6 +75,47 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_173233) do
     t.integer "max"
   end
 
+  create_table "cities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "province_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["province_id"], name: "index_cities_on_province_id"
+  end
+
+  create_table "districts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "province_id", null: false
+    t.bigint "city_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_districts_on_city_id"
+    t.index ["province_id"], name: "index_districts_on_province_id"
+  end
+
+  create_table "kycs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "no_ktp"
+    t.string "nama"
+    t.string "tempat_tinggal"
+    t.date "tgl_lahir"
+    t.string "rt"
+    t.string "rw"
+    t.string "desa"
+    t.bigint "province_id", null: false
+    t.bigint "city_id", null: false
+    t.bigint "district_id", null: false
+    t.bigint "mitra_id", null: false
+    t.integer "status"
+    t.string "agama"
+    t.string "pekerjaan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_kycs_on_city_id"
+    t.index ["district_id"], name: "index_kycs_on_district_id"
+    t.index ["mitra_id"], name: "index_kycs_on_mitra_id"
+    t.index ["province_id"], name: "index_kycs_on_province_id"
+  end
+
   create_table "merks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "uuid"
@@ -95,6 +136,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_173233) do
     t.integer "status"
     t.datetime "dates"
     t.string "activation_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "kode"
+    t.integer "displays"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -122,4 +171,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_173233) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "botols", "merks"
+  add_foreign_key "cities", "provinces"
+  add_foreign_key "districts", "cities"
+  add_foreign_key "districts", "provinces"
+  add_foreign_key "kycs", "cities"
+  add_foreign_key "kycs", "districts"
+  add_foreign_key "kycs", "mitras"
+  add_foreign_key "kycs", "provinces"
 end
