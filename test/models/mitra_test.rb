@@ -10,7 +10,7 @@
 #  dates           :datetime
 #  email           :string(255)
 #  name            :string(255)
-#  password        :string(255)
+#  password_digest :string(255)
 #  phone           :string(255)
 #  status          :integer
 #  terms           :integer

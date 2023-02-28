@@ -12,9 +12,9 @@
 #  updated_at :datetime         not null
 #
 class Box < ApplicationRecord
-    # before_create :set_uuid
+    before_create :set_uuid
 
-    # def set_uuid
-    #     self.uuid = SecureRandom.uuid
-    # end
+    def set_uuid
+        self.uuid = SecureRandom.uuid
+    end
 end

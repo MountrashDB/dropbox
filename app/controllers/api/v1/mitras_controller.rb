@@ -19,10 +19,14 @@ class Api::V1::MitrasController < ApplicationController
   def create
     mitra = Mitra.new()
     mitra.name = params[:name]
+    mitra.avatar = params[:avatar]
     mitra.contact = params[:contact]
     mitra.email = params[:email]
     mitra.phone = params[:phone]
+    mitra.terms = params[:terms]
     mitra.address = params[:address]
+    mitra.password = params[:password]
+    mitra.password_confirmation = params[:password_confirmation]
     if mitra.save
       render json: mitra
     else
@@ -51,6 +55,17 @@ class Api::V1::MitrasController < ApplicationController
       render json: {message: "Deleted"}
     else
       render json: {message: "Not found"}, status: :not_found
+    end
+  end
+
+  def active_code
+    if mitra = Mitra.find_by(uuid: params[:uuid], activation_code: params[:activation_code])
+      mitra.status = 1
+      mitra.activation_code = nil
+      mitra.save
+      render json: {message: "Success"}
+    else
+      render json: {message: "Not found or Activation Code not match"}, status: :not_found
     end
   end
 

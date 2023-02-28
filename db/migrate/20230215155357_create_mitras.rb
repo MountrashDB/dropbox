@@ -8,7 +8,7 @@ class CreateMitras < ActiveRecord::Migration[7.0]
       t.string :address
       t.string :email      
       t.string :avatar
-      t.string :password
+      t.string :password_digest
       t.integer :terms
       t.integer :status
       t.datetime :dates

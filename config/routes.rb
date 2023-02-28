@@ -52,6 +52,16 @@ Rails.application.routes.draw do
         post 'forgot',             to: 'login#forgot'
         post 'change-password',    to: 'login#change_password'
       end
+
+      scope 'mitra' do
+        # get '',                    to: 'mitras#index'
+        # get ':uuid',               to: 'mitras#show'
+        # post 'datatable',          to: 'mitras#datatable'
+        post '',                     to: 'mitras#create'
+        post 'active-code/:uuid',    to: 'mitras#active_code'
+        # delete ':uuid',            to: 'mitras#destroy'
+        # patch ':uuid',             to: 'mitras#update'
+      end
     end
   end
   
