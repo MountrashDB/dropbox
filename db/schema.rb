@@ -89,6 +89,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_173233) do
     t.string "contact"
     t.string "address"
     t.string "email"
+    t.string "avatar"
+    t.string "password"
+    t.integer "terms"
+    t.integer "status"
+    t.datetime "dates"
+    t.string "activation_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

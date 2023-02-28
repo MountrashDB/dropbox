@@ -2,15 +2,21 @@
 #
 # Table name: mitras
 #
-#  id         :bigint           not null, primary key
-#  address    :string(255)
-#  contact    :string(255)
-#  email      :string(255)
-#  name       :string(255)
-#  phone      :string(255)
-#  uuid       :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :bigint           not null, primary key
+#  activation_code :string(255)
+#  address         :string(255)
+#  avatar          :string(255)
+#  contact         :string(255)
+#  dates           :datetime
+#  email           :string(255)
+#  name            :string(255)
+#  password        :string(255)
+#  phone           :string(255)
+#  status          :integer
+#  terms           :integer
+#  uuid            :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 require "test_helper"
 
