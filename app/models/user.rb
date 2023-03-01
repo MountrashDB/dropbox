@@ -26,7 +26,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
-  has_secure_password
+  # has_secure_password
   validates :username, length: { in: 1..35 }, presence: true
   validates :phone, presence: true
   validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
