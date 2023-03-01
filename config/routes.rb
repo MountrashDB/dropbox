@@ -1,4 +1,4 @@
-Rails.application.routes.draw do
+Rails.application.routes.draw do  
   devise_for :admins
   devise_for :users
   # Defines the root path route ("/")
@@ -63,10 +63,17 @@ Rails.application.routes.draw do
         # patch ':uuid',             to: 'mitras#update'
       end
 
+      # Form KYC
+      scope 'kyc' do
+        get 'province',                to: 'kyc#province'
+        get 'city/:province_id',       to: 'kyc#city'
+        get 'district',                to: 'kyc#district'
+      end
+
       # User webapp
       post 'register',                        to: 'users#register'
       get  'register/activation-code/:code',  to: 'users#active_code'
-      post 'login',                           to: 'users#login'
+      post 'login',                           to: 'users#login'      
     end
   end
   

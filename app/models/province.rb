@@ -10,4 +10,5 @@
 #  updated_at :datetime         not null
 #
 class Province < ApplicationRecord
+    scope :active, -> { where(displays: 1).order(name: :asc) }
 end
