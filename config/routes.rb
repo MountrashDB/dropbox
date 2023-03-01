@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       # User webapp
       post 'register',                        to: 'users#register'
       get  'register/activation-code/:code',  to: 'users#active_code'
+      post 'login',                           to: 'users#login'
     end
   end
   

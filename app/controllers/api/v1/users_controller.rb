@@ -38,8 +38,19 @@ class Api::V1::UsersController < ApplicationController
       render json: UserBlueprint.render(user, view: :register)
     else
       render json: {message: "Not found"}, status: :not_found
+    end    
+  end
+
+  def login
+    if user = User.find_by(email: params[:email], active: true)
+      if user.valid_password?(params[:password])
+        render json: UserBlueprint.render(user, view: :register)
+      else
+        render json: {message: "Not found"}, status: :unauthorized
+      end
+    else
+      render json: {message: "Not found"}, status: :unauthorized
     end
-    
   end
 
   def create
