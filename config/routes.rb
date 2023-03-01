@@ -28,7 +28,7 @@ Rails.application.routes.draw do
         get '',                    to: 'users#index'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
-        post '',                   to: 'users#create'
+        post '',                   to: 'users#create'        
         post 'change-password',    to: 'users#change_password'
         delete ':uuid',            to: 'users#destroy'
         patch ':uuid',             to: 'users#update'
@@ -62,6 +62,10 @@ Rails.application.routes.draw do
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end
+
+      # User webapp
+      post 'register',                        to: 'users#register'
+      get  'register/activation-code/:code',  to: 'users#active_code'
     end
   end
   

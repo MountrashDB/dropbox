@@ -16,11 +16,37 @@ class Api::V1::UsersController < ApplicationController
     render json: UserDatatable.new(params)    
   end
 
+  def register
+    user = User.new()
+    user.username = params[:username]
+    user.email = params[:email]
+    user.phone = params[:phone]
+    user.password = params[:password]
+    user.password_confirmation = params[:password_confirmation]
+    if user.save
+      render json: UserBlueprint.render(user, view: :register)
+    else
+      render json: user.errors
+    end
+  end
+
+  def active_code
+    if user = User.find_by(active_code: params[:code])
+      user.active = 1
+      user.active_code = nil
+      user.save
+      render json: UserBlueprint.render(user, view: :register)
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
+    
+  end
+
   def create
     user = User.new()
-    user.name = params[:name]
+    user.username = params[:name]
     user.email = params[:email]
-    user.active = params[:active]
+    user.phone = params[:phone]
     user.password = params[:password]
     user.password_confirmation = params[:password_confirmation]
     if user.save
