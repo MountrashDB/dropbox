@@ -42,4 +42,10 @@ class Kyc < ApplicationRecord
   has_one_attached :ktp_image, dependent: :destroy, service: :cloudinary 
 
   validates :ktp_image, :nama, :no_ktp, :tempat_tinggal, :tgl_lahir, :province_id, :city_id, :district_id, :mitra_id, presence: true
+
+  before_create :set_value
+
+  def set_value
+    self.status = 0 #Waiting approve, 1 = Approved, 2 = Rejected
+  end 
 end

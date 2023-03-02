@@ -101,7 +101,8 @@ class Api::V1::MitrasController < ApplicationController
             exp: Time.now.to_i + @@token_expired
         }
         token = JWT.encode payload, Rails.application.credentials.secret_key_base, 'HS256'        
-        render json: {token: token}
+        kyc = Kyc.where(mitra_id: mitra.id).last
+        render json: {token: token, kyc_status: kyc != nil ? kyc.status : nil}
       else
         render json: {message: "Not found"}, status: :unauthorized
       end
