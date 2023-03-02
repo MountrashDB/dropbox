@@ -15,7 +15,7 @@ class Api::V1::LoginController < AdminController
                     admin_id: admin.id,
                     exp: Time.now.to_i + @@token_expired
                 }
-                token = JWT.encode payload, Rails.application.credentials.secret_key_base, 'HS256'
+                token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
                 render json: {admin: admin, token: token}, status: :ok
             else
                 render json: {error: true}, status: :unauthorized

@@ -1,4 +1,14 @@
 class Api::V1::MitrasController < ApplicationController
+  before_action :check_mitra_token, only: [
+    :update_kyc
+  ]
+
+  if Rails.env.production?
+    @@token_expired  = 3.days.to_i
+  else
+    @@token_expired  = 30.days.to_i
+  end
+
   def index
     render json: Mitra.all
   end
@@ -83,5 +93,55 @@ class Api::V1::MitrasController < ApplicationController
     end
   end
 
+  def login
+    if mitra = Mitra.find_by(email: params[:email], status: 1)
+      if mitra.valid_password?(params[:password])
+        payload = {
+            mitra_uuid: mitra.uuid,
+            exp: Time.now.to_i + @@token_expired
+        }
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, 'HS256'        
+        render json: {token: token}
+      else
+        render json: {message: "Not found"}, status: :unauthorized
+      end
+    else
+      render json: {message: "Not found"}, status: :unauthorized
+    end
+  end
+
+  def update_kyc
+    kyc = Kyc.new()
+    kyc.agama = params[:agama]
+    kyc.desa = params[:desa]
+    kyc.nama = params[:nama]
+    kyc.no_ktp = params[:no_ktp]
+    kyc.pekerjaan = params[:pekerjaan]
+    kyc.rt = params[:rt]
+    kyc.rw = params[:rw]
+    kyc.tempat_tinggal = params[:tempat_tinggal]
+    kyc.tgl_lahir = params[:tgl_lahir]
+    kyc.province_id = params[:province_id]
+    kyc.city_id = params[:city_id]
+    kyc.district_id = params[:district_id]
+    kyc.ktp_image.attach(params[:ktp_image])
+    kyc.mitra_id = @current_mitra.id
+    if kyc.save
+      render json: {message: "Success"}
+    else
+      render json: {error: kyc.errors}
+    end
+  end
+
   private
+
+  def check_mitra_token      
+    begin       
+      if !@current_mitra = Mitra.get_mitra(request.headers)   
+        render json: {error: true}, status: :unauthorized
+      end
+    rescue
+      render json: {error: true}, status: :unauthorized
+    end
+  end
 end

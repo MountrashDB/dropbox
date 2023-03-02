@@ -39,5 +39,7 @@ class Kyc < ApplicationRecord
   belongs_to :city
   belongs_to :district
   belongs_to :mitra
-  has_one_attached :ktp_image
+  has_one_attached :ktp_image, dependent: :destroy, service: :cloudinary 
+
+  validates :ktp_image, :nama, :no_ktp, :tempat_tinggal, :tgl_lahir, :province_id, :city_id, :district_id, :mitra_id, presence: true
 end

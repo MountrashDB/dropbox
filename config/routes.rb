@@ -56,11 +56,13 @@ Rails.application.routes.draw do
 
       scope 'mitra' do
         post 'register',             to: 'mitras#register'
+        post 'login',                to: 'mitras#login'
         # get '',                    to: 'mitras#index'
         # get ':uuid',               to: 'mitras#show'
         # post 'datatable',          to: 'mitras#datatable'
         post '',                     to: 'mitras#create'
-        get 'activation-code/:code',to: 'mitras#active_code'
+        get 'activation-code/:code', to: 'mitras#active_code'
+        post 'update-kyc',           to: 'mitras#update_kyc'
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end
