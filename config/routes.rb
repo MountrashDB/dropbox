@@ -1,4 +1,5 @@
 Rails.application.routes.draw do  
+  devise_for :mitras
   devise_for :admins
   devise_for :users
   # Defines the root path route ("/")
@@ -54,11 +55,12 @@ Rails.application.routes.draw do
       end
 
       scope 'mitra' do
+        post 'register',             to: 'mitras#register'
         # get '',                    to: 'mitras#index'
         # get ':uuid',               to: 'mitras#show'
         # post 'datatable',          to: 'mitras#datatable'
         post '',                     to: 'mitras#create'
-        post 'active-code/:uuid',    to: 'mitras#active_code'
+        get 'activation-code/:code',to: 'mitras#active_code'
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end
@@ -74,6 +76,7 @@ Rails.application.routes.draw do
       post 'register',                        to: 'users#register'
       get  'register/activation-code/:code',  to: 'users#active_code'
       post 'login',                           to: 'users#login'      
+
     end
   end
   

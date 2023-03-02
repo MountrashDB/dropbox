@@ -16,6 +16,20 @@ class Api::V1::MitrasController < ApplicationController
     render json: MitraDatatable.new(params)    
   end
 
+  def register
+    mitra = Mitra.new()
+    mitra.name = params[:name]
+    mitra.email = params[:email]
+    mitra.phone = params[:phone]
+    mitra.password = params[:password]
+    mitra.password_confirmation = params[:password_confirmation]
+    if mitra.save
+      render json: MitraBlueprint.render(mitra, view: :register)
+    else
+      render json: mitra.errors
+    end
+  end
+  
   def create
     mitra = Mitra.new()
     mitra.name = params[:name]
@@ -59,7 +73,7 @@ class Api::V1::MitrasController < ApplicationController
   end
 
   def active_code
-    if mitra = Mitra.find_by(uuid: params[:uuid], activation_code: params[:activation_code])
+    if mitra = Mitra.find_by(activation_code: params[:code])
       mitra.status = 1
       mitra.activation_code = nil
       mitra.save
