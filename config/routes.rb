@@ -26,11 +26,11 @@ Rails.application.routes.draw do
       end
 
       scope 'user' do
-        get '',                    to: 'users#index'
+        # get '',                    to: 'users#index'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
-        post '',                   to: 'users#create'        
-        post 'change-password',    to: 'users#change_password'
+        # post '',                   to: 'users#create'        
+        # post 'change-password',    to: 'users#change_password'
         delete ':uuid',            to: 'users#destroy'
         patch ':uuid',             to: 'users#update'
       end
@@ -57,6 +57,7 @@ Rails.application.routes.draw do
       scope 'mitra' do
         post 'register',             to: 'mitras#register'
         post 'login',                to: 'mitras#login'
+        get 'profile',               to: 'mitras#profile'
         get '',                      to: 'mitras#index'
         get ':uuid',                 to: 'mitras#show'
         get 'kyc/:uuid',             to: 'mitras#show_kyc'
@@ -65,6 +66,7 @@ Rails.application.routes.draw do
         get 'activation-code/:code', to: 'mitras#active_code'
         post 'create-kyc',           to: 'mitras#create_kyc'
         post 'kyc/status/:uuid',     to: 'mitras#set_status'
+        post 'profile-update',       to: 'mitras#update_profile'
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end

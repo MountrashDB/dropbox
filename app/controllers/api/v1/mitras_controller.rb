@@ -1,6 +1,8 @@
 class Api::V1::MitrasController < AdminController
   before_action :check_mitra_token, only: [
-    :create_kyc
+    :create_kyc,
+    :profile,
+    :update_profile
   ]
 
   before_action :check_admin_token, only: [
@@ -161,6 +163,37 @@ class Api::V1::MitrasController < AdminController
     end
   end
 
+  def profile
+    render json: MitraBlueprint.render(@current_mitra, view: :profile)
+  end
+
+  def update_profile
+    mitra = Mitra.find(@current_mitra.id)      
+    if mitra
+      mitra.name = params[:name]
+      mitra.phone = params[:phone]
+      mitra.address = params[:address]
+      if params[:image]
+        mitra.image.attach(params[:image])
+      end
+      if params[:password]
+        if mitra.valid_password?(params[:old_password]) && params[:password] == params[:password_confirmation]
+          mitra.reset_password(params[:password], params[:password_confirmation])
+        else
+          render json: {error: "Password not match"}
+          return
+        end
+      end
+      if mitra.save   
+        render json: mitra
+      else 
+        render json: {error: mitra.errors}
+      end
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end    
+  end
+
   private
 
   def check_mitra_token      
@@ -171,5 +204,9 @@ class Api::V1::MitrasController < AdminController
     rescue
       render json: {error: true}, status: :unauthorized
     end
+  end
+
+  def mitra_params
+    params.permit(:name, :phone, :address, :image, :password, :password_confirmation)
   end
 end

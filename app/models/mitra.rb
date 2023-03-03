@@ -2,21 +2,23 @@
 #
 # Table name: mitras
 #
-#  id                 :bigint           not null, primary key
-#  activation_code    :string(255)
-#  address            :string(255)
-#  avatar             :string(255)
-#  contact            :string(255)
-#  dates              :datetime
-#  email              :string(255)
-#  encrypted_password :string(255)
-#  name               :string(255)
-#  phone              :string(255)
-#  status             :integer
-#  terms              :integer
-#  uuid               :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                     :bigint           not null, primary key
+#  activation_code        :string(255)
+#  address                :string(255)
+#  avatar                 :string(255)
+#  contact                :string(255)
+#  dates                  :datetime
+#  email                  :string(255)
+#  encrypted_password     :string(255)
+#  name                   :string(255)
+#  phone                  :string(255)
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string(255)
+#  status                 :integer
+#  terms                  :integer
+#  uuid                   :string(255)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 
 class Mitra < ApplicationRecord
@@ -25,9 +27,11 @@ class Mitra < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
+  validates :name, presence: true
   validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   before_create :set_uuid    
   has_many :kyc
+  has_one_attached :image, dependent: :destroy, service: :cloudinary 
 
   def set_uuid
       self.uuid = SecureRandom.uuid

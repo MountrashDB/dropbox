@@ -1,5 +1,10 @@
 class Api::V1::UsersController < ApiController
-  
+  before_action :check_admin_token, only: [
+    :show,
+    :datatable,
+    :destroy
+  ]
+
   def index
     render json: User.all
   end
