@@ -63,7 +63,7 @@ Rails.application.routes.draw do
         post 'datatable',            to: 'mitras#datatable'
         post '',                     to: 'mitras#create'
         get 'activation-code/:code', to: 'mitras#active_code'
-        post 'update-kyc',           to: 'mitras#update_kyc'
+        post 'create-kyc',           to: 'mitras#create_kyc'
         post 'kyc/status/:uuid',     to: 'mitras#set_status'
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'

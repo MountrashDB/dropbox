@@ -138,7 +138,7 @@ class Api::V1::MitrasController < AdminController
     end
   end
 
-  def update_kyc
+  def create_kyc
     kyc = Kyc.new()
     kyc.agama = params[:agama]
     kyc.desa = params[:desa]
