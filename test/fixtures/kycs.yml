@@ -13,6 +13,7 @@
 #  status         :integer
 #  tempat_tinggal :string(255)
 #  tgl_lahir      :date
+#  uuid           :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  city_id        :bigint           not null

@@ -49,20 +49,22 @@ Rails.application.routes.draw do
       end
 
       scope 'admin' do
-        post 'login',              to: 'login#login'
-        post 'forgot',             to: 'login#forgot'
-        post 'change-password',    to: 'login#change_password'
+        post 'login',              to: 'admin#login'
+        post 'forgot',             to: 'admin#forgot'
+        post 'change-password',    to: 'admin#change_password'
       end
 
       scope 'mitra' do
         post 'register',             to: 'mitras#register'
         post 'login',                to: 'mitras#login'
-        # get '',                    to: 'mitras#index'
-        # get ':uuid',               to: 'mitras#show'
-        # post 'datatable',          to: 'mitras#datatable'
+        get '',                      to: 'mitras#index'
+        get ':uuid',                 to: 'mitras#show'
+        get 'kyc/:uuid',             to: 'mitras#show_kyc'
+        post 'datatable',            to: 'mitras#datatable'
         post '',                     to: 'mitras#create'
         get 'activation-code/:code', to: 'mitras#active_code'
         post 'update-kyc',           to: 'mitras#update_kyc'
+        post 'kyc/status/:uuid',     to: 'mitras#set_status'
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end

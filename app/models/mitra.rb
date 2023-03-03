@@ -24,23 +24,24 @@ class Mitra < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
-    validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
-    before_create :set_uuid    
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
+  validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+  before_create :set_uuid    
+  has_many :kyc
 
-    def set_uuid
-        self.uuid = SecureRandom.uuid
-        self.activation_code = rand(100000000..999999999)
-        self.status = 0    
-    end
+  def set_uuid
+      self.uuid = SecureRandom.uuid
+      self.activation_code = rand(100000000..999999999)
+      self.status = 0    
+  end
 
-    def self.get_mitra(headers)
-        token = headers['Authorization'].split(' ').last
-        begin
-          decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
-            admin = Mitra.find_by(decode[0]["admin_uuid"])
-        rescue JWT::ExpiredSignature
-          false
-        end    
-      end
+  def self.get_mitra(headers)
+    token = headers['Authorization'].split(' ').last
+    begin
+      decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+        admin = Mitra.find_by(decode[0]["admin_uuid"])
+    rescue JWT::ExpiredSignature
+      false
+    end    
+  end
 end

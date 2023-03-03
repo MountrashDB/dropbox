@@ -3,9 +3,19 @@ class AdminController < ApplicationController
     include Pagy::Backend
 
     private
-    def check_token      
+    def check_admin_token      
       begin       
-        if !@current_user = Admin.get_admin(request.headers)   
+        if !@current_admin = Admin.get_admin(request.headers)   
+          render json: {error: true, message: t('error.admin.token_error')}, status: :unauthorized
+        end
+      rescue
+        render json: {error: true, message: t('error.admin.need_login')}, status: :unauthorized
+      end
+    end
+
+    def check_mitra_token      
+      begin       
+        if !@current_mitra = Mitra.get_mitra(request.headers)   
           render json: {error: true, message: t('error.admin.token_error')}, status: :unauthorized
         end
       rescue

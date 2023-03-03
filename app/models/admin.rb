@@ -12,6 +12,7 @@
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string(255)
+#  uuid                   :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -22,21 +23,26 @@
 #
 class Admin < ApplicationRecord
   EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
-  acts_as_token_authenticatable  
   validates :first_name, length: { in: 1..35 }, allow_blank: true
   validates :last_name, length: { in: 1..35 }, allow_blank: true
   validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: EMAIL_REGEX }
-  validates :password, presence: true, allow_blank: true
+  validates :password, presence: true
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  before_create :set_uuid
+
+  def set_uuid
+      self.uuid = SecureRandom.uuid
+  end
          
-  def self.get_admin(headers)
-    token = headers['Authorization'].split(' ').last
-    begin
+  def self.get_admin(headers)    
+    token = headers['Authorization'].split(' ').last    
+    begin      
       decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
-        admin = Admin.find(decode[0]["admin_id"])
+      admin = Admin.find_by(uuid: decode[0]["admin_uuid"])
     rescue JWT::ExpiredSignature
       false
     end    

@@ -1,6 +1,12 @@
-class Api::V1::MitrasController < ApplicationController
+class Api::V1::MitrasController < AdminController
   before_action :check_mitra_token, only: [
     :update_kyc
+  ]
+
+  before_action :check_admin_token, only: [
+    :show,
+    :show_kyc,
+    :datatable
   ]
 
   if Rails.env.production?
@@ -16,7 +22,20 @@ class Api::V1::MitrasController < ApplicationController
   def show
     mitra = Mitra.find_by(uuid: params[:uuid])
     if mitra
-      render json: mitra
+      render json: MitraBlueprint.render(mitra, view: :show)
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
+  end
+
+  def set_status #for approval
+    kyc = Kyc.find_by(uuid: params[:uuid])
+    if kyc
+      kyc.update(status: params[:status])
+      if params[:status] == 1
+        Mitra.find(kyc.mitra_id).update(status: params[:status])
+      end 
+      render json: {message: "Updated"}
     else
       render json: {message: "Not found"}, status: :not_found
     end
@@ -24,6 +43,14 @@ class Api::V1::MitrasController < ApplicationController
 
   def datatable    
     render json: MitraDatatable.new(params)    
+  end
+
+  def show_kyc
+    if kyc = Kyc.find_by(uuid: params[:uuid])
+      render json: KycBlueprint.render(kyc)
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
   end
 
   def register
@@ -100,7 +127,7 @@ class Api::V1::MitrasController < ApplicationController
             mitra_uuid: mitra.uuid,
             exp: Time.now.to_i + @@token_expired
         }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, 'HS256'        
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm        
         kyc = Kyc.where(mitra_id: mitra.id).last
         render json: {token: token, kyc_status: kyc != nil ? kyc.status : nil}
       else

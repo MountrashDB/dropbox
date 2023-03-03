@@ -13,6 +13,7 @@
 #  status         :integer
 #  tempat_tinggal :string(255)
 #  tgl_lahir      :date
+#  uuid           :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  city_id        :bigint           not null
@@ -43,9 +44,10 @@ class Kyc < ApplicationRecord
 
   validates :ktp_image, :nama, :no_ktp, :tempat_tinggal, :tgl_lahir, :province_id, :city_id, :district_id, :mitra_id, presence: true
 
-  before_create :set_value
+  before_create :set_value  
 
   def set_value
+    self.uuid = SecureRandom.uuid
     self.status = 0 #Waiting approve, 1 = Approved, 2 = Rejected
   end 
 end
