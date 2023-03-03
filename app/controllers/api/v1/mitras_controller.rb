@@ -1,6 +1,6 @@
 class Api::V1::MitrasController < AdminController
   before_action :check_mitra_token, only: [
-    :update_kyc
+    :create_kyc
   ]
 
   before_action :check_admin_token, only: [
