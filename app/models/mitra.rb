@@ -40,10 +40,10 @@ class Mitra < ApplicationRecord
   end
 
   def self.get_mitra(headers)
-    token = headers['Authorization'].split(' ').last
+    token = headers['Authorization'].split(' ').last    
     begin
       decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
-        admin = Mitra.find_by(decode[0]["admin_uuid"])
+      @current_mitra = Mitra.find_by(uuid: decode[0]["mitra_uuid"])      
     rescue JWT::ExpiredSignature
       false
     end    

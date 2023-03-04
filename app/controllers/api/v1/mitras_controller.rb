@@ -140,7 +140,8 @@ class Api::V1::MitrasController < AdminController
     end
   end
 
-  def create_kyc
+  def create_kyc      
+    
     kyc = Kyc.new()
     kyc.agama = params[:agama]
     kyc.desa = params[:desa]
@@ -195,17 +196,6 @@ class Api::V1::MitrasController < AdminController
   end
 
   private
-
-  def check_mitra_token      
-    begin       
-      if !@current_mitra = Mitra.get_mitra(request.headers)   
-        render json: {error: true}, status: :unauthorized
-      end
-    rescue
-      render json: {error: true}, status: :unauthorized
-    end
-  end
-
   def mitra_params
     params.permit(:name, :phone, :address, :image, :password, :password_confirmation)
   end
