@@ -3,7 +3,7 @@ class AdminController < ApplicationController
     include Pagy::Backend
 
     private
-    def check_admin_token      
+    def check_admin_token           
       begin       
         if !@current_admin = Admin.get_admin(request.headers)   
           render json: {error: true, message: t('error.admin.token_error')}, status: :unauthorized
