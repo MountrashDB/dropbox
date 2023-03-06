@@ -47,6 +47,10 @@ class Api::V1::MitrasController < AdminController
     render json: MitraDatatable.new(params)    
   end
 
+  def mitra_kyc    
+    render json: KycDatatable.new(params)    
+  end
+
   def show_kyc
     if kyc = Kyc.find_by(uuid: params[:uuid])
       render json: KycBlueprint.render(kyc)

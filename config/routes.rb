@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         post 'register',             to: 'mitras#register'
         post 'login',                to: 'mitras#login'
         get 'profile',               to: 'mitras#profile'
+        get 'mitra-kyc',             to: 'mitras#mitra_kyc'
         post 'create-kyc',           to: 'mitras#create_kyc'
         get '',                      to: 'mitras#index'
         get ':uuid',                 to: 'mitras#show'
@@ -75,7 +76,8 @@ Rails.application.routes.draw do
       scope 'kyc' do
         get 'province',                to: 'kyc#province'
         get 'city/:province_id',       to: 'kyc#city'
-        get 'district',                to: 'kyc#district'
+        get 'district',                to: 'kyc#district'  
+        post 'datatable',              to: 'mitras#mitra_kyc'        
       end
 
       # User webapp
