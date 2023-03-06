@@ -77,7 +77,8 @@ Rails.application.routes.draw do
         get 'province',                to: 'kyc#province'
         get 'city/:province_id',       to: 'kyc#city'
         get 'district',                to: 'kyc#district'  
-        post 'datatable',              to: 'mitras#mitra_kyc'        
+        post 'datatable',              to: 'mitras#mitra_kyc'   
+        get 'total-waiting',           to: 'kyc#total_waiting'
       end
 
       # User webapp

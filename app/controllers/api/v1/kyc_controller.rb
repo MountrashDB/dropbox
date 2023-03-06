@@ -18,4 +18,9 @@ class Api::V1::KycController < ApplicationController
             render json: {message: "Not found"}, status: :not_found
         end
     end
+
+    def total_waiting
+        total = Kyc.where(status: 0).count
+        render json: {total: total}
+    end
 end
