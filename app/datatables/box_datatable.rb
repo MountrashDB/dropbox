@@ -6,9 +6,13 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
     @view_columns ||= {
       id: { source: "Box.id", cond: :eq },
       uuid: { source: "Box.uuid", cond: :like },
+      nama: { source: "Box.nama", cond: :like, searchable: true },
+      jenis: { source: "Box.jenis", cond: :like },
+      type_progress: { source: "Box.type_progress", cond: :like },
       qr_code: { source: "Box.qr_code", cond: :like },
-      lat: { source: "Box.lat", cond: :like },
-      lang: { source: "Box.lat", cond: :like },
+      latitude: { source: "Box.latitude", cond: :like },
+      longitude: { source: "Box.longitude", cond: :like },
+      mitra: { source: "Mitra.name", cond: :like, searchable: true },
       max: { source: "Box.max", cond: :eq },
     }
   end
@@ -18,10 +22,13 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       {
         id: record.id,
         uuid: record.uuid,
+        nama: record.nama,
+        jenis: record.jenis,
+        type_progress: record.type_progress,
         qr_code: record.qr_code,
-        lat: record.lat,
-        lang: record.lang,
-        max: record.max,
+        latitude: record.latitude,
+        longitude: record.longitude,
+        mitra: record.mitra.name
       }
     end
   end
