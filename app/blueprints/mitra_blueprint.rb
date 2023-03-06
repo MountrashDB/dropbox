@@ -1,13 +1,13 @@
 class MitraBlueprint < Blueprinter::Base
     identifier :id
 
-    fields :uuid
+    fields :uuid, :name
     view :register do
-        fields :email, :name, :activation_code, :phone
+        fields :email, :activation_code, :phone
     end
 
     view :profile do        
-        fields :email, :name, :activation_code, :phone
+        fields :email, :activation_code, :phone
         field :image do |data|
             if data
                 data.image.url
@@ -18,7 +18,7 @@ class MitraBlueprint < Blueprinter::Base
     end
 
     view :after_update do
-        fields :email, :name, :phone
+        fields :email, :phone
     end
 
     view :admin_index do
@@ -26,7 +26,7 @@ class MitraBlueprint < Blueprinter::Base
     end
 
     view :show do
-        fields :email, :name, :phone
+        fields :email, :phone
         association :kyc, blueprint: KycBlueprint
     end
 end
