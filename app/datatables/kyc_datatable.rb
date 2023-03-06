@@ -11,6 +11,7 @@ class KycDatatable < AjaxDatatablesRails::ActiveRecord
       desa: { source: "Kyc.desa", cond: :like, searchable: true },
       tempat_tinggal: { source: "Kyc.tempat_tinggal", cond: :like, searchable: true },
       no_ktp: { source: "Kyc.no_ktp", cond: :like, searchable: true },
+      mitra: { source: "Mitra.name", cond: :like, searchable: true }
     }
   end
 
@@ -21,7 +22,8 @@ class KycDatatable < AjaxDatatablesRails::ActiveRecord
         nama: record.nama,
         tempat_tinggal: record.tempat_tinggal,
         status: record.status,        
-        no_ktp: record.no_ktp
+        no_ktp: record.no_ktp,
+        mitra: record.mitra.name
       }
     end
   end
