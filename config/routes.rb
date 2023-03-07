@@ -58,16 +58,19 @@ Rails.application.routes.draw do
         post 'login',                to: 'mitras#login'
         get 'profile',               to: 'mitras#profile'
         get 'mitra-kyc',             to: 'mitras#mitra_kyc'
-        post 'create-kyc',           to: 'mitras#create_kyc'
-        get '',                      to: 'mitras#index'
-        get ':uuid',                 to: 'mitras#show'
+        post 'create-kyc',           to: 'mitras#create_kyc'        
         get 'kyc/:uuid',             to: 'mitras#show_kyc'
         post 'datatable',            to: 'mitras#datatable'
         post '',                     to: 'mitras#create'
         get 'activation-code/:code', to: 'mitras#active_code'
         post 'kyc/status/:uuid',     to: 'mitras#set_status'
         post 'profile-update',       to: 'mitras#update_profile'
+        get 'active',                to: 'mitras#mitra_active'
         get 'dropbox',               to: 'mitras#dropbox'
+        get ':uuid',                 to: 'mitras#show'
+        scope 'box' do
+          post 'datatable',          to: 'mitras#box_datatable'
+        end        
         # delete ':uuid',            to: 'mitras#destroy'
         # patch ':uuid',             to: 'mitras#update'
       end
