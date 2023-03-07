@@ -32,6 +32,7 @@ class Mitra < ApplicationRecord
   before_create :set_uuid    
   has_many :kyc
   has_one_attached :image, dependent: :destroy, service: :cloudinary 
+  scope :active, -> { where(status: 1) }
 
   def set_uuid
       self.uuid = SecureRandom.uuid

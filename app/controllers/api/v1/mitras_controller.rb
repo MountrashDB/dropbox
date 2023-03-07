@@ -10,7 +10,8 @@ class Api::V1::MitrasController < AdminController
     :show,
     :show_kyc,
     :mitra_kyc,
-    :datatable
+    :datatable,
+    :active
   ]
 
   if Rails.env.production?
@@ -19,8 +20,14 @@ class Api::V1::MitrasController < AdminController
     @@token_expired  = 30.days.to_i
   end
 
-  def index
-    render json: Mitra.active
+  def active
+    puts "== here =="
+    render json: {message: "active"}
+    # if params[:search]
+    #   render json: Mitra.active.where("name LIKE ?", "%" + params[:search] + "%")
+    # else
+    #   render json: Mitra.active
+    # end
   end
 
   def show
@@ -206,7 +213,12 @@ class Api::V1::MitrasController < AdminController
   end
 
   def mitra_active
-    render json: MitraBlueprint.render(mitra.active, view: :profile)
+    if params[:search]
+      mitra = Mitra.active.where("name LIKE ?", "%" + params[:search] + "%")
+      render json: MitraBlueprint.render(mitra, view: :profile)
+    else
+      render json: Mitra.active
+    end
   end
 
   private
