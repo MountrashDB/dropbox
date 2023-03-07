@@ -2,12 +2,14 @@ class Api::V1::MitrasController < AdminController
   before_action :check_mitra_token, only: [
     :create_kyc,
     :profile,
-    :update_profile
+    :update_profile,
+    :box_datatable
   ]
 
   before_action :check_admin_token, only: [
     :show,
     :show_kyc,
+    :mitra_kyc,
     :datatable
   ]
 
@@ -18,7 +20,7 @@ class Api::V1::MitrasController < AdminController
   end
 
   def index
-    render json: Mitra.all
+    render json: Mitra.active
   end
 
   def show
@@ -197,6 +199,14 @@ class Api::V1::MitrasController < AdminController
     else
       render json: {message: "Not found"}, status: :not_found
     end    
+  end
+
+  def box_datatable    
+    render json: BoxDatatable.new(params)    
+  end
+
+  def mitra_active
+    render json: MitraBlueprint.render(mitra.active, view: :profile)
   end
 
   private
