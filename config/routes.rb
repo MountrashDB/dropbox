@@ -93,6 +93,9 @@ Rails.application.routes.draw do
       post 'register',                        to: 'users#register'
       get  'register/activation-code/:code',  to: 'users#active_code'
       post 'login',                           to: 'users#login'      
+      scope :dropbox do
+        get 'views/:uuid',                    to: 'users#scan'
+      end
 
     end
   end

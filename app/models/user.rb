@@ -38,4 +38,14 @@ class User < ApplicationRecord
       self.uuid = SecureRandom.uuid
       self.active_code = rand(100000000..999999999)
   end
+
+  def self.get_user(headers)
+    token = headers['Authorization'].split(' ').last    
+    begin
+      decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+      @current_user = User.find_by(uuid: decode[0]["user_uuid"])      
+    rescue JWT::ExpiredSignature
+      false
+    end    
+  end
 end

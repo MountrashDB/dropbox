@@ -1,9 +1,20 @@
-class Api::V1::UsersController < ApiController
+class Api::V1::UsersController < AdminController
   before_action :check_admin_token, only: [
     :show,
     :datatable,
     :destroy
   ]
+
+  before_action :check_user_token, only: [
+    :scan
+  ]
+
+  if Rails.env.production?
+    @@token_expired  = 3.days.to_i
+  else
+    @@token_expired  = 30.days.to_i
+  end
+
 
   def index
     render json: User.all
@@ -50,7 +61,12 @@ class Api::V1::UsersController < ApiController
   def login
     if user = User.find_by(email: params[:email], active: true)
       if user.valid_password?(params[:password])
-        render json: UserBlueprint.render(user, view: :register)
+        payload = {
+            user_uuid: user.uuid,
+            exp: Time.now.to_i + @@token_expired
+        }
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        render json: {token: token, email: user.email, username: user.username}
       else
         render json: {message: "Not found"}, status: :unauthorized
       end
@@ -90,6 +106,15 @@ class Api::V1::UsersController < ApiController
     if user = User.find_by(uuid: params[:uuid])
       user.delete
       render json: {message: "Deleted"}
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
+  end
+
+  def scan
+    box = Box.find_by(uuid: params[:uuid])
+    if box
+      render json: BoxBlueprint.render(box)
     else
       render json: {message: "Not found"}, status: :not_found
     end

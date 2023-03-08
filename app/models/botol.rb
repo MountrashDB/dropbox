@@ -20,6 +20,7 @@
 #
 class Botol < ApplicationRecord
   belongs_to :merk  
+  has_one_attached :image, dependent: :destroy, service: :cloudinary 
   has_many_attached :images, dependent: :destroy, service: :cloudinary 
   before_create :set_uuid
 
