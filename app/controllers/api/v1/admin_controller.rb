@@ -1,6 +1,6 @@
 class Api::V1::AdminController < AdminController
     before_action :check_admin_token, except: [
-        :login
+        :login,        
     ]
 
     if Rails.env.production?
@@ -33,6 +33,67 @@ class Api::V1::AdminController < AdminController
             render json: {message: "Success"}
         else
             render json: {error: @current_admin.errors}
+        end
+    end
+
+    def create
+        admin = Admin.new()
+        admin.email = params[:email]
+        admin.first_name = params[:first_name]
+        admin.last_name = params[:last_name]
+        admin.active = params[:active]
+        admin.password = params[:password]
+        admin.password_confirmation = params[:password_confirmation]
+        if admin.save
+            render json: admin
+        else
+            render json: {error: admin.errors}
+        end
+    end
+
+    def update
+        admin = Admin.find_by(uuid: params[:uuid])
+        if admin
+            admin.email = params[:email]
+            admin.first_name = params[:first_name]
+            admin.last_name = params[:last_name]
+            admin.active = params[:active]
+            if params[:password]
+                admin.reset_password(params[:password], params[:password_confirmation])
+            else 
+                render json: {error: "Password not match"}
+                return
+            end
+            if admin.save
+                render json: {message: "Success"}
+            else
+                render json: {error: admin.errors}
+            end
+        else
+            render json: {message: "Not found"}
+        end
+    end
+
+    def destroy
+        admin = Admin.find_by(uuid: params[:uuid])
+        if admin
+            admin.delete
+            render json: {message: "Success"}
+        else
+            render json: {message: "Not found"}
+        end
+    end
+
+    def datatable    
+        render json: AdminDatatable.new(params, current_admin: @current_admin)    
+    end
+
+    def show
+        admin = Admin.find_by(uuid: params[:uuid])
+        if admin
+            render json: admin
+        else
+            render json: {message: "Not found"}
         end
     end
 end

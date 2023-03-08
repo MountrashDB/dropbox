@@ -47,10 +47,15 @@ Rails.application.routes.draw do
         post 'upload/:uuid',       to: 'transaction#upload'
       end
 
-      scope 'admin' do
+      scope 'admin' do        
         post 'login',              to: 'admin#login'
         post 'forgot',             to: 'admin#forgot'
         post 'change-password',    to: 'admin#change_password'
+        post 'datatable',          to: 'admin#datatable'
+        post '',                   to: 'admin#create'
+        get ':uuid',               to: 'admin#show'
+        patch ':uuid',             to: 'admin#update'
+        delete ':uuid',            to: 'admin#destroy'
       end
 
       scope 'mitra' do

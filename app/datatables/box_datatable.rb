@@ -34,6 +34,10 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    Box.all
+    if @current_mitra
+      Box.where(mitra_id: @current_mitra.id)
+    else
+      Box.all
+    end
   end
 end

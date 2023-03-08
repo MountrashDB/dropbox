@@ -35,6 +35,8 @@ class Box < ApplicationRecord
     belongs_to :mitra
     belongs_to :admin
     before_create :set_uuid
+    scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
+
 
     def set_uuid
         self.uuid = SecureRandom.uuid
