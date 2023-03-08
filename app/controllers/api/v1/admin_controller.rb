@@ -67,6 +67,7 @@ class Api::V1::AdminController < AdminController
                 return
             end
             if admin.save
+                admin.image.attach(params[:image]) if params[:image]
                 render json: {message: "Success"}
             else
                 render json: {error: admin.errors}
