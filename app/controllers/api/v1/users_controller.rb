@@ -114,6 +114,8 @@ class Api::V1::UsersController < AdminController
   def scan
     box = Box.find_by(uuid: params[:uuid])
     if box
+      box.user_id = @current_user.id
+      box.save
       render json: BoxBlueprint.render(box)
     else
       render json: {message: "Not found"}, status: :not_found

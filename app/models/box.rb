@@ -22,6 +22,7 @@
 #  updated_at    :datetime         not null
 #  admin_id      :integer
 #  mitra_id      :integer
+#  user_id       :integer
 #
 class Box < ApplicationRecord
     validates :uuid, uniqueness: true
@@ -34,9 +35,9 @@ class Box < ApplicationRecord
     validates :mitra_share, presence: true
     belongs_to :mitra
     belongs_to :admin
+    belongs_to :user
     before_create :set_uuid
     scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
-
 
     def set_uuid
         self.uuid = SecureRandom.uuid
