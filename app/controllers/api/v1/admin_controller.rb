@@ -44,8 +44,9 @@ class Api::V1::AdminController < AdminController
         admin.active = params[:active]
         admin.password = params[:password]
         admin.password_confirmation = params[:password_confirmation]
-        if admin.save
-            render json: admin
+        if admin.save            
+            admin.image.attach(params[:image]) if params[:image]
+            render json: AdminBlueprint.render(admin)
         else
             render json: {error: admin.errors}
         end
@@ -60,6 +61,7 @@ class Api::V1::AdminController < AdminController
             admin.active = params[:active]
             if params[:password]
                 admin.reset_password(params[:password], params[:password_confirmation])
+                render json: AdminBlueprint.render(admin)
             else 
                 render json: {error: "Password not match"}
                 return
@@ -91,7 +93,7 @@ class Api::V1::AdminController < AdminController
     def show
         admin = Admin.find_by(uuid: params[:uuid])
         if admin
-            render json: admin
+            render json: AdminBlueprint.render(admin)
         else
             render json: {message: "Not found"}
         end
