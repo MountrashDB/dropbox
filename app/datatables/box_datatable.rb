@@ -33,11 +33,17 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
     end
   end
 
+  def current_mitra
+    @current_mitra ||= options[:current_mitra]
+  end
+
   def get_raw_records
-    if @current_mitra
-      Box.where(mitra_id: @current_mitra.id)
+    if current_mitra
+      # Mitra list
+      Box.where(mitra_id: current_mitra.id)
     else
-      Box.all
+      # Admin list
+      Box.all 
     end
   end
 end

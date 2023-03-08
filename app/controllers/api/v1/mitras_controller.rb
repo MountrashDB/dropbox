@@ -208,8 +208,9 @@ class Api::V1::MitrasController < AdminController
     end    
   end
 
+  # Mitra's box
   def box_datatable    
-    render json: BoxDatatable.new(params)    
+    render json: BoxDatatable.new(params, current_mitra: @current_mitra)    
   end
 
   def mitra_active
