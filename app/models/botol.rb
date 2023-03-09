@@ -8,7 +8,7 @@
 #  uuid       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  merk_id    :bigint           not null
+#  merk_id    :bigint
 #
 # Indexes
 #
@@ -19,8 +19,9 @@
 #  fk_rails_...  (merk_id => merks.id)
 #
 class Botol < ApplicationRecord
-  belongs_to :merk  
-  has_one_attached :image, dependent: :destroy, service: :cloudinary 
+  belongs_to :merk, optional: true
+  has_many :botol_harga, dependent: :destroy
+  has_one_attached :primary_image, dependent: :destroy, service: :cloudinary 
   has_many_attached :images, dependent: :destroy, service: :cloudinary 
   before_create :set_uuid
 

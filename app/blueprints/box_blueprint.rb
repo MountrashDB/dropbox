@@ -1,5 +1,5 @@
 class BoxBlueprint < Blueprinter::Base
-    identifier :id
+    identifier :uuid
 
     fields :nama, 
         :uuid,
@@ -16,4 +16,8 @@ class BoxBlueprint < Blueprinter::Base
         :created_at,
         :updated_at
     association :mitra, blueprint: MitraBlueprint
+
+    view :show_harga do
+        excludes :qr_code, :qty, :cycles,  :dates, :jenis, :latitude, :longitude, :mitra_share, :user_share, :type_progress, :created_at, :updated_at
+    end
 end

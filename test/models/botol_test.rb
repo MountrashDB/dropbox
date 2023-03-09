@@ -8,7 +8,7 @@
 #  uuid       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  merk_id    :bigint           not null
+#  merk_id    :bigint
 #
 # Indexes
 #

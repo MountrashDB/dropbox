@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_08_154332) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_09_161934) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -56,11 +56,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_154332) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "botol_hargas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "botol_id", null: false
+    t.float "harga"
+    t.bigint "box_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["botol_id"], name: "index_botol_hargas_on_botol_id"
+    t.index ["box_id"], name: "index_botol_hargas_on_box_id"
+  end
+
   create_table "botols", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "uuid"
     t.string "ukuran"
-    t.bigint "merk_id", null: false
+    t.bigint "merk_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["merk_id"], name: "index_botols_on_merk_id"
@@ -190,6 +200,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_154332) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "botol_hargas", "botols"
+  add_foreign_key "botol_hargas", "boxes"
   add_foreign_key "botols", "merks"
   add_foreign_key "cities", "provinces"
   add_foreign_key "districts", "cities"

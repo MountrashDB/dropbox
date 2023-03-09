@@ -15,13 +15,17 @@ Rails.application.routes.draw do
         patch ':uuid',             to: 'boxes#update'
       end
 
-      scope 'botol' do
-        get '',                    to: 'botols#index'
+      scope 'botol' do        
         get ':uuid',               to: 'botols#show'
-        post 'datatable',          to: 'botols#datatable'
-        post '',                   to: 'botols#create'
+        post 'datatable',          to: 'botols#datatable'        
         delete ':uuid',            to: 'botols#destroy'
         patch ':uuid',             to: 'botols#update'
+        get ':uuid/harga',         to: 'botols#show_harga'
+        post ':uuid/harga',        to: 'botols#create_harga'
+        patch ':uuid/harga',       to: 'botols#update_harga'
+        post '',                   to: 'botols#create'
+        get '',                    to: 'botols#index'
+
       end
 
       scope 'user' do

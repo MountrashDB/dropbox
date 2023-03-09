@@ -1,7 +1,7 @@
 class MitraBlueprint < Blueprinter::Base
-    identifier :id
+    identifier :uuid
 
-    fields :uuid, :name
+    fields :name
     view :register do
         fields :email, :activation_code, :phone
     end

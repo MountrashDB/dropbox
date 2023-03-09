@@ -10,10 +10,8 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
     @view_columns ||= {
       id: { source: "Botol.id", cond: :eq },
       uuid: { source: "Botol.uuid", cond: :eq },
-      name: { source: "Botol.name", cond: :eq },
-      merk: { source: "Merk.name", cond: :eq },    
-      ukuran: { source: "Botol.ukuran", cond: :eq },  
-      image: { source: "Botol.image" }    
+      name: { source: "Botol.name", cond: :eq },       
+      ukuran: { source: "Botol.ukuran", cond: :eq }
     }
   end
 
@@ -22,10 +20,8 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
       {
         id: record.id,        
         uuid: record.uuid,
-        name: record.name,
-        merk: record.merk.name,
-        ukuran: record.ukuran,
-        image: record.image
+        name: record.name,        
+        ukuran: record.ukuran
       }
     end
   end

@@ -1,7 +1,7 @@
 class AdminBlueprint < Blueprinter::Base
-    identifier :id
+    identifier :uuid
 
-    fields :email, :uuid, :first_name, :last_name, :active
+    fields :email, :first_name, :last_name, :active
 
         field :image do |data|
             if data

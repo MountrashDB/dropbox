@@ -53,7 +53,47 @@ class Api::V1::BotolsController < ApplicationController
         render json: {message: "Not found"}, status: :not_found
       end
     end
-  
+
+    def show_harga
+      if botol = Botol.find_by(uuid: params[:uuid])
+        render json: BotolhargaBlueprint.render(botol.botol_harga)     
+      else
+        render json: {message: "Not found"}, status: :not_found
+      end
+    end
+
+    def create_harga
+      if botol = Botol.find_by(uuid: params[:uuid]) 
+        harga = BotolHarga.new()
+        harga.botol = botol
+        harga.box = Box.find_by(uuid: params[:box_uuid])
+        harga.harga = params[:harga]
+        if harga.save
+          render json: BotolhargaBlueprint.render(harga)
+        else
+          render json: harga.errors
+        end
+      else
+        render json: {message: "Not found"}, status: :not_found
+      end
+    end
+
+    def update_harga
+      if botol = Botol.find_by(uuid: params[:uuid]) 
+        harga = Botol.b
+        harga.botol = botol
+        harga.box = Box.find_by(uuid: params[:box_uuid])
+        harga.harga = params[:harga]
+        if harga.save
+          render json: {message: "Success"}
+        else
+          render json: harga.errors
+        end
+      else
+        render json: {message: "Not found"}, status: :not_found
+      end
+    end
+
     private
   end
   
