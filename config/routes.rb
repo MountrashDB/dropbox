@@ -29,10 +29,9 @@ Rails.application.routes.draw do
       end
 
       scope 'user' do
-        # get '',                    to: 'users#index'
+        get 'check-botol',         to: 'users#check_botol'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
-        # post '',                   to: 'users#create'        
         # post 'change-password',    to: 'users#change_password'
         delete ':uuid',            to: 'users#destroy'
         patch ':uuid',             to: 'users#update'
@@ -99,8 +98,8 @@ Rails.application.routes.draw do
       post 'login',                           to: 'users#login'      
       scope :dropbox do
         get 'views/:uuid',                    to: 'users#scan'
-      end
-
+        post 'insert/:uuid',                  to: 'users#insert'        
+      end     
     end
   end
   

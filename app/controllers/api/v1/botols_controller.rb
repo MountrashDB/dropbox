@@ -35,7 +35,7 @@ class Api::V1::BotolsController < ApplicationController
         botol.ukuran = params[:ukuran]
         botol.merk_id = params[:merk_id]
         if params[:images]
-            botol.images.attach(params[:images])
+          botol.images.attach(params[:images])
         end
         botol.save
         render json: botol

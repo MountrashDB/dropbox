@@ -23,7 +23,7 @@ class AdminController < ApplicationController
       end
     end
 
-    def check_user_token            
+    def check_user_token             
       begin       
         if !@current_user = User.get_user(request.headers)   
           render json: {error: true, message: t('error.admin.token_error')}, status: :unauthorized

@@ -6,7 +6,8 @@ class Api::V1::UsersController < AdminController
   ]
 
   before_action :check_user_token, only: [
-    :scan
+    :scan,
+    :check_botol
   ]
 
   if Rails.env.production?
@@ -120,6 +121,38 @@ class Api::V1::UsersController < AdminController
     else
       render json: {message: "Not found"}, status: :not_found
     end
+  end
+
+  def insert
+    box = Box.find_by(uuid: params[:uuid])
+    if box
+      harga_botol = 300 # Nanti disesuaikan sesuai botol yang masuk
+      mitra_amount = box.mitra_share * harga_botol / 100
+      user_amount = box.user_share * harga_botol / 100
+      transaction = Transaction.new()
+      transaction.mitra = box.mitra
+      transaction.user = box.user
+      transaction.box_id = box.id
+      transaction.harga = harga_botol
+      transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
+      transaction.mitra_amount = mitra_amount
+      transaction.user_amount = user_amount
+      if transaction.save
+        if params[:foto]
+          transaction.foto.attach(params[:foto])
+        end
+        render json: {message: "Success"}
+      else
+        render json: transaction.errors
+      end
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end  
+  end
+
+  def check_botol    
+    transaction = Transaction.where(user_id: @current_user.id).order(created_at: :desc).limit(1)
+    render json: TransactionBlueprint.render(transaction, view: :check_botol)
   end
 
   private
