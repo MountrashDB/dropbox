@@ -65,8 +65,8 @@ class Api::V1::BotolsController < ApplicationController
     def create_harga
       if botol = Botol.find_by(uuid: params[:uuid]) 
         harga = BotolHarga.new()
-        harga.botol = botol
-        harga.box = Box.find_by(uuid: params[:box_uuid])
+        harga.botol_id = botol.id
+        harga.box_id = Box.find_by(uuid: params[:box_uuid]).id
         harga.harga = params[:harga]
         if harga.save
           render json: BotolhargaBlueprint.render(harga)
