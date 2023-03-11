@@ -17,7 +17,8 @@ Rails.application.routes.draw do
 
       scope 'botol' do        
         get ':uuid',               to: 'botols#show'
-        post 'datatable',          to: 'botols#datatable'        
+        post 'datatable',          to: 'botols#datatable'   
+        post 'harga-jual',         to: 'admin#harga_jual'     
         delete ':uuid',            to: 'botols#destroy'
         patch ':uuid',             to: 'botols#update'
         get ':uuid/harga',         to: 'botols#show_harga'
@@ -56,7 +57,7 @@ Rails.application.routes.draw do
         post 'forgot',             to: 'admin#forgot'
         post 'change-password',    to: 'admin#change_password'
         post 'datatable',          to: 'admin#datatable'
-        post 'transaction',        to: 'admin#transaction'
+        post 'transaction',        to: 'admin#transaction'        
         post '',                   to: 'admin#create'
         get ':uuid',               to: 'admin#show'
         patch ':uuid',             to: 'admin#update'

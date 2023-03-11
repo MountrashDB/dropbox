@@ -103,4 +103,8 @@ class Api::V1::AdminController < AdminController
     def transaction    
         render json: TransactionDatatable.new(params)    
     end
+
+    def harga_jual
+        render json: BotolhargaDatatable.new(params)    
+    end
 end

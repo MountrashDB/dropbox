@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  harga      :float(24)
+#  uuid       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  botol_id   :bigint           not null
@@ -22,4 +23,10 @@
 class BotolHarga < ApplicationRecord
   belongs_to :botol
   belongs_to :box
+
+  before_create :set_uuid
+
+  def set_uuid
+      self.uuid = SecureRandom.uuid
+  end
 end
