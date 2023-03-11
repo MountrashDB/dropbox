@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         post 'forgot',             to: 'admin#forgot'
         post 'change-password',    to: 'admin#change_password'
         post 'datatable',          to: 'admin#datatable'
+        post 'transaction',        to: 'admin#transaction'
         post '',                   to: 'admin#create'
         get ':uuid',               to: 'admin#show'
         patch ':uuid',             to: 'admin#update'

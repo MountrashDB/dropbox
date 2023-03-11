@@ -99,4 +99,8 @@ class Api::V1::AdminController < AdminController
             render json: {message: "Not found"}
         end
     end
+
+    def transaction    
+        render json: TransactionDatatable.new(params)    
+    end
 end
