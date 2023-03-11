@@ -68,5 +68,14 @@ class Api::V1::BoxesController < AdminController
     end
   end
 
+  def list
+    if params[:search]
+      box = Box.where("LOWER(nama) LIKE ?", "%" + params[:search].downcase + "%").order(nama: :asc)
+      render json: BoxBlueprint.render(box)
+    else
+      render json: BoxBlueprint.render(Box.all.order(nama: :asc))
+    end
+  end
+
   private
 end

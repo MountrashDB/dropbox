@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do      
       scope 'box' do        
+        get 'list',                to: 'boxes#list'
         get ':uuid',               to: 'boxes#show'
         post 'datatable',          to: 'boxes#datatable'
         post '',                   to: 'boxes#create'
