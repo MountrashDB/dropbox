@@ -8,18 +8,8 @@
 #  uuid       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  merk_id    :bigint
-#
-# Indexes
-#
-#  index_botols_on_merk_id  (merk_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (merk_id => merks.id)
 #
 class Botol < ApplicationRecord
-  belongs_to :merk, optional: true
   has_many :botol_harga, dependent: :destroy
   has_one_attached :primary_image, dependent: :destroy, service: :cloudinary 
   has_many_attached :images, dependent: :destroy, service: :cloudinary 

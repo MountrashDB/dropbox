@@ -8,15 +8,6 @@
 #  uuid       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  merk_id    :bigint
-#
-# Indexes
-#
-#  index_botols_on_merk_id  (merk_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (merk_id => merks.id)
 #
 one:
   name: MyString

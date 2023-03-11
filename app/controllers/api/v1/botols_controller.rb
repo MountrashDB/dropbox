@@ -22,7 +22,6 @@ class Api::V1::BotolsController < AdminController
       botol = Botol.new()
       botol.name = params[:name]
       botol.ukuran = params[:ukuran]
-      botol.merk_id = params[:merk_id]
       botol.images.attach(params[:images])
       if botol.save
         render json: BotolBlueprint.render(botol, view: :show)
@@ -35,7 +34,6 @@ class Api::V1::BotolsController < AdminController
       if botol = Botol.find_by(uuid: params[:uuid])
         botol.name = params[:name]
         botol.ukuran = params[:ukuran]
-        botol.merk_id = params[:merk_id]
         if params[:images]
           botol.images.attach(params[:images])
         end
@@ -99,7 +97,7 @@ class Api::V1::BotolsController < AdminController
     def botol_list
       if params[:search]
         botol = Botol.where("name LIKE ?", "%" + params[:search] + "%").order(name: :asc)
-        render json: BotolBlueprint.render(mitra, view: :index)
+        render json: BotolBlueprint.render(botol, view: :index)
       else
         render json: BotolBlueprint.render(Botol.all.order(name: :asc), view: :index)
       end
