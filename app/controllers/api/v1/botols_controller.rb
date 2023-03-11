@@ -1,4 +1,6 @@
-class Api::V1::BotolsController < ApplicationController
+class Api::V1::BotolsController < AdminController
+    before_action :check_admin_token
+
     def index
       render json: BotolBlueprint.render(Botol.all, view: :index)
     end
@@ -91,6 +93,15 @@ class Api::V1::BotolsController < ApplicationController
         end
       else
         render json: {message: "Not found"}, status: :not_found
+      end
+    end
+
+    def botol_list
+      if params[:search]
+        botol = Botol.where("name LIKE ?", "%" + params[:search] + "%").order(name: :asc)
+        render json: BotolBlueprint.render(mitra, view: :index)
+      else
+        render json: BotolBlueprint.render(Botol.all.order(name: :asc), view: :index)
       end
     end
 

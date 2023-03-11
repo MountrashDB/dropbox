@@ -130,6 +130,7 @@ class Api::V1::UsersController < AdminController
       harga_botol = 300 # Nanti disesuaikan sesuai botol yang masuk
       mitra_amount = box.mitra_share * harga_botol / 100
       user_amount = box.user_share * harga_botol / 100
+      
       transaction = Transaction.new()
       transaction.mitra = box.mitra
       transaction.user = box.user

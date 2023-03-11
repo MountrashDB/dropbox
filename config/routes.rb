@@ -16,17 +16,16 @@ Rails.application.routes.draw do
       end
 
       scope 'botol' do        
-        get ':uuid',               to: 'botols#show'
         post 'datatable',          to: 'botols#datatable'   
         post 'harga-jual',         to: 'admin#harga_jual'     
         delete ':uuid',            to: 'botols#destroy'
         patch ':uuid',             to: 'botols#update'
         get ':uuid/harga',         to: 'botols#show_harga'
+        get 'list',                to: 'botols#botol_list'
+        get ':uuid',               to: 'botols#show'
         post ':uuid/harga',        to: 'botols#create_harga'
         patch ':uuid/harga',       to: 'botols#update_harga'
         post '',                   to: 'botols#create'
-        get '',                    to: 'botols#index'
-
       end
 
       scope 'user' do
@@ -72,13 +71,13 @@ Rails.application.routes.draw do
         post 'create-kyc',           to: 'mitras#create_kyc'        
         get 'kyc/:uuid',             to: 'mitras#show_kyc'
         post 'datatable',            to: 'mitras#datatable'
-        post '',                     to: 'mitras#create'
         get 'activation-code/:code', to: 'mitras#active_code'
         post 'kyc/status/:uuid',     to: 'mitras#set_status'
         post 'profile-update',       to: 'mitras#update_profile'
         get 'active',                to: 'mitras#mitra_active'
         get 'dropbox',               to: 'mitras#dropbox'
         get 'balance',               to: 'mitras#balance'
+        post '',                     to: 'mitras#create'
 
         get ':uuid',                 to: 'mitras#show'
         scope 'box' do
