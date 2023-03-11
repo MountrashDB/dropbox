@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
       scope 'user' do
         get 'check-botol',         to: 'users#check_botol'
+        get 'balance',             to: 'users#balance'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
         # post 'change-password',    to: 'users#change_password'
@@ -75,6 +76,8 @@ Rails.application.routes.draw do
         post 'profile-update',       to: 'mitras#update_profile'
         get 'active',                to: 'mitras#mitra_active'
         get 'dropbox',               to: 'mitras#dropbox'
+        get 'balance',               to: 'mitras#balance'
+
         get ':uuid',                 to: 'mitras#show'
         scope 'box' do
           post 'datatable',          to: 'mitras#box_datatable'

@@ -3,7 +3,8 @@ class Api::V1::MitrasController < AdminController
     :create_kyc,
     :profile,
     :update_profile,
-    :box_datatable
+    :box_datatable,
+    :balance
   ]
 
   before_action :check_admin_token, only: [
@@ -218,6 +219,15 @@ class Api::V1::MitrasController < AdminController
       render json: MitraBlueprint.render(mitra, view: :profile)
     else
       render json: Mitra.active
+    end
+  end
+
+  def balance
+    trx = Mitratransaction.where(mitra_id: @current_mitra.id).last
+    if trx
+      render json: {balance: trx.balance}
+    else
+      render json: {balance: 0}
     end
   end
 

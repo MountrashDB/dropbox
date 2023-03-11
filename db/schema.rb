@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_10_132257) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_11_153306) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -167,6 +167,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_132257) do
     t.datetime "reset_password_sent_at"
   end
 
+  create_table "mitratransactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "mitra_id", null: false
+    t.float "credit", default: 0.0
+    t.float "debit", default: 0.0
+    t.float "balance", default: 0.0
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mitra_id"], name: "index_mitratransactions_on_mitra_id"
+  end
+
   create_table "provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "kode"
@@ -206,6 +217,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_132257) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "usertransactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.float "credit", default: 0.0
+    t.float "debit", default: 0.0
+    t.float "balance", default: 0.0
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_usertransactions_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "botol_hargas", "botols"
@@ -218,4 +240,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_132257) do
   add_foreign_key "kycs", "districts"
   add_foreign_key "kycs", "mitras"
   add_foreign_key "kycs", "provinces"
+  add_foreign_key "mitratransactions", "mitras"
+  add_foreign_key "usertransactions", "users"
 end

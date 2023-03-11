@@ -7,7 +7,8 @@ class Api::V1::UsersController < AdminController
 
   before_action :check_user_token, only: [
     :scan,
-    :check_botol
+    :check_botol,
+    :balance
   ]
 
   if Rails.env.production?
@@ -153,6 +154,15 @@ class Api::V1::UsersController < AdminController
   def check_botol    
     transaction = Transaction.where(user_id: @current_user.id).order(created_at: :desc).limit(1)
     render json: TransactionBlueprint.render(transaction, view: :check_botol)
+  end
+
+  def balance
+    trx = Usertransaction.where(user_id: @current_user.id).last
+    if trx
+      render json: {balance: trx.balance}
+    else
+      render json: {balance: 0}
+    end
   end
 
   private

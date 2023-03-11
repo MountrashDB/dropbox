@@ -20,8 +20,29 @@ class Transaction < ApplicationRecord
   belongs_to :mitra
   belongs_to :user
   belongs_to :box
+
+  after_create :set_balance
   
   def set_uuid
       self.uuid = SecureRandom.uuid
+  end
+
+  def set_balance    
+    trx = Usertransaction.where(user_id: self.user_id).last    
+    description = "Reward Trx: " + self.id.to_s
+    if trx
+      balance = trx.balance
+      trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance+self.user_amount, description: description)
+    else
+      Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
+    end
+
+    trx = Mitratransaction.where(mitra_id: self.mitra_id).last    
+    if trx
+      balance = trx.balance
+      trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance+self.mitra_amount, description: description)
+    else
+      Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
+    end
   end
 end
