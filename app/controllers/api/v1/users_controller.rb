@@ -67,7 +67,7 @@ class Api::V1::UsersController < AdminController
             exp: Time.now.to_i + @@token_expired
         }
         token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
-        render json: {token: token, email: user.email, username: user.username}
+        render json: {token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id}
       else
         render json: {message: "Not found"}, status: :unauthorized
       end

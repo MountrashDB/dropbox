@@ -144,7 +144,7 @@ class Api::V1::MitrasController < AdminController
         }
         token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm        
         kyc = Kyc.where(mitra_id: mitra.id).last
-        render json: {token: token, kyc_status: kyc != nil ? kyc.status : -1}
+        render json: {token: token, kyc_status: kyc != nil ? kyc.status : -1, uuid: mitra.uuid, id: mitra.id}
       else
         render json: {message: "Not found"}, status: :unauthorized
       end
