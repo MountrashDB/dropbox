@@ -25,6 +25,10 @@ class Usertransaction < ApplicationRecord
   after_create :send_notify
 
   def send_notify    
-    NotifyChannel.broadcast_to self.user.uuid, status: "complete", image: Cloudinary::Utils.cloudinary_url(Transaction.last.foto.key, :width => 200, :height => 200, :crop => :fill), diterima: true
+    NotifyChannel.broadcast_to self.user.uuid, 
+      status: "complete", 
+      image: Cloudinary::Utils.cloudinary_url(Transaction.last.foto.key, :width => 200, :height => 200, :crop => :fill), 
+      diterima: true,
+      key: Transaction.last.foto.key
   end
 end
