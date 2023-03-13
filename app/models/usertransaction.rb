@@ -21,4 +21,10 @@
 #
 class Usertransaction < ApplicationRecord
   belongs_to :user
+
+  after_create :send_notify
+
+  def send_notify    
+    NotifyChannel.broadcast_to self.user.uuid, status: "complete", image: Transaction.last.foto.url, diterima: true
+  end
 end
