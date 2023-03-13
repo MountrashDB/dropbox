@@ -12,8 +12,8 @@
     <script>
     
     function openConnection() {
-      return new WebSocket("ws://localhost:3000/cable");
-        // return new WebSocket("<%= Rails.application.credentials.cable_url { "ws://localhost:3000" } %>/cable");
+      // return new WebSocket("ws://localhost:3000/cable");
+        return new WebSocket("<%= Rails.application.credentials.cable_url { "ws://localhost:3000" } %>/cable");
     }
     document.addEventListener("DOMContentLoaded", () => {
         const chatWebSocket = openConnection()
