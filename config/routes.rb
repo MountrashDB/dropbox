@@ -1,4 +1,5 @@
 Rails.application.routes.draw do  
+  get 'notify/index'
   devise_for :mitras
   devise_for :admins
   devise_for :users
@@ -107,5 +108,5 @@ Rails.application.routes.draw do
       end     
     end
   end
-  
+  mount ActionCable.server => '/cable'
 end

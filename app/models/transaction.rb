@@ -22,9 +22,14 @@ class Transaction < ApplicationRecord
   belongs_to :box
 
   after_create :set_balance
+  before_create :send_notify
   
   def set_uuid
       self.uuid = SecureRandom.uuid
+  end
+
+  def send_notify
+    NotifyChannel.broadcast_to self.user.uuid, status: "process"
   end
 
   def set_balance    
@@ -44,5 +49,6 @@ class Transaction < ApplicationRecord
     else
       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
     end
+    NotifyChannel.broadcast_to self.user.uuid, status: "complete", image: foto.url, diterima: true
   end
 end

@@ -88,3 +88,5 @@ gem 'capistrano-passenger', '~> 0.2.0'
 gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 gem "rqrcode", "~> 2.0"
 gem 'simple_token_authentication', '~> 1.0'
+gem 'yajl-ruby', require: 'yajl' # SPeed JSON rendering
+gem 'draper'
