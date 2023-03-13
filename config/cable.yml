@@ -8,5 +8,5 @@ test:
 
 production:
   adapter: redis
-  url: rediss://api.smartdropbox.online:6379/1
+  url: redis://api.smartdropbox.online:6379/1
   channel_prefix: dropbox_production
