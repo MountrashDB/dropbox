@@ -49,6 +49,6 @@ class Transaction < ApplicationRecord
     else
       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
     end
-    NotifyChannel.broadcast_to self.user.uuid, status: "complete", image: self.foto.url, diterima: true
+    NotifyChannel.broadcast_to self.user.uuid, status: "complete", image: Transaction.last.foto.url, diterima: true
   end
 end
