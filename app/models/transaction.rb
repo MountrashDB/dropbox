@@ -15,7 +15,7 @@
 #  user_id      :integer
 #
 class Transaction < ApplicationRecord
-  has_one_attached :foto, dependent: :destroy, service: :cloudinary 
+  has_one_attached :foto, dependent: :destroy
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user
