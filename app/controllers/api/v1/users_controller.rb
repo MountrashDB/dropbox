@@ -139,10 +139,12 @@ class Api::V1::UsersController < AdminController
       transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
       transaction.mitra_amount = mitra_amount
       transaction.user_amount = user_amount
+      transaction.foto = params[:foto]
+      # transaction.foto.attach(params[:foto])
       if transaction.save
-        if params[:foto]
-          transaction.foto.attach(params[:foto])
-        end
+        # if params[:foto]
+        #   transaction.foto.attach(params[:foto])
+        # end
         render json: {message: "Success"}
       else
         render json: transaction.errors
