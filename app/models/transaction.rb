@@ -49,9 +49,10 @@ class Transaction < ApplicationRecord
     else
       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
     end    
+    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
     NotifyChannel.broadcast_to self.user.uuid, 
       status: "complete", 
-      image: self.foto.url, 
+      image: foto_url, 
       diterima: true
   end
 end
