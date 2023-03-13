@@ -91,4 +91,5 @@ Rails.application.configure do
     config.api_secret = Rails.application.credentials.cloudinary[:api_secret]
     config.secure = true
   end
+  Rails.application.config.action_cable.allowed_request_origins = ["http://localhost:3000"]
 end
