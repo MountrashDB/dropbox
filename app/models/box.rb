@@ -35,7 +35,7 @@ class Box < ApplicationRecord
     validates :mitra_share, presence: true
     belongs_to :mitra
     belongs_to :admin
-    belongs_to :user
+    belongs_to :user, allow_blank: true
     before_create :set_uuid
     scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
 
