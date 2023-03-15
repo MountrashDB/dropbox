@@ -31,9 +31,9 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
     end
   end 
 
-  def get_raw_records
-    if params[:mitra_id]
-      Transaction.where(mitra_id: params[:mitra_id])
+  def get_raw_records    
+    if params[:mitra_uuid]      
+      Mitra.find_by(uuid: params[:mitra_uuid]).transactions
     else
       Transaction.all
     end

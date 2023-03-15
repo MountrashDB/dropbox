@@ -31,6 +31,7 @@ class Mitra < ApplicationRecord
   validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   before_create :set_uuid    
   has_many :kyc
+  has_many :transactions  
   has_one_attached :image, dependent: :destroy, service: :cloudinary 
   scope :active, -> { where(status: 1) }
 

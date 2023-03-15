@@ -15,7 +15,9 @@
 #  user_id      :integer
 #
 class Transaction < ApplicationRecord
-  has_one_attached :foto, dependent: :destroy, service: :cloudinary
+  has_one_attached :foto, dependent: :destroy, service: :cloudinary do |attachable|
+    attachable.variant :kotak, resize_to_limit: [300, 300]
+  end
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user
@@ -49,10 +51,12 @@ class Transaction < ApplicationRecord
     else
       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
     end    
-    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
+    puts "===================="
+    puts self.foto.variant(:kotak).url
+    # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
     NotifyChannel.broadcast_to self.user.uuid, 
       status: "complete", 
-      image: foto_url, 
+      image: self.foto.variant(:kotak).url, 
       diterima: true
   end
 end
