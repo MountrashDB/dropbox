@@ -232,7 +232,7 @@ class Api::V1::MitrasController < AdminController
   end
 
   def transaction    
-    render json: TransactionDatatable.new(params, view_context: view_context)    
+    render json: TransactionDatatable.new(params, mitra_id: @current_mitra.id)    
   end
 
   private

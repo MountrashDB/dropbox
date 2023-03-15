@@ -1,4 +1,5 @@
 class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
+
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
@@ -14,6 +15,10 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       created_at: { source: "Transaction.created_at", cond: :like, searchable: true}
     }
   end
+
+  # def initialize(params, opts = {})
+  #   @mitra_id = opts[:mitra_id]
+  # end
 
   def data    
     records.map do |record|
@@ -31,9 +36,9 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
     end
   end 
 
-  def get_raw_records    
-    if params[:mitra_uuid]      
-      Mitra.find_by(uuid: params[:mitra_uuid]).transactions
+  def get_raw_records   
+    if options[:mitra_id]
+      Transaction.where(mitra_id: options[:mitra_id])
     else
       Transaction.all
     end
