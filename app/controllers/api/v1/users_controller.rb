@@ -196,6 +196,7 @@ class Api::V1::UsersController < AdminController
       user.username = params[:username] if params[:username]
       user.email = params[:email] if params[:email]
       user.phone = params[:phone] if params[:phone]
+      user.reset_password(params[:password], params[:password_confirmation]) if params[:password]
       if user.save
         render json: {message: "Success"}
       else
