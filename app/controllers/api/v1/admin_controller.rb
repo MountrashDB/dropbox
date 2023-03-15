@@ -1,4 +1,6 @@
 class Api::V1::AdminController < AdminController
+  include ActiveStorage::SetCurrent
+
     before_action :check_admin_token, except: [
         :login,        
     ]
