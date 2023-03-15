@@ -5,7 +5,8 @@ class Api::V1::MitrasController < AdminController
     :update_profile,
     :box_datatable,
     :balance,
-    :transaction
+    :transaction,
+    :show_self_kyc
   ]
 
   before_action :check_admin_token, only: [
@@ -59,6 +60,10 @@ class Api::V1::MitrasController < AdminController
 
   def mitra_kyc    
     render json: KycDatatable.new(params)    
+  end
+
+  def show_self_kyc
+    render json: KycBlueprint.render(Kyc.find_by(mitra_id: @current_mitra.id))
   end
 
   def show_kyc
@@ -233,6 +238,28 @@ class Api::V1::MitrasController < AdminController
 
   def transaction    
     render json: TransactionDatatable.new(params, mitra_id: @current_mitra.id)    
+  end
+
+  def forgot_password    
+    if mitra = Mitra.find_by(email: params[:email])
+      raw, enc = Devise.token_generator.generate(Mitra, :reset_password_token)
+      mitra.update(reset_password_token: enc, reset_password_sent_at: Time.now())
+      render json: {message: "Success", token: enc}
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
+  end
+
+  def reset_password
+    if mitra = Mitra.find_by(reset_password_token: params[:token])
+      if mitra.reset_password(params[:new_password], params[:password_confirmation])
+        render json: {message: "Success"}
+      else
+        render json: {error: mitra.errors}
+      end
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end      
   end
 
   private

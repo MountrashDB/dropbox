@@ -1,8 +1,8 @@
 Rails.application.routes.draw do  
   get 'notify/index'
-  devise_for :mitras
-  devise_for :admins
-  devise_for :users
+  # devise_for :mitras
+  # devise_for :admins
+  # devise_for :users
   # Defines the root path route ("/")
 
   root to:'home#index'
@@ -71,6 +71,7 @@ Rails.application.routes.draw do
         get 'profile',               to: 'mitras#profile'
         get 'mitra-kyc',             to: 'mitras#mitra_kyc'
         post 'create-kyc',           to: 'mitras#create_kyc'        
+        get 'kyc',                   to: 'mitras#show_self_kyc'
         get 'kyc/:uuid',             to: 'mitras#show_kyc'
         post 'datatable',            to: 'mitras#datatable'
         post 'transaction',          to: 'mitras#transaction'
@@ -80,6 +81,8 @@ Rails.application.routes.draw do
         get 'active',                to: 'mitras#mitra_active'
         get 'dropbox',               to: 'mitras#dropbox'        
         get 'balance',               to: 'mitras#balance'
+        post 'forgot-password',      to: 'mitras#forgot_password'
+        post 'reset-password/:token', to: 'mitras#reset_password'
         post '',                     to: 'mitras#create'
 
         get ':uuid',                 to: 'mitras#show'
