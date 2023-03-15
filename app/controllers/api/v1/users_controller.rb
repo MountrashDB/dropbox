@@ -1,4 +1,6 @@
 class Api::V1::UsersController < AdminController
+  include ActiveStorage::SetCurrent
+
   before_action :check_admin_token, only: [
     :show,
     :datatable,
@@ -10,7 +12,8 @@ class Api::V1::UsersController < AdminController
     :check_botol,
     :balance,
     :profile,
-    :update_profile
+    :update_profile,
+    :rewards
   ]
 
   if Rails.env.production?
@@ -35,6 +38,10 @@ class Api::V1::UsersController < AdminController
 
   def datatable    
     render json: UserDatatable.new(params)    
+  end
+
+  def rewards    
+    render json: TransactionDatatable.new(params, user_id: @current_user.id)    
   end
 
   def register

@@ -36,6 +36,7 @@ Rails.application.routes.draw do
         get 'profile',             to: 'users#profile'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
+        post 'rewards',            to: 'users#rewards'
         # post 'change-password',    to: 'users#change_password'
         delete ':uuid',            to: 'users#destroy'
         patch ':uuid',             to: 'users#update_profile'
