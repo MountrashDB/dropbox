@@ -4,7 +4,8 @@ class Api::V1::MitrasController < AdminController
     :profile,
     :update_profile,
     :box_datatable,
-    :balance
+    :balance,
+    :transaction
   ]
 
   before_action :check_admin_token, only: [
@@ -22,7 +23,6 @@ class Api::V1::MitrasController < AdminController
   end
 
   def active
-    puts "== here =="
     render json: {message: "active"}
     # if params[:search]
     #   render json: Mitra.active.where("name LIKE ?", "%" + params[:search] + "%")
@@ -229,6 +229,10 @@ class Api::V1::MitrasController < AdminController
     else
       render json: {balance: 0}
     end
+  end
+
+  def transaction    
+    render json: TransactionDatatable.new(params, view_context: view_context)    
   end
 
   private

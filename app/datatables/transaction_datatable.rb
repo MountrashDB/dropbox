@@ -1,5 +1,4 @@
 class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
-
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
@@ -30,10 +29,13 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
         created_at: record.created_at
       }
     end
-  end
+  end 
 
   def get_raw_records
-    Transaction.all
+    if params[:mitra_id]
+      Transaction.where(mitra_id: params[:mitra_id])
+    else
+      Transaction.all
+    end
   end
-
 end

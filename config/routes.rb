@@ -73,11 +73,12 @@ Rails.application.routes.draw do
         post 'create-kyc',           to: 'mitras#create_kyc'        
         get 'kyc/:uuid',             to: 'mitras#show_kyc'
         post 'datatable',            to: 'mitras#datatable'
+        post 'transaction',          to: 'mitras#transaction'
         get 'activation-code/:code', to: 'mitras#active_code'
         post 'kyc/status/:uuid',     to: 'mitras#set_status'
         post 'profile-update',       to: 'mitras#update_profile'
         get 'active',                to: 'mitras#mitra_active'
-        get 'dropbox',               to: 'mitras#dropbox'
+        get 'dropbox',               to: 'mitras#dropbox'        
         get 'balance',               to: 'mitras#balance'
         post '',                     to: 'mitras#create'
 
