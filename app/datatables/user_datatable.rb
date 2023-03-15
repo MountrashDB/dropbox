@@ -5,8 +5,9 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
     # or in aliased_join_table.column_name format
     @view_columns ||= {
       id: { source: "User.id", cond: :eq },
-      name: { source: "User.name", cond: :like },
+      username: { source: "User.username", cond: :like },
       email: { source: "User.email", cond: :like },      
+      uuid: { source: "User.uuid", cond: :like },      
       active: { source: "User.active", cond: :eq },      
     }
   end
@@ -15,7 +16,8 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
     records.map do |record|
       {
         id: record.id,
-        name: record.name,
+        uuid: record.uuid,
+        username: record.username,
         email: record.email,
         active: record.active
       }
@@ -23,7 +25,6 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    # insert query here
     User.all
   end
 
