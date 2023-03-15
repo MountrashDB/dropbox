@@ -206,5 +206,27 @@ class Api::V1::UsersController < AdminController
     end
   end
 
+  def forgot_password    
+    if user = User.find_by(email: params[:email])
+      raw, enc = Devise.token_generator.generate(User, :reset_password_token)
+      user.update(reset_password_token: enc, reset_password_sent_at: Time.now())
+      render json: {message: "Success", token: enc}
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
+  end
+
+  def reset_password
+    if user = User.find_by(reset_password_token: params[:token])
+      if user.reset_password(params[:new_password], params[:password_confirmation])
+        render json: {message: "Success"}
+      else
+        render json: {error: mitra.errors}
+      end
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end      
+  end
+
   private
 end
