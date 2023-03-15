@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       scope 'user' do
         get 'check-botol',         to: 'users#check_botol'
         get 'balance',             to: 'users#balance'
+        get 'profile',             to: 'users#profile'
         get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
         # post 'change-password',    to: 'users#change_password'

@@ -8,7 +8,8 @@ class Api::V1::UsersController < AdminController
   before_action :check_user_token, only: [
     :scan,
     :check_botol,
-    :balance
+    :balance,
+    :profile
   ]
 
   if Rails.env.production?
@@ -140,11 +141,7 @@ class Api::V1::UsersController < AdminController
       transaction.mitra_amount = mitra_amount
       transaction.user_amount = user_amount
       transaction.foto = params[:foto]
-      # transaction.foto.attach(params[:foto])
       if transaction.save
-        # if params[:foto]
-        #   transaction.foto.attach(params[:foto])
-        # end
         render json: {message: "Success"}
       else
         render json: transaction.errors
@@ -166,6 +163,10 @@ class Api::V1::UsersController < AdminController
     else
       render json: {balance: 0}
     end
+  end
+
+  def profile
+    render json: @current_user
   end
 
   private
