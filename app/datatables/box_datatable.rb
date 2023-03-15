@@ -14,6 +14,8 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       longitude: { source: "Box.longitude", cond: :like },
       mitra: { source: "Mitra.name", cond: :like, searchable: true },
       max: { source: "Box.max", cond: :eq },
+      mitra_share: { source: "Box.mitra_share" },
+      user_share: { source: "Box.user_share"}
     }
   end
 
@@ -28,7 +30,9 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
         qr_code: record.qr_code,
         latitude: record.latitude,
         longitude: record.longitude,
-        mitra: record.mitra.name
+        mitra: record.mitra.name,
+        mitra_share: record.mitra_share,
+        user_share: record.user_share
       }
     end
   end
