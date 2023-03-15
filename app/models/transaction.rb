@@ -15,9 +15,7 @@
 #  user_id      :integer
 #
 class Transaction < ApplicationRecord
-  has_one_attached :foto, dependent: :destroy, service: :cloudinary do |attachable|
-    attachable.variant :kotak, resize_to_limit: [300, 300]
-  end
+  has_one_attached :foto, dependent: :destroy, service: :cloudinary
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user

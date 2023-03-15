@@ -1,4 +1,5 @@
 class Api::V1::MitrasController < AdminController
+  include ActiveStorage::SetCurrent
   before_action :check_mitra_token, only: [
     :create_kyc,
     :profile,
