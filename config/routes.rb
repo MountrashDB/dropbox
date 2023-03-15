@@ -38,7 +38,7 @@ Rails.application.routes.draw do
         post 'datatable',          to: 'users#datatable'
         # post 'change-password',    to: 'users#change_password'
         delete ':uuid',            to: 'users#destroy'
-        patch ':uuid',             to: 'users#update'
+        patch ':uuid',             to: 'users#update_profile'
       end
 
       scope 'merk' do
