@@ -9,7 +9,8 @@ class Api::V1::UsersController < AdminController
     :scan,
     :check_botol,
     :balance,
-    :profile
+    :profile,
+    :update_profile
   ]
 
   if Rails.env.production?
@@ -105,6 +106,19 @@ class Api::V1::UsersController < AdminController
     end    
   end
 
+  def update_profile
+    user = User.find_by(uuid: params[:uuid])
+    if user
+      user.name = params[:name]
+      user.email = params[:email]      
+      user.active = params[:active]
+      user.save
+      render json: user
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end    
+  end
+
   def destroy    
     if user = User.find_by(uuid: params[:uuid])
       user.delete
@@ -165,8 +179,24 @@ class Api::V1::UsersController < AdminController
     end
   end
 
-  def profile
+  def profile    
     render json: @current_user
+  end
+
+  def update_profile
+    user = User.find(@current_user.id)
+    if user
+      user.username = params[:username] if params[:username]
+      user.email = params[:email] if params[:email]
+      user.phone = params[:phone] if params[:phone]
+      if user.save
+        render json: {message: "Success"}
+      else
+        render json: user.errors
+      end
+    else
+      render json: {message: "Not found"}, status: :not_found
+    end
   end
 
   private
