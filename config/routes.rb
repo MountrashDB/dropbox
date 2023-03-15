@@ -34,11 +34,12 @@ Rails.application.routes.draw do
         get 'check-botol',         to: 'users#check_botol'
         get 'balance',             to: 'users#balance'
         get 'profile',             to: 'users#profile'
-        get ':uuid',               to: 'users#show'
         post 'datatable',          to: 'users#datatable'
         post 'rewards',            to: 'users#rewards'
+        post 'update-user/:user_uuid', to: 'users#update_user'
         post 'forgot-password',    to: 'users#forgot_password'
         post 'reset-password/:token', to: 'users#reset_password'
+        get ':uuid',               to: 'users#show'
         delete ':uuid',            to: 'users#destroy'
         patch ':uuid',             to: 'users#update_profile'
       end

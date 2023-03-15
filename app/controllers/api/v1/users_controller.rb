@@ -4,7 +4,8 @@ class Api::V1::UsersController < AdminController
   before_action :check_admin_token, only: [
     :show,
     :datatable,
-    :destroy
+    :destroy,
+    :update_user
   ]
 
   before_action :check_user_token, only: [
@@ -100,30 +101,35 @@ class Api::V1::UsersController < AdminController
     end
   end
 
-  def update
-    user = User.find_by(uuid: params[:uuid])
-    if user
-      user.name = params[:name]
-      user.email = params[:email]      
-      user.active = params[:active]
-      user.save
-      render json: user
-    else
-      render json: {message: "Not found"}, status: :not_found
-    end    
-  end
+  # def update
+  #   user = User.find_by(uuid: params[:uuid])
+  #   if user
+  #     user.username = params[:username]
+  #     user.email = params[:email]      
+  #     user.active = params[:active]
+  #     user.save
+  #     render json: user
+  #   else
+  #     render json: {message: "Not found"}, status: :not_found
+  #   end    
+  # end
 
-  def update_profile
-    user = User.find_by(uuid: params[:uuid])
+  def update_user # Used by admin
+    user = User.find_by(uuid: params[:user_uuid])
     if user
-      user.name = params[:name]
-      user.email = params[:email]      
-      user.active = params[:active]
-      user.save
-      render json: user
+      user.username = params[:username] if params[:username]
+      user.email = params[:email] if params[:email]
+      user.phone = params[:phone] if params[:phone]
+      user.active = params[:active] if params[:active]
+      user.reset_password(params[:password], params[:password_confirmation]) if params[:password]
+      if user.save
+        render json: UserBlueprint.render(user, view: :register)
+      else
+        render json: user.errors
+      end
     else
       render json: {message: "Not found"}, status: :not_found
-    end    
+    end
   end
 
   def destroy    
@@ -206,6 +212,8 @@ class Api::V1::UsersController < AdminController
       render json: {message: "Not found"}, status: :not_found
     end
   end
+
+  
 
   def forgot_password    
     if user = User.find_by(email: params[:email])
