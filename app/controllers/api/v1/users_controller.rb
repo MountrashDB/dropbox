@@ -14,7 +14,8 @@ class Api::V1::UsersController < AdminController
     :balance,
     :profile,
     :update_profile,
-    :rewards
+    :rewards,
+    :rss
   ]
 
   if Rails.env.production?
@@ -235,6 +236,25 @@ class Api::V1::UsersController < AdminController
     else
       render json: {message: "Not found"}, status: :not_found
     end      
+  end
+
+  def get_rss
+    require 'rss'
+    require 'open-uri'
+    url = 'https://news.mountrash.com/feed/'
+    arr_items = []
+    URI.open(url) do |rss|
+      feed = RSS::Parser.parse(rss)
+      feed.items.each do |item|
+        data = {
+          title: item.title,
+          link: item.link,
+          description: item.description
+        }
+        arr_items.push(data)
+      end
+    end
+    render json: arr_items
   end
 
   private

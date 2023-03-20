@@ -90,3 +90,6 @@ gem "rqrcode", "~> 2.0"
 gem 'simple_token_authentication', '~> 1.0'
 gem 'yajl-ruby', require: 'yajl' # SPeed JSON rendering
 gem 'draper'
+gem 'imatcher'
+gem 'rss'
+gem 'open-uri'

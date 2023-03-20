@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         post 'update-user/:user_uuid', to: 'users#update_user'        
         post 'forgot-password',    to: 'users#forgot_password'
         post 'reset-password/:token', to: 'users#reset_password'
+        get 'news',                to: 'users#get_rss'
         get ':uuid',               to: 'users#show'
         delete ':uuid',            to: 'users#destroy'
         patch '',                  to: 'users#update_profile'
