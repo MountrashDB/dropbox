@@ -240,7 +240,7 @@ class Api::V1::UsersController < AdminController
 
   def get_rss
     require 'rss'
-    require 'open-uri'
+    # require 'open-uri'
     url = 'https://news.mountrash.com/feed/'
     arr_items = []
     URI.open(url) do |rss|

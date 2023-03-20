@@ -92,4 +92,4 @@ gem 'yajl-ruby', require: 'yajl' # SPeed JSON rendering
 gem 'draper'
 gem 'imatcher'
 gem 'rss'
-gem 'open-uri'
+# gem 'open-uri'
