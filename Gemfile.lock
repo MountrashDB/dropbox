@@ -257,6 +257,7 @@ GEM
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+    rufo (0.15.1)
     selenium-webdriver (4.8.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -327,6 +328,7 @@ DEPENDENCIES
   redis (~> 4.0)
   rqrcode (~> 2.0)
   rss
+  rufo
   selenium-webdriver
   simple_token_authentication (~> 1.0)
   sprockets-rails

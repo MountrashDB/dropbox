@@ -25,23 +25,23 @@
 #  user_id       :integer
 #
 class Box < ApplicationRecord
-    validates :uuid, uniqueness: true
-    validates :nama, presence: true
-    validates :cycles, presence: true
-    validates :jenis, presence: true
-    validates :cycles, presence: true
-    validates :revenue, presence: true
-    validates :user_share, presence: true
-    validates :mitra_share, presence: true
-    belongs_to :mitra
-    belongs_to :admin
-    belongs_to :user, optional: true
-    before_create :set_uuid
-    scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
+  validates :uuid, uniqueness: true
+  validates :nama, presence: true
+  validates :cycles, presence: true
+  validates :jenis, presence: true
+  validates :cycles, presence: true
+  validates :revenue, presence: true
+  validates :user_share, presence: true
+  validates :mitra_share, presence: true
+  belongs_to :mitra
+  belongs_to :admin
+  belongs_to :user, optional: true
+  before_create :set_uuid
+  scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
 
-    def set_uuid
-        self.uuid = SecureRandom.uuid
-        self.qr_code = self.uuid
-        self.type_progress = "ongoing"        
-    end
+  def set_uuid
+    self.uuid = SecureRandom.uuid
+    self.qr_code = self.uuid
+    self.type_progress = "ongoing"
+  end
 end
