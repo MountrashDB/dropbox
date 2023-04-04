@@ -23,38 +23,36 @@ class Transaction < ApplicationRecord
 
   after_create :set_balance
   before_create :send_notify
-  
+
   def set_uuid
-      self.uuid = SecureRandom.uuid
+    self.uuid = SecureRandom.uuid
   end
 
   def send_notify
     NotifyChannel.broadcast_to self.user.uuid, status: "process"
   end
 
-  def set_balance    
-    trx = Usertransaction.where(user_id: self.user_id).last    
+  def set_balance
+    trx = Usertransaction.where(user_id: self.user_id).last
     description = "Reward Trx: " + self.id.to_s
     if trx
       balance = trx.balance
-      trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance+self.user_amount, description: description)
+      trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance + self.user_amount, description: description)
     else
       Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
     end
 
-    trx = Mitratransaction.where(mitra_id: self.mitra_id).last    
+    trx = Mitratransaction.where(mitra_id: self.mitra_id).last
     if trx
       balance = trx.balance
-      trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance+self.mitra_amount, description: description)
+      trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance + self.mitra_amount, description: description)
     else
       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
-    end    
-    puts "===================="
-    puts self.foto.variant(:kotak).url
-    # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
-    NotifyChannel.broadcast_to self.user.uuid, 
-      status: "complete", 
-      image: self.foto.variant(:kotak).url, 
+    end
+    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
+    NotifyChannel.broadcast_to self.user.uuid,
+      status: "complete",
+      image: foto_url,
       diterima: true
   end
 end
