@@ -1,5 +1,4 @@
 class BoxDatatable < AjaxDatatablesRails::ActiveRecord
-
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
@@ -15,7 +14,7 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       mitra: { source: "Mitra.name", cond: :like, searchable: true },
       max: { source: "Box.max", cond: :eq },
       mitra_share: { source: "Box.mitra_share" },
-      user_share: { source: "Box.user_share"}
+      user_share: { source: "Box.user_share" },
     }
   end
 
@@ -32,7 +31,7 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
         longitude: record.longitude,
         mitra: record.mitra.name,
         mitra_share: record.mitra_share,
-        user_share: record.user_share
+        user_share: record.user_share,
       }
     end
   end
@@ -44,10 +43,10 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
   def get_raw_records
     if current_mitra
       # Mitra list
-      Box.where(mitra_id: current_mitra.id)
+      Box.where(mitra_id: current_mitra.id).joins(:mitra)
     else
       # Admin list
-      Box.all 
+      Box.all.joins(:mitra)
     end
   end
 end
