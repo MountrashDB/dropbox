@@ -24,6 +24,14 @@ class Transaction < ApplicationRecord
   after_create :set_balance
   before_create :send_notify
 
+  def set_foto_folder(folder_name)
+    # This method sets the folder for the foto attachment
+    if foto.attached?
+      foto.blob.update!(filename: foto.blob.filename,
+                        key: "#{folder_name}/#{foto.blob.key}")
+    end
+  end
+
   def set_uuid
     self.uuid = SecureRandom.uuid
   end
