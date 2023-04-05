@@ -15,6 +15,7 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       max: { source: "Box.max", cond: :eq },
       mitra_share: { source: "Box.mitra_share" },
       user_share: { source: "Box.user_share" },
+      created_at: { source: "Box.created_at" },
     }
   end
 
@@ -32,6 +33,7 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
         mitra: record.mitra.name,
         mitra_share: record.mitra_share,
         user_share: record.user_share,
+        created_at: record.created_at,
       }
     end
   end
