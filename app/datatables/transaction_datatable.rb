@@ -10,7 +10,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       user_amount: { source: "Transaction.user_amount" },
       box: { source: "Box.nama", cond: :like, searchable: true },
       mitra: { source: "Mitra.name", cond: :like, searchable: true },
-      user: { source: "User.name", cond: :like, searchable: true },
+      user: { source: "User.username", cond: :like, searchable: true },
       foto: { source: "Transaction.foto" },
       created_at: { source: "Transaction.created_at", cond: :like, searchable: true },
     }
@@ -30,7 +30,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
         user_amount: record.user_amount,
         box: record.box.nama,
         mitra: record.mitra.name,
-        user: record.user.name,
+        user: record.user.username,
         image: record.foto.url,
         created_at: record.created_at,
       }
