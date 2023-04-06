@@ -1,5 +1,4 @@
 class MitraDatatable < AjaxDatatablesRails::ActiveRecord
-
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
@@ -10,7 +9,7 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
       email: { source: "Mitra.email", cond: :like },
       contact: { source: "Mitra.contact", cond: :like },
       status: { source: "Mitra.status", cond: :eq },
-
+      created_at: { source: "Mitra.created_at" },
     }
   end
 
@@ -23,7 +22,8 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
         phone: record.phone,
         email: record.email,
         contact: record.contact,
-        status: record.status
+        status: record.status,
+        created_at: record.created_at,
       }
     end
   end
@@ -31,5 +31,4 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
   def get_raw_records
     Mitra.all
   end
-
 end
