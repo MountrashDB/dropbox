@@ -58,7 +58,7 @@ group :development do
   # gem "web-console"
   # gem "spring"
   # gem 'faker'
-  gem 'annotate'
+  gem "annotate"
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
@@ -73,24 +73,24 @@ group :test do
   gem "webdrivers"
 end
 
-gem 'pagy'
-gem 'mysql2'
-gem 'ransack'
-gem 'blueprinter'
-gem 'jwt'
-gem 'devise'
-gem 'rack-cors'
-gem 'ajax-datatables-rails'
-gem 'cloudinary'                                # Assets upload
-gem 'capistrano', '~> 3.11'
-gem 'capistrano-rails', '~> 1.4'
-gem 'capistrano-passenger', '~> 0.2.0'
-gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+gem "pagy"
+gem "mysql2"
+gem "ransack"
+gem "blueprinter"
+gem "jwt"
+gem "devise"
+gem "rack-cors"
+gem "ajax-datatables-rails"
+gem "cloudinary"                                # Assets upload
+gem "capistrano", "~> 3.11"
+gem "capistrano-rails", "~> 1.4"
+gem "capistrano-passenger", "~> 0.2.0"
+gem "capistrano-rbenv", "~> 2.1", ">= 2.1.4"
 gem "rqrcode", "~> 2.0"
-gem 'simple_token_authentication', '~> 1.0'
-gem 'yajl-ruby', require: 'yajl' # SPeed JSON rendering
-gem 'draper'
-gem 'imatcher'
-gem 'rss'
+gem "simple_token_authentication", "~> 1.0"
+gem "yajl-ruby", require: "yajl" # SPeed JSON rendering
+gem "draper"
+gem "imatcher"
+gem "rss"
 # gem 'open-uri'
-gem 'rufo'
+gem "rufo"
