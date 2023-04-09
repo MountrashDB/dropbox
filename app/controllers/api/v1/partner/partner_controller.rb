@@ -50,6 +50,7 @@ class Api::V1::Partner::PartnerController < PartnerController
   def verify
     partner = Partner.find_by(uuid: params[:uuid], verified: nil)
     if partner
+      partner.update(verified: true)
       render json: PartnerBlueprint.render(partner, view: :login)
     else
       render json: { message: "Not found or already verified" }, status: :not_found
