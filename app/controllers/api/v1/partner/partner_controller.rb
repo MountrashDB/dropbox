@@ -34,7 +34,7 @@ class Api::V1::Partner::PartnerController < PartnerController
   end
 
   def login
-    partner = Partner.find_by(email: params[:email], verified: true, approved: true)
+    partner = Partner.find_by(email: params[:email], verified: true)
     if partner && partner.authenticate(params[:password])
       payload = {
         uuid: partner.uuid,
