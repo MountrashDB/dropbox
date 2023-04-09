@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_11_174437) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_08_161332) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -175,6 +175,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_174437) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["mitra_id"], name: "index_mitratransactions_on_mitra_id"
+  end
+
+  create_table "partners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.string "nama"
+    t.string "nama_usaha"
+    t.string "handphone"
+    t.text "alamat_kantor"
+    t.string "email"
+    t.string "password_digest"
+    t.boolean "verified"
+    t.boolean "approved"
+    t.string "api_key"
+    t.string "api_secret"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
