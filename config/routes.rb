@@ -119,7 +119,7 @@ Rails.application.routes.draw do
       namespace :partner do
         post "register", to: "partner#register"
         post "login", to: "partner#login"
-        post "verify", to: "partner#verify"
+        get "verify/:uuid", to: "partner#verify"
         post "change-password", to: "partner#change_password"
         scope :admin do
           get "test", to: "admin#home"
