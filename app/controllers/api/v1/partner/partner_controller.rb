@@ -34,16 +34,20 @@ class Api::V1::Partner::PartnerController < PartnerController
   end
 
   def login
-    partner = Partner.find_by(email: params[:email], verified: true)
+    partner = Partner.find_by(email: params[:email])
     if partner && partner.authenticate(params[:password])
-      payload = {
-        uuid: partner.uuid,
-        exp: Time.now.to_i + @@token_expired,
-      }
-      jwt = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
-      render json: { jwt: jwt, email: partner.email, nama: partner.nama, api_key: partner.api_key, api_secret: partner.api_secret }
+      if partner.verified
+        payload = {
+          uuid: partner.uuid,
+          exp: Time.now.to_i + @@token_expired,
+        }
+        jwt = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        render json: { uuid: partner.uuid, jwt: jwt, email: partner.email, nama: partner.nama, api_key: partner.api_key, api_secret: partner.api_secret }
+      else
+        render json: { message: "Not yet verified" }, status: :not_found
+      end
     else
-      render json: { message: "Not yet verified or not yet approved" }, status: :not_found
+      render json: { message: "Email or password not match" }, status: :not_found
     end
   end
 
