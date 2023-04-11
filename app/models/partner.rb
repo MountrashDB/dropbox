@@ -42,4 +42,9 @@ class Partner < ApplicationRecord
       false
     end
   end
+
+  def self.get_jwt(jwt)
+    decode = JWT.decode jwt, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+    partner = Partner.find_by(uuid: decode[0]["uuid"])
+  end
 end
