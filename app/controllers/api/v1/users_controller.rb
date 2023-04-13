@@ -52,6 +52,14 @@ class Api::V1::UsersController < AdminController
     user.phone = params[:phone]
     user.password = params[:password]
     user.password_confirmation = params[:password_confirmation]
+    begin
+      headers = request.headers
+      jwt = headers["Authorization"].split(" ").last
+      partner = Partner.get_jwt(jwt)
+      user.partner_id = partner.id
+    rescue
+      # Do nothing
+    end
     if user.save
       render json: UserBlueprint.render(user, view: :register)
     else

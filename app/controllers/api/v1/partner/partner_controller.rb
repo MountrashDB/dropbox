@@ -1,6 +1,7 @@
 class Api::V1::Partner::PartnerController < PartnerController
   before_action :check_partner_token, only: [
                                         :change_password,
+                                        :dashboard,
                                       ]
 
   if Rails.env.production?
@@ -73,5 +74,9 @@ class Api::V1::Partner::PartnerController < PartnerController
     else
       render json: { message: "Old password not match" }, status: :not_found
     end
+  end
+
+  def dashboard
+    render json: Partner.dashboard(@current_partner.id)
   end
 end

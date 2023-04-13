@@ -19,6 +19,7 @@
 #  uuid                   :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  partner_id             :integer
 #
 
 class Mitra < ApplicationRecord
@@ -28,26 +29,27 @@ class Mitra < ApplicationRecord
          :recoverable, :rememberable, :validatable
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
   validates :name, presence: true
-  validates :email, length: { in: 1..100 },  presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
-  before_create :set_uuid    
+  validates :email, length: { in: 1..100 }, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+  before_create :set_uuid
   has_many :kyc
-  has_many :transactions  
-  has_one_attached :image, dependent: :destroy, service: :cloudinary 
+  has_many :transactions
+  belongs_to :partner, optional: true
+  has_one_attached :image, dependent: :destroy, service: :cloudinary
   scope :active, -> { where(status: 1) }
 
   def set_uuid
-      self.uuid = SecureRandom.uuid
-      self.activation_code = rand(100000000..999999999)
-      self.status = 0    
+    self.uuid = SecureRandom.uuid
+    self.activation_code = rand(100000000..999999999)
+    self.status = 0
   end
 
   def self.get_mitra(headers)
-    token = headers['Authorization'].split(' ').last    
+    token = headers["Authorization"].split(" ").last
     begin
       decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
-      @current_mitra = Mitra.find_by(uuid: decode[0]["mitra_uuid"])      
+      @current_mitra = Mitra.find_by(uuid: decode[0]["mitra_uuid"])
     rescue JWT::ExpiredSignature
       false
-    end    
+    end
   end
 end

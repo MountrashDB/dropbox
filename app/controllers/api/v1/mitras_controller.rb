@@ -1,31 +1,31 @@
 class Api::V1::MitrasController < AdminController
   include ActiveStorage::SetCurrent
   before_action :check_mitra_token, only: [
-    :create_kyc,
-    :profile,
-    :update_profile,
-    :box_datatable,
-    :balance,
-    :transaction,
-    :show_self_kyc
-  ]
+                                      :create_kyc,
+                                      :profile,
+                                      :update_profile,
+                                      :box_datatable,
+                                      :balance,
+                                      :transaction,
+                                      :show_self_kyc,
+                                    ]
 
   before_action :check_admin_token, only: [
-    :show,
-    :show_kyc,
-    :mitra_kyc,
-    :datatable,
-    :active
-  ]
+                                      :show,
+                                      :show_kyc,
+                                      :mitra_kyc,
+                                      :datatable,
+                                      :active,
+                                    ]
 
   if Rails.env.production?
-    @@token_expired  = 3.days.to_i
+    @@token_expired = 3.days.to_i
   else
-    @@token_expired  = 30.days.to_i
+    @@token_expired = 30.days.to_i
   end
 
   def active
-    render json: {message: "active"}
+    render json: { message: "active" }
     # if params[:search]
     #   render json: Mitra.active.where("name LIKE ?", "%" + params[:search] + "%")
     # else
@@ -38,7 +38,7 @@ class Api::V1::MitrasController < AdminController
     if mitra
       render json: MitraBlueprint.render(mitra, view: :show)
     else
-      render json: {message: "Not found"}, status: :not_found
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
@@ -48,19 +48,19 @@ class Api::V1::MitrasController < AdminController
       kyc.update(status: params[:status])
       if params[:status] == 1
         Mitra.find(kyc.mitra_id).update(status: params[:status])
-      end 
-      render json: {message: "Updated"}
+      end
+      render json: { message: "Updated" }
     else
-      render json: {message: "Not found"}, status: :not_found
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
-  def datatable    
-    render json: MitraDatatable.new(params)    
+  def datatable
+    render json: MitraDatatable.new(params)
   end
 
-  def mitra_kyc    
-    render json: KycDatatable.new(params)    
+  def mitra_kyc
+    render json: KycDatatable.new(params)
   end
 
   def show_self_kyc
@@ -71,7 +71,7 @@ class Api::V1::MitrasController < AdminController
     if kyc = Kyc.find_by(uuid: params[:uuid])
       render json: KycBlueprint.render(kyc)
     else
-      render json: {message: "Not found"}, status: :not_found
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
@@ -82,13 +82,21 @@ class Api::V1::MitrasController < AdminController
     mitra.phone = params[:phone]
     mitra.password = params[:password]
     mitra.password_confirmation = params[:password_confirmation]
+    begin
+      headers = request.headers
+      jwt = headers["Authorization"].split(" ").last
+      partner = Partner.get_jwt(jwt)
+      mitra.partner_id = partner.id
+    rescue
+      # Do nothing
+    end
     if mitra.save
       render json: MitraBlueprint.render(mitra, view: :register)
     else
       render json: mitra.errors
     end
   end
-  
+
   def create
     mitra = Mitra.new()
     mitra.name = params[:name]
@@ -118,16 +126,16 @@ class Api::V1::MitrasController < AdminController
       mitra.save
       render json: mitra
     else
-      render json: {message: "Not found"}, status: :not_found
-    end    
+      render json: { message: "Not found" }, status: :not_found
+    end
   end
 
-  def destroy    
+  def destroy
     if mitra = Mitra.find_by(uuid: params[:uuid])
       mitra.delete
-      render json: {message: "Deleted"}
+      render json: { message: "Deleted" }
     else
-      render json: {message: "Not found"}, status: :not_found
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
@@ -136,9 +144,9 @@ class Api::V1::MitrasController < AdminController
       mitra.status = 1
       mitra.activation_code = nil
       mitra.save
-      render json: {message: "Success"}
+      render json: { message: "Success" }
     else
-      render json: {message: "Not found or Activation Code not match"}, status: :not_found
+      render json: { message: "Not found or Activation Code not match" }, status: :not_found
     end
   end
 
@@ -146,21 +154,21 @@ class Api::V1::MitrasController < AdminController
     if mitra = Mitra.find_by(email: params[:email], status: 1)
       if mitra.valid_password?(params[:password])
         payload = {
-            mitra_uuid: mitra.uuid,
-            exp: Time.now.to_i + @@token_expired
+          mitra_uuid: mitra.uuid,
+          exp: Time.now.to_i + @@token_expired,
         }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm        
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
         kyc = Kyc.where(mitra_id: mitra.id).last
-        render json: {token: token, kyc_status: kyc != nil ? kyc.status : -1, uuid: mitra.uuid, id: mitra.id}
+        render json: { token: token, kyc_status: kyc != nil ? kyc.status : -1, uuid: mitra.uuid, id: mitra.id }
       else
-        render json: {message: "Not found"}, status: :unauthorized
+        render json: { message: "Not found" }, status: :unauthorized
       end
     else
-      render json: {message: "Not found"}, status: :unauthorized
+      render json: { message: "Not found" }, status: :unauthorized
     end
   end
 
-  def create_kyc          
+  def create_kyc
     kyc = Kyc.new()
     kyc.agama = params[:agama]
     kyc.desa = params[:desa]
@@ -177,9 +185,9 @@ class Api::V1::MitrasController < AdminController
     kyc.ktp_image.attach(params[:ktp_image])
     kyc.mitra_id = @current_mitra.id
     if kyc.save
-      render json: {message: "Success"}
+      render json: { message: "Success" }
     else
-      render json: {error: kyc.errors}
+      render json: { error: kyc.errors }
     end
   end
 
@@ -188,7 +196,7 @@ class Api::V1::MitrasController < AdminController
   end
 
   def update_profile
-    mitra = Mitra.find(@current_mitra.id)      
+    mitra = Mitra.find(@current_mitra.id)
     if mitra
       mitra.name = params[:name]
       mitra.phone = params[:phone]
@@ -200,23 +208,23 @@ class Api::V1::MitrasController < AdminController
         if mitra.valid_password?(params[:old_password]) && params[:password] == params[:password_confirmation]
           mitra.reset_password(params[:password], params[:password_confirmation])
         else
-          render json: {error: "Password not match"}
+          render json: { error: "Password not match" }
           return
         end
       end
-      if mitra.save   
+      if mitra.save
         render json: mitra
-      else 
-        render json: {error: mitra.errors}
+      else
+        render json: { error: mitra.errors }
       end
     else
-      render json: {message: "Not found"}, status: :not_found
-    end    
+      render json: { message: "Not found" }, status: :not_found
+    end
   end
 
   # Mitra's box
-  def box_datatable    
-    render json: BoxDatatable.new(params, current_mitra: @current_mitra)    
+  def box_datatable
+    render json: BoxDatatable.new(params, current_mitra: @current_mitra)
   end
 
   def mitra_active
@@ -231,39 +239,40 @@ class Api::V1::MitrasController < AdminController
   def balance
     trx = Mitratransaction.where(mitra_id: @current_mitra.id).last
     if trx
-      render json: {balance: trx.balance}
+      render json: { balance: trx.balance }
     else
-      render json: {balance: 0}
+      render json: { balance: 0 }
     end
   end
 
-  def transaction    
-    render json: TransactionDatatable.new(params, mitra_id: @current_mitra.id)    
+  def transaction
+    render json: TransactionDatatable.new(params, mitra_id: @current_mitra.id)
   end
 
-  def forgot_password    
+  def forgot_password
     if mitra = Mitra.find_by(email: params[:email])
       raw, enc = Devise.token_generator.generate(Mitra, :reset_password_token)
       mitra.update(reset_password_token: enc, reset_password_sent_at: Time.now())
-      render json: {message: "Success", token: enc}
+      render json: { message: "Success", token: enc }
     else
-      render json: {message: "Not found"}, status: :not_found
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
   def reset_password
     if mitra = Mitra.find_by(reset_password_token: params[:token])
       if mitra.reset_password(params[:new_password], params[:password_confirmation])
-        render json: {message: "Success"}
+        render json: { message: "Success" }
       else
-        render json: {error: mitra.errors}
+        render json: { error: mitra.errors }
       end
     else
-      render json: {message: "Not found"}, status: :not_found
-    end      
+      render json: { message: "Not found" }, status: :not_found
+    end
   end
 
   private
+
   def mitra_params
     params.permit(:name, :phone, :address, :image, :password, :password_confirmation)
   end

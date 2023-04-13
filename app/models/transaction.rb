@@ -23,6 +23,7 @@ class Transaction < ApplicationRecord
 
   after_create :set_balance
   before_create :send_notify
+  scope :berhasil, -> { where(diterima: true) }
 
   def set_foto_folder(folder_name)
     # This method sets the folder for the foto attachment

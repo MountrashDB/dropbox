@@ -47,4 +47,24 @@ class Partner < ApplicationRecord
     decode = JWT.decode jwt, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
     partner = Partner.find_by(uuid: decode[0]["uuid"])
   end
+
+  def self.dashboard(partner_id)
+    mitras = Mitra.where(partner_id: partner_id)
+    users = User.where(partner_id: partner_id)
+    transactions = Transaction.where(user: users)
+    result = {
+      mitra: {
+        active: mitras.active.count,
+        total: mitras.count,
+      },
+      user: {
+        active: users.active.count,
+        total: users.count,
+      },
+      transaction: {
+        success: transactions.berhasil.count,
+        total: transactions.count,
+      },
+    }
+  end
 end
