@@ -43,6 +43,5 @@ class Box < ApplicationRecord
   def set_uuid
     self.uuid = SecureRandom.uuid
     self.qr_code = self.uuid
-    # self.type_progress = "ongoing"
   end
 end
