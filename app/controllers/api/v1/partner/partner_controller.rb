@@ -2,6 +2,7 @@ class Api::V1::Partner::PartnerController < PartnerController
   before_action :check_partner_token, only: [
                                         :change_password,
                                         :dashboard,
+                                        :recent,
                                       ]
 
   if Rails.env.production?
@@ -78,5 +79,10 @@ class Api::V1::Partner::PartnerController < PartnerController
 
   def dashboard
     render json: Partner.dashboard(@current_partner.id)
+  end
+
+  def recent
+    users = User.where(partner_id: @current_partner.id).order(created_at: :desc).limit(10)
+    render json: UserBlueprint.render(users, view: :register)
   end
 end

@@ -122,6 +122,7 @@ Rails.application.routes.draw do
         get "verify/:uuid", to: "partner#verify"
         post "change-password", to: "partner#change_password"
         get "dashboard", to: "partner#dashboard"
+        get "recent", to: "partner#recent"
         scope :admin do
           get "test", to: "admin#home"
         end
