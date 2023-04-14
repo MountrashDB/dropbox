@@ -33,6 +33,7 @@ class Box < ApplicationRecord
   validates :revenue, presence: true
   validates :user_share, presence: true
   validates :mitra_share, presence: true
+  validates :type_progress, presence: true
   belongs_to :mitra
   belongs_to :admin
   belongs_to :user, optional: true
@@ -42,6 +43,6 @@ class Box < ApplicationRecord
   def set_uuid
     self.uuid = SecureRandom.uuid
     self.qr_code = self.uuid
-    self.type_progress = "ongoing"
+    # self.type_progress = "ongoing"
   end
 end
