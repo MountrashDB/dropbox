@@ -171,8 +171,8 @@ class Api::V1::UsersController < AdminController
       transaction.mitra = box.mitra
       transaction.user = box.user
       transaction.box_id = box.id
-      # transaction.harga = harga_botol
-      # transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
+      transaction.harga = harga_botol
+      transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
       transaction.mitra_amount = mitra_amount
       transaction.user_amount = user_amount
       image = params[:foto]
