@@ -152,6 +152,7 @@ class Api::V1::UsersController < AdminController
   def scan
     box = Box.find_by(uuid: params[:uuid], type_progress: "active")
     if box
+      Box.where(user: @current_user).update(user_id: nil)
       box.user_id = @current_user.id
       box.save
       render json: BoxBlueprint.render(box)
