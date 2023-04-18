@@ -4,12 +4,12 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
     # or in aliased_join_table.column_name format
     @view_columns ||= {
       uuid: { source: "Mitra.id", cond: :eq },
-      name: { source: "Mitra.name", cond: :like },
+      name: { source: "Mitra.name", cond: :like, orderable: true },
       phone: { source: "Mitra.phone", cond: :like },
-      email: { source: "Mitra.email", cond: :like },
+      email: { source: "Mitra.email", cond: :like, orderable: true },
       contact: { source: "Mitra.contact", cond: :like },
-      status: { source: "Mitra.status", cond: :eq },
-      created_at: { source: "Mitra.created_at" },
+      status: { source: "Mitra.status", cond: :eq, orderable: true },
+      created_at: { source: "Mitra.created_at", orderable: true },
     }
   end
 
