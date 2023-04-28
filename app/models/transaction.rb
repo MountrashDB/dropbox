@@ -42,26 +42,83 @@ class Transaction < ApplicationRecord
   end
 
   def set_balance
-    trx = Usertransaction.where(user_id: self.user_id).last
-    description = "Reward Trx: " + self.id.to_s
-    if trx
-      balance = trx.balance
-      trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance + self.user_amount, description: description)
-    else
-      Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
-    end
+    # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
+    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
+    sleep(2)
+    botol_valid = Botol.validate(foto_url)
+    if botol_valid
+      box = Box.find(self.box_id)
+      harga_botol = 65 # Nanti disesuaikan sesuai botol yang masuk
+      mitra_amount = box.mitra_share * harga_botol / 100
+      user_amount = box.user_share * harga_botol / 100
+      self.harga = harga_botol
+      self.diterima = true
+      self.save
+      trx = Usertransaction.where(user_id: self.user_id).last
+      description = "Reward Trx: " + self.id.to_s
+      if trx.balance
+        balance = trx.balance
+        user_amount = self.user_amount ? self.user_amount : 0
+        trx = Usertransaction.create!(user_id: self.user_id, credit: user_amount, balance: balance + user_amount, description: description)
+      else
+        Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
+      end
 
-    trx = Mitratransaction.where(mitra_id: self.mitra_id).last
-    if trx
-      balance = trx.balance
-      trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance + self.mitra_amount, description: description)
+      trx = Mitratransaction.where(mitra_id: self.mitra_id).last
+      if trx
+        balance = trx.balance ? trx.balance : 0
+        mitra_amount = self.mitra_amount ? self.mitra_amount : 0
+        trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: mitra_amount, balance: balance + mitra_amount, description: description)
+      else
+        Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
+      end
+      NotifyChannel.broadcast_to self.user.uuid,
+        status: "complete",
+        image: foto_url,
+        diterima: true
     else
-      Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
+      NotifyChannel.broadcast_to self.user.uuid,
+                                 status: "complete",
+                                 image: foto_url,
+                                 diterima: false
     end
-    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :fill)
-    NotifyChannel.broadcast_to self.user.uuid,
-      status: "complete",
-      image: foto_url,
-      diterima: true
+  end
+
+  def set_balance_old
+    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
+
+    if Botol.validate(foto_url)
+      puts "=== BETUL ==="
+      puts foto_url
+      # self.harga = harga_botol
+      # self.diterima = true
+      # self.save
+      trx = Usertransaction.where(user_id: self.user_id).last
+      description = "Reward Trx: " + self.id.to_s
+      if trx
+        balance = trx.balance
+        trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance + self.user_amount, description: description)
+      else
+        Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
+      end
+
+      trx = Mitratransaction.where(mitra_id: self.mitra_id).last
+      if trx
+        balance = trx.balance
+        trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance + self.mitra_amount, description: description)
+      else
+        Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
+      end
+      NotifyChannel.broadcast_to self.user.uuid,
+        status: "complete",
+        image: foto_url,
+        diterima: true
+    else
+      puts "=== INVALID ==="
+      NotifyChannel.broadcast_to self.user.uuid,
+                                 status: "complete",
+                                 image: foto_url,
+                                 diterima: false
+    end
   end
 end
