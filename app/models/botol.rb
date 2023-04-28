@@ -9,19 +9,56 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Botol validation
+# Di atas 75% ---> botol beneran
+
 class Botol < ApplicationRecord
   has_many :botol_harga, dependent: :destroy
-  has_one_attached :primary_image, dependent: :destroy, service: :cloudinary 
-  has_many_attached :images, dependent: :destroy, service: :cloudinary 
+  has_one_attached :primary_image, dependent: :destroy, service: :cloudinary
+  has_many_attached :images, dependent: :destroy, service: :cloudinary do |attachable|
+    attachable.variant :fix, resize_to_limit: [300, 300]
+  end
   before_create :set_uuid
+  # before_save :resize_images
+  SERVER_VALIDATION = "https://bottlenobottle.hasbala.cloud/predict"
 
   def set_uuid
-      self.uuid = SecureRandom.uuid
+    self.uuid = SecureRandom.uuid
   end
 
   def image
     if self.images[0].key
-      Cloudinary::Utils.cloudinary_url(self.images[0].key, :width => 200, :height => 200, :crop => :fill)
+      Cloudinary::Utils.cloudinary_url(self.images[0].key, :width => 300, :height => 300, :crop => :fill)
+    end
+  end
+
+  def self.validate(image_url)
+    begin
+      url = URI.parse(SERVER_VALIDATION)
+      https = Net::HTTP.new(url.host, url.port)
+      https.use_ssl = true
+      request = Net::HTTP::Post.new(url)
+      request["Content-Type"] = "application/json"
+      request.body = JSON.dump({
+        "url": image_url,
+      })
+      response = https.request(request)
+      result = JSON.parse(response.read_body)
+      puts "=== result ==="
+      puts result.code
+      is_botol = false
+      result.each do |data|
+        prob = data["probability"] * 100
+        if prob > 75
+          is_botol = true
+          break
+        end
+      end
+      puts "=== is_botol ==="
+      puts is_botol
+      is_botol
+    rescue # Jaga-jaga kalo server validationnya ngadat
+      true
     end
   end
 end
