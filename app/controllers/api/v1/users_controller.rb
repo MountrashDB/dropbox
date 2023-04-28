@@ -151,10 +151,9 @@ class Api::V1::UsersController < AdminController
 
   def scan
     Box.where(user: @current_user).update(user_id: nil)
-    box = Box.find_by(uuid: params[:uuid], type_progress: "active")
+    box = Box.find_by(uuid: params[:uuid])
     if box
-      box.user_id = @current_user.id
-      box.save
+      box.update!(user_id: @current_user.id)
       render json: BoxBlueprint.render(box)
     else
       render json: { message: "Not found" }, status: :not_found
