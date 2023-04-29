@@ -44,7 +44,6 @@ class Transaction < ApplicationRecord
   def set_balance
     # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
     foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
-    sleep(2)
     botol_valid = Botol.validate(foto_url)
     harga_botol = 65 # Nanti disesuaikan sesuai botol yang masuk
     if botol_valid
