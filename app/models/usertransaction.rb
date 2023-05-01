@@ -21,4 +21,5 @@
 #
 class Usertransaction < ApplicationRecord
   belongs_to :user
+  scope :balance, -> { pluck(:balance).last || 0 }
 end

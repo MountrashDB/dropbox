@@ -35,7 +35,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   scope :active, -> { where(active: true) }
 
-  has_many :transactions
+  has_many :transactions, dependent: :destroy
+  has_many :usertransactions, dependent: :destroy
+  has_one :user_bank, dependent: :destroy
   before_create :set_uuid
 
   def set_uuid

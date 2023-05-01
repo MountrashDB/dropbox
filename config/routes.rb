@@ -39,7 +39,9 @@ Rails.application.routes.draw do
         post "update-user/:user_uuid", to: "users#update_user"
         post "forgot-password", to: "users#forgot_password"
         post "reset-password/:token", to: "users#reset_password"
+        post "bank-info", to: "users#bank_info_update"
         get "news", to: "users#get_rss"
+        get "bank-info", to: "users#bank_info"
         get ":uuid", to: "users#show"
         delete ":uuid", to: "users#destroy"
         patch "", to: "users#update_profile"
@@ -105,6 +107,10 @@ Rails.application.routes.draw do
         get "district", to: "kyc#district"
         post "datatable", to: "mitras#mitra_kyc"
         get "total-waiting", to: "kyc#total_waiting"
+      end
+
+      scope "payment" do
+        get "bank-list", to: "payment#bank_list"
       end
 
       # User webapp

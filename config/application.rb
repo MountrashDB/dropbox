@@ -23,6 +23,7 @@ module Dropbox
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
+    config.cache_store = :memory_store, { size: 64.megabytes }
     config.api_only = true
     config.action_cable.disable_request_forgery_protection = true
     config.action_cable.url = "/cable"

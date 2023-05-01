@@ -16,6 +16,8 @@ class Api::V1::UsersController < AdminController
                                      :update_profile,
                                      :rewards,
                                      :rss,
+                                     :bank_info,
+                                     :bank_info_update,
                                    ]
 
   if Rails.env.production?
@@ -196,12 +198,7 @@ class Api::V1::UsersController < AdminController
   end
 
   def balance
-    trx = Usertransaction.where(user_id: @current_user.id).last
-    if trx
-      render json: { balance: trx.balance }
-    else
-      render json: { balance: 0 }
-    end
+    render json: { balance: User.find(@current_user.id).usertransactions.balance }
   end
 
   def profile
@@ -264,6 +261,43 @@ class Api::V1::UsersController < AdminController
       end
     end
     render json: arr_items
+  end
+
+  def bank_info
+    user_bank = UserBank.find_by(user_id: @current_user.id)
+    if user_bank
+      render json: {
+        nama: user_bank.nama,
+        nama_bank: user_bank.nama_bank,
+        rekening: user_bank.rekening,
+        kodeBank: user_bank.kodeBank,
+      }
+    else
+      render json: {
+        message: "Empty",
+      }
+    end
+  end
+
+  def bank_info_update
+    userbank = UserBank.find_by(user_id: @current_user.id)
+    if userbank
+      userbank.nama = params[:nama]
+      userbank.nama_bank = params[:nama_bank]
+      userbank.rekening = params[:rekening]
+      userbank.kodeBank = params[:kodeBank]
+      if userbank.save
+        render json: userbank
+      else
+        render json: { error: userbank.errors }
+      end
+    else
+      if userbank = UserBank.create!(user_id: @current_user.id, nama: params[:nama], nama_bank: params[:nama_bank], rekening: params[:rekening], kodeBank: params[:kodeBank])
+        render json: userbank
+      else
+        render json: { error: userbank.errors }
+      end
+    end
   end
 
   private
