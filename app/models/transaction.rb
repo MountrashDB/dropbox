@@ -57,7 +57,7 @@ class Transaction < ApplicationRecord
       self.save
       trx = Usertransaction.where(user_id: self.user_id).last
       description = "Reward Trx: " + self.id.to_s
-      if trx.balance
+      if trx
         balance = trx.balance
         user_amount = self.user_amount ? self.user_amount : 0
         trx = Usertransaction.create!(user_id: self.user_id, credit: user_amount, balance: balance + user_amount, description: description)
