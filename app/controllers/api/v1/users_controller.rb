@@ -100,7 +100,7 @@ class Api::V1::UsersController < AdminController
 
   def google_login
     if user = User.find_by(email: params[:email], google_id: params[:google_id])
-      if user
+      if user && params[:google_id]
         payload = {
           user_uuid: user.uuid,
           exp: Time.now.to_i + @@token_expired,
