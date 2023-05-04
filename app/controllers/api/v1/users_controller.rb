@@ -18,6 +18,7 @@ class Api::V1::UsersController < AdminController
                                      :rss,
                                      :bank_info,
                                      :bank_info_update,
+                                     :withdraw,
                                    ]
 
   if Rails.env.production?
@@ -83,6 +84,23 @@ class Api::V1::UsersController < AdminController
   def login
     if user = User.find_by(email: params[:email], active: true)
       if user.valid_password?(params[:password])
+        payload = {
+          user_uuid: user.uuid,
+          exp: Time.now.to_i + @@token_expired,
+        }
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
+      else
+        render json: { message: "Not found" }, status: :unauthorized
+      end
+    else
+      render json: { message: "Not found" }, status: :unauthorized
+    end
+  end
+
+  def google_login
+    if user = User.find_by(email: params[:email], google_id: params[:google_id])
+      if user
         payload = {
           user_uuid: user.uuid,
           exp: Time.now.to_i + @@token_expired,
@@ -281,22 +299,59 @@ class Api::V1::UsersController < AdminController
 
   def bank_info_update
     userbank = UserBank.find_by(user_id: @current_user.id)
+    bank_validation = User.validate_bank(params[:kodeBank], params[:rekening], params[:nama].upcase)
     if userbank
       userbank.nama = params[:nama]
       userbank.nama_bank = params[:nama_bank]
       userbank.rekening = params[:rekening]
       userbank.kodeBank = params[:kodeBank]
+      userbank.is_valid = bank_validation
       if userbank.save
         render json: userbank
       else
         render json: { error: userbank.errors }
       end
     else
-      if userbank = UserBank.create!(user_id: @current_user.id, nama: params[:nama], nama_bank: params[:nama_bank], rekening: params[:rekening], kodeBank: params[:kodeBank])
+      if userbank = UserBank.create!(
+        user_id: @current_user.id,
+        nama: params[:nama],
+        nama_bank: params[:nama_bank],
+        rekening: params[:rekening],
+        kodeBank: params[:kodeBank],
+        is_valid: bank_validation,
+      )
         render json: userbank
       else
         render json: { error: userbank.errors }
       end
+    end
+  end
+
+  def withdraw
+    user = User.find(@current_user.id)
+    balance = user.usertransactions.balance
+    if params[:amount] < balance
+      trx = Usertransaction.create!(
+        user_id: @current_user.id,
+        credit: 0,
+        debit: params[:amount],
+        balance: balance - params[:amount],
+        description: "Withdraw",
+      )
+      process = Withdrawl.new()
+      process.amount = params[:amount]
+      process.kodeBank = user.user_bank.kodeBank
+      process.nama = user.user_bank.nama
+      process.rekening = user.user_bank.rekening
+      process.user = @current_user
+      process.usertransaction_id = trx.id
+      if process.save
+        render json: { message: "Success" }
+      else
+        render json: { error: process.errors }
+      end
+    else
+      render json: { message: "Insuffient Balance" }, status: :bad_request
     end
   end
 

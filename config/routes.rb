@@ -1,3 +1,4 @@
+require "sidekiq/web"
 Rails.application.routes.draw do
   get "notify/index"
   # devise_for :mitras
@@ -40,6 +41,8 @@ Rails.application.routes.draw do
         post "forgot-password", to: "users#forgot_password"
         post "reset-password/:token", to: "users#reset_password"
         post "bank-info", to: "users#bank_info_update"
+        post "withdraw", to: "users#withdraw"
+        post "bank-validation", to: "payment#bank_validation"
         get "news", to: "users#get_rss"
         get "bank-info", to: "users#bank_info"
         get ":uuid", to: "users#show"
@@ -117,6 +120,7 @@ Rails.application.routes.draw do
       post "register", to: "users#register"
       get "register/activation-code/:code", to: "users#active_code"
       post "login", to: "users#login"
+      post "google-login", to: "users#google_login"
       scope :dropbox do
         get "views/:uuid", to: "users#scan"
         post "insert/:uuid", to: "users#insert"
@@ -135,5 +139,6 @@ Rails.application.routes.draw do
       end
     end
   end
+  mount Sidekiq::Web => "/sidekiq"
   mount ActionCable.server => "/cable"
 end
