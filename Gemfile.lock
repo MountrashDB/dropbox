@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (5.5.0)
+      concurrent-ruby (~> 1.0)
     actioncable (7.0.4.2)
       actionpack (= 7.0.4.2)
       activesupport (= 7.0.4.2)
@@ -72,6 +74,9 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    after_commit_everywhere (1.3.0)
+      activerecord (>= 4.2)
+      activesupport
     airbrussh (1.4.1)
       sshkit (>= 1.6.1, != 1.7.0)
     ajax-datatables-rails (1.4.0)
@@ -115,6 +120,7 @@ GEM
       aws_cf_signer
       rest-client (>= 2.0.0)
     concurrent-ruby (1.2.0)
+    connection_pool (2.4.0)
     crass (1.0.6)
     date (3.3.3)
     debug (1.7.1)
@@ -233,6 +239,8 @@ GEM
       activesupport (>= 6.1.5)
       i18n
     redis (4.8.1)
+    redis-client (0.14.1)
+      connection_pool
     regexp_parser (2.7.0)
     reline (0.3.2)
       io-console (~> 0.5)
@@ -262,6 +270,11 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sidekiq (7.1.0)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.14.0)
     simple_token_authentication (1.18.1)
       actionmailer (>= 3.2.6, < 8)
       actionpack (>= 3.2.6, < 8)
@@ -302,6 +315,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  aasm
+  after_commit_everywhere
   ajax-datatables-rails
   annotate
   blueprinter
@@ -330,6 +345,7 @@ DEPENDENCIES
   rss
   rufo
   selenium-webdriver
+  sidekiq
   simple_token_authentication (~> 1.0)
   sprockets-rails
   tzinfo-data

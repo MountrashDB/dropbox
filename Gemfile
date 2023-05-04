@@ -94,3 +94,9 @@ gem "imatcher"
 gem "rss"
 # gem 'open-uri'
 gem "rufo"
+gem "aasm" # For record status
+gem "after_commit_everywhere" # For AASM after_commit
+gem "sidekiq"
+# gem "sidekiq-status"
+# gem "sidekiq-cron"
+# gem "sidekiq-scheduler"

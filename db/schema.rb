@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_30_162013) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_02_140929) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -223,6 +223,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_30_162013) do
     t.string "rekening"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_valid"
     t.index ["user_id"], name: "index_user_banks_on_user_id"
   end
 
@@ -256,6 +257,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_30_162013) do
     t.index ["user_id"], name: "index_usertransactions_on_user_id"
   end
 
+  create_table "withdrawls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "usertransaction_id", null: false
+    t.float "amount"
+    t.string "status"
+    t.string "kodeBank"
+    t.string "rekening"
+    t.string "nama"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_withdrawls_on_user_id"
+    t.index ["usertransaction_id"], name: "index_withdrawls_on_usertransaction_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "botol_hargas", "botols"
@@ -270,4 +285,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_30_162013) do
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "user_banks", "users"
   add_foreign_key "usertransactions", "users"
+  add_foreign_key "withdrawls", "users"
+  add_foreign_key "withdrawls", "usertransactions"
 end

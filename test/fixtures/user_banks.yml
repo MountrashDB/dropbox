@@ -3,6 +3,7 @@
 # Table name: user_banks
 #
 #  id         :bigint           not null, primary key
+#  is_valid   :boolean
 #  kodeBank   :string(255)
 #  nama       :string(255)
 #  nama_bank  :string(255)
