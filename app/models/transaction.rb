@@ -73,6 +73,7 @@ class Transaction < ApplicationRecord
       else
         Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
       end
+      Box.insert_botol(self.box_id)
       NotifyChannel.broadcast_to self.user.uuid,
         status: "complete",
         image: foto_url,

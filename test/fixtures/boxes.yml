@@ -3,6 +3,7 @@
 # Table name: boxes
 #
 #  id            :bigint           not null, primary key
+#  botol_total   :integer
 #  cycles        :string(255)
 #  dates         :datetime
 #  jenis         :string(255)

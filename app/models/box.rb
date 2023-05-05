@@ -3,6 +3,7 @@
 # Table name: boxes
 #
 #  id            :bigint           not null, primary key
+#  botol_total   :integer
 #  cycles        :string(255)
 #  dates         :datetime
 #  jenis         :string(255)
@@ -43,5 +44,13 @@ class Box < ApplicationRecord
   def set_uuid
     self.uuid = SecureRandom.uuid
     self.qr_code = self.uuid
+  end
+
+  def self.insert_botol(id)
+    box = Box.find(id)
+    if box
+      total = box.botol_total || 0
+      box.update!(botol_total: total + 1)
+    end
   end
 end
