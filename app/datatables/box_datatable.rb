@@ -13,6 +13,7 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       longitude: { source: "Box.longitude", cond: :like },
       mitra: { source: "Mitra.name", cond: :like, searchable: true },
       max: { source: "Box.max", cond: :eq },
+      botol_total: { source: "Box.botol_total", cond: :eq },
       mitra_share: { source: "Box.mitra_share" },
       user_share: { source: "Box.user_share" },
       created_at: { source: "Box.created_at" },
@@ -32,6 +33,8 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
         longitude: record.longitude,
         mitra: record.mitra.name,
         mitra_share: record.mitra_share,
+        max: record.max,
+        botol_total: record.botol_total,
         user_share: record.user_share,
         created_at: record.created_at,
       }
