@@ -77,6 +77,7 @@ Rails.application.routes.draw do
         post "change-password", to: "admin#change_password"
         post "datatable", to: "admin#datatable"
         post "transaction", to: "admin#transaction"
+        post "withdraw", to: "admin#withdrawl"
         post "transaction/process/:uuid", to: "admin#transaction_process"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
