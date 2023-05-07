@@ -21,6 +21,8 @@ class Api::V1::UsersController < AdminController
                                      :withdraw,
                                    ]
 
+  @@fee = Rails.application.credentials.linkqu[:fee]
+
   if Rails.env.production?
     @@token_expired = 3.days.to_i
   else
@@ -330,12 +332,19 @@ class Api::V1::UsersController < AdminController
   def withdraw
     user = User.find(@current_user.id)
     balance = user.usertransactions.balance
-    if params[:amount] < balance
+    if params[:amount] + @@fee < balance
+      Usertransaction.create!(
+        user_id: @current_user.id,
+        credit: 0,
+        debit: @@fee,
+        balance: balance - @@fee,
+        description: "Withdraw Fee",
+      )
       trx = Usertransaction.create!(
         user_id: @current_user.id,
         credit: 0,
         debit: params[:amount],
-        balance: balance - params[:amount],
+        balance: balance - params[:amount] - @@fee,
         description: "Withdraw",
       )
       process = Withdrawl.new()

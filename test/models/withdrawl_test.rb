@@ -5,11 +5,13 @@
 #  id                 :bigint           not null, primary key
 #  amount             :float(24)
 #  kodeBank           :string(255)
+#  mitratransaction   :integer
 #  nama               :string(255)
 #  rekening           :string(255)
 #  status             :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  mitra_id           :integer
 #  user_id            :bigint           not null
 #  usertransaction_id :bigint           not null
 #

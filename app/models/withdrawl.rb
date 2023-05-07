@@ -5,11 +5,13 @@
 #  id                 :bigint           not null, primary key
 #  amount             :float(24)
 #  kodeBank           :string(255)
+#  mitratransaction   :integer
 #  nama               :string(255)
 #  rekening           :string(255)
 #  status             :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  mitra_id           :integer
 #  user_id            :bigint           not null
 #  usertransaction_id :bigint           not null
 #
@@ -26,10 +28,15 @@
 class Withdrawl < ApplicationRecord
   include AASM
 
-  belongs_to :user
-  belongs_to :usertransaction
+  belongs_to :user, optional: true
+  belongs_to :usertransaction, optional: true
+
+  belongs_to :mitra, optional: true
+  # belongs_to :usertransaction, optional: true
 
   after_create :send_money
+
+  @@fee = Rails.application.credentials.linkqu[:fee]
 
   aasm column: :status do
     state :requesting, initial: true
@@ -49,14 +56,14 @@ class Withdrawl < ApplicationRecord
     balance = user.usertransactions.balance
     trx = Usertransaction.create!(
       user_id: self.user_id,
-      credit: self.amount,
+      credit: self.amount + @@fee,
       debit: 0,
-      balance: balance + self.amount,
+      balance: balance + self.amount + @@fee,
       description: "Failed Withdraw",
     )
   end
 
   def send_money
-    SendMoneyJob.perform_in(5.seconds)
+    SendMoneyJob.perform_at(5.seconds.from_now, self.id)
   end
 end

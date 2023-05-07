@@ -1,7 +1,90 @@
+require "net/http"
+require "openssl"
+
 class SendMoneyJob
   include Sidekiq::Job
+  sidekiq_options retry: 0
 
-  def perform(*args)
-    puts "=== Job Send Money ==="
+  @@url = Rails.application.credentials.linkqu[:url]
+  @@username = Rails.application.credentials.linkqu[:username]
+  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@client_id = Rails.application.credentials.linkqu[:client_id]
+  @@client_secret = Rails.application.credentials.linkqu[:client_secret]
+  @@fee = Rails.application.credentials.linkqu[:fee]
+
+  # @@url = "https://gateway-dev.linkqu.id"
+  # @@username = "LI307GXIN"
+  # @@pin = "2K2NPCBBNNTovgB"
+  # @@client_id = "testing"
+  # @@client_secret = "123"
+
+  def perform(id)
+    trx = Withdrawl.find(id)
+    user = User.find(trx.user_id)
+    balance = user.usertransactions.balance
+    begin
+      # Inquiry before payment
+      url = URI.parse(@@url + "/linkqu-partner/transaction/withdraw/inquiry")
+      https = Net::HTTP.new(url.host, url.port)
+      https.use_ssl = true
+      request = Net::HTTP::Post.new(url)
+      request["Content-Type"] = "application/json"
+      request["client-id"] = @@client_id
+      request["client-secret"] = @@client_secret
+      partner_reff = "user|" + id.to_s
+      data = {
+        "username": @@username,
+        "pin": @@pin,
+        "bankcode": trx.kodeBank,
+        "amount": trx.amount,
+        "accountnumber": trx.rekening,
+        "accountname": trx.nama,
+        "partner_reff": partner_reff,
+        "sendername": "SmartDropbox",
+        "customeridentity": "user",
+        "category": "03",
+      }
+
+      request.body = JSON.dump(data)
+      response = https.request(request)
+      result = JSON.parse(response.read_body)
+      inquiry_reff = result["inquiry_reff"]
+
+      # Payment
+      url = URI.parse(@@url + "/linkqu-partner/transaction/withdraw/payment")
+      https = Net::HTTP.new(url.host, url.port)
+      https.use_ssl = true
+      request = Net::HTTP::Post.new(url)
+      request["Content-Type"] = "application/json"
+      request["client-id"] = @@client_id
+      request["client-secret"] = @@client_secret
+      data = {
+        "username": @@username,
+        "pin": @@pin,
+        "bankcode": trx.kodeBank,
+        "amount": trx.amount,
+        "accountnumber": trx.rekening,
+        "accountname": trx.nama,
+        "partner_reff": partner_reff,
+        "sendername": "SmartDropbox",
+        "inquiry_reff": inquiry_reff,
+        "customeridentity": "user",
+        "category": "03",
+      }
+
+      request.body = JSON.dump(data)
+      response = https.request(request)
+      result = JSON.parse(response.read_body)
+      if result["status"] == "FAILED"
+        logger.error "=== Failed WD ID #{trx.id} ==="
+        logger.error result
+        trx.gagal!
+      elsif result["status"] == "FAILED"
+        trx.success!
+      end
+    rescue #Reverse user balance
+      trx.gagal!
+      logger.error "=== Error WD #{trx.id} ==="
+    end
   end
 end

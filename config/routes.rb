@@ -1,6 +1,11 @@
 require "sidekiq/web"
+Sidekiq::Web.use ActionDispatch::Cookies
+Sidekiq::Web.use ActionDispatch::Session::CookieStore, key: "_interslice_session"
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq"
+
   get "notify/index"
+
   # devise_for :mitras
   # devise_for :admins
   # devise_for :users
@@ -9,6 +14,9 @@ Rails.application.routes.draw do
   root to: "home#index"
   namespace :api do
     namespace :v1 do
+      scope "callback" do
+        post "payment-linkqu", to: "callback#payment_linkqu"
+      end
       scope "box" do
         get "list", to: "boxes#list"
         get ":uuid", to: "boxes#show"
@@ -69,6 +77,7 @@ Rails.application.routes.draw do
         post "change-password", to: "admin#change_password"
         post "datatable", to: "admin#datatable"
         post "transaction", to: "admin#transaction"
+        post "transaction/process/:uuid", to: "admin#transaction_process"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
         patch ":uuid", to: "admin#update"
@@ -139,6 +148,5 @@ Rails.application.routes.draw do
       end
     end
   end
-  mount Sidekiq::Web => "/sidekiq"
   mount ActionCable.server => "/cable"
 end

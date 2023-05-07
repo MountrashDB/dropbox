@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_05_132421) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -97,6 +97,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_132421) do
     t.string "type_progress"
     t.integer "user_id"
     t.integer "botol_total"
+  end
+
+  create_table "callbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "body"
+    t.text "headers"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "cities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -203,6 +211,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_132421) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "server_responses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "body"
+    t.text "headers"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -268,6 +284,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_05_132421) do
     t.string "nama"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "mitra_id"
+    t.integer "mitratransaction"
     t.index ["user_id"], name: "index_withdrawls_on_user_id"
     t.index ["usertransaction_id"], name: "index_withdrawls_on_usertransaction_id"
   end

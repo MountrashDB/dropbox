@@ -15,6 +15,7 @@
 #  user_id      :integer
 #
 class Transaction < ApplicationRecord
+  include AASM
   has_one_attached :foto, dependent: :destroy, service: :cloudinary
   before_create :set_uuid
   belongs_to :mitra
@@ -53,7 +54,7 @@ class Transaction < ApplicationRecord
       self.mitra_amount = mitra_amount
       self.user_amount = user_amount
       self.harga = harga_botol
-      self.diterima = true
+      # self.diterima = true
       self.save
       trx = Usertransaction.where(user_id: self.user_id).last
       description = "Reward Trx: " + self.id.to_s
@@ -82,7 +83,7 @@ class Transaction < ApplicationRecord
       self.mitra_amount = 0
       self.user_amount = 0
       self.harga = harga_botol
-      self.diterima = false
+      # self.diterima = false
       self.save
       NotifyChannel.broadcast_to self.user.uuid,
                                  status: "complete",
