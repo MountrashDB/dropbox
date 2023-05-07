@@ -334,31 +334,34 @@ class Api::V1::UsersController < AdminController
     balance = user.usertransactions.balance
     if user.user_bank.is_valid?
       if params[:amount] + @@fee < balance
-        Usertransaction.create!(
-          user_id: @current_user.id,
-          credit: 0,
-          debit: @@fee,
-          balance: balance - @@fee,
-          description: "Withdraw Fee",
-        )
-        trx = Usertransaction.create!(
-          user_id: @current_user.id,
-          credit: 0,
-          debit: params[:amount],
-          balance: balance - params[:amount] - @@fee,
-          description: "Withdraw",
-        )
-        process = Withdrawl.new()
-        process.amount = params[:amount]
-        process.kodeBank = user.user_bank.kodeBank
-        process.nama = user.user_bank.nama
-        process.rekening = user.user_bank.rekening
-        process.user = @current_user
-        process.usertransaction_id = trx.id
-        if process.save
-          render json: { message: "Success" }
-        else
-          render json: { error: process.errors }, status: :bad_request
+        Withdrawl.transaction do
+          Usertransaction.create!(
+            user_id: @current_user.id,
+            credit: 0,
+            debit: @@fee,
+            balance: balance - @@fee,
+            description: "Withdraw Fee",
+          )
+          trx = Usertransaction.create!(
+            user_id: @current_user.id,
+            credit: 0,
+            debit: params[:amount],
+            balance: balance - params[:amount] - @@fee,
+            description: "Withdraw",
+          )
+          process = Withdrawl.new()
+          process.amount = params[:amount]
+          process.kodeBank = user.user_bank.kodeBank
+          process.nama = user.user_bank.nama
+          process.rekening = user.user_bank.rekening
+          process.user = @current_user
+          process.usertransaction_id = trx.id
+          if process.save
+            render json: { message: "Success" }
+          else
+            render json: { error: process.errors }, status: :bad_request
+            raise ActiveRecord::Rollback
+          end
         end
       else
         render json: { message: "Insuffient Balance" }, status: :bad_request

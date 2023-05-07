@@ -33,6 +33,7 @@ class Withdrawl < ApplicationRecord
 
   belongs_to :mitra, optional: true
   # belongs_to :usertransaction, optional: true
+  validates_numericality_of :amount, greater_than_or_equal_to: 10000
 
   after_create :send_money
 
