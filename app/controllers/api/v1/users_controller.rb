@@ -291,6 +291,7 @@ class Api::V1::UsersController < AdminController
         nama_bank: user_bank.nama_bank,
         rekening: user_bank.rekening,
         kodeBank: user_bank.kodeBank,
+        is_valid: user_bank.is_valid,
       }
     else
       render json: {

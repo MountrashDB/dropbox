@@ -34,9 +34,16 @@ class Mitra < ApplicationRecord
   has_many :kyc, dependent: :destroy
   has_many :box, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :mitratransactions, dependent: :destroy
+  has_one :mitra_bank, dependent: :destroy
+
   belongs_to :partner, optional: true
   has_one_attached :image, dependent: :destroy, service: :cloudinary
   scope :active, -> { where(status: 1) }
+
+  @@url = Rails.application.credentials.linkqu[:url]
+  @@username = Rails.application.credentials.linkqu[:username]
+  @@pin = Rails.application.credentials.linkqu[:pin]
 
   def set_uuid
     self.uuid = SecureRandom.uuid
@@ -50,6 +57,40 @@ class Mitra < ApplicationRecord
       decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
       @current_mitra = Mitra.find_by(uuid: decode[0]["mitra_uuid"])
     rescue JWT::ExpiredSignature
+      false
+    end
+  end
+
+  def self.validate_bank(bankcode, rekening, nama_rekening)
+    begin
+      url = URI.parse(@@url + "/linkqu-partner/transaction/withdraw/inquiry")
+      https = Net::HTTP.new(url.host, url.port)
+      https.use_ssl = true
+      request = Net::HTTP::Post.new(url)
+      request["Content-Type"] = "application/json"
+      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
+      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+      data = {
+        "username": @@username,
+        "pin": @@pin,
+        "bankcode": bankcode,
+        "amount": 10000, #Just for validation
+        "accountnumber": rekening,
+        "partner_reff": "Validasi",
+        "sendername": "Dropbox",
+        "category": "99",
+        "customeridentity": "Mitra",
+      }
+
+      request.body = JSON.dump(data)
+      response = https.request(request)
+      result = JSON.parse(response.read_body)
+      if result["accountname"] == nama_rekening
+        true
+      else
+        false
+      end
+    rescue
       false
     end
   end

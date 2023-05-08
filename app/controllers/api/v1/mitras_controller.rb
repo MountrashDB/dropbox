@@ -8,6 +8,9 @@ class Api::V1::MitrasController < AdminController
                                       :balance,
                                       :transaction,
                                       :show_self_kyc,
+                                      :bank_info,
+                                      :bank_info_update,
+                                      :withdraw,
                                     ]
 
   before_action :check_admin_token, only: [
@@ -23,6 +26,8 @@ class Api::V1::MitrasController < AdminController
   else
     @@token_expired = 30.days.to_i
   end
+
+  @@fee = Rails.application.credentials.linkqu[:fee]
 
   def active
     render json: { message: "active" }
@@ -268,6 +273,95 @@ class Api::V1::MitrasController < AdminController
       end
     else
       render json: { message: "Not found" }, status: :not_found
+    end
+  end
+
+  def bank_info
+    mitra_bank = MitraBank.find_by(mitra_id: @current_mitra.id)
+    if mitra_bank
+      render json: {
+        nama: mitra_bank.nama,
+        nama_bank: mitra_bank.nama_bank,
+        rekening: mitra_bank.rekening,
+        kodeBank: mitra_bank.kodeBank,
+        is_valid: mitra_bank.is_valid,
+      }
+    else
+      render json: {
+        message: "Empty",
+      }
+    end
+  end
+
+  def bank_info_update
+    mitrabank = MitraBank.find_by(mitra_id: @current_mitra.id)
+    bank_validation = Mitra.validate_bank(params[:kodeBank], params[:rekening], params[:nama].upcase)
+    if mitrabank
+      mitrabank.nama = params[:nama]
+      mitrabank.nama_bank = params[:nama_bank]
+      mitrabank.rekening = params[:rekening]
+      mitrabank.kodeBank = params[:kodeBank]
+      mitrabank.is_valid = bank_validation
+      if mitrabank.save
+        render json: mitrabank
+      else
+        render json: { error: mitrabank.errors }
+      end
+    else
+      if mitrabank = MitraBank.create!(
+        mitra_id: @current_mitra.id,
+        nama: params[:nama],
+        nama_bank: params[:nama_bank],
+        rekening: params[:rekening],
+        kodeBank: params[:kodeBank],
+        is_valid: bank_validation,
+      )
+        render json: mitrabank
+      else
+        render json: { error: mitrabank.errors }
+      end
+    end
+  end
+
+  def withdraw
+    mitra = Mitra.find(@current_mitra.id)
+    balance = mitra.mitratransactions.balance
+    if mitra.mitra_bank.is_valid?
+      if params[:amount] + @@fee < balance
+        Withdrawl.transaction do
+          Mitratransaction.create!(
+            mitra_id: @current_mitra.id,
+            credit: 0,
+            debit: @@fee,
+            balance: balance - @@fee,
+            description: "Withdraw Fee",
+          )
+          trx = Mitratransaction.create!(
+            mitra_id: @current_mitra.id,
+            credit: 0,
+            debit: params[:amount],
+            balance: balance - params[:amount] - @@fee,
+            description: "Withdraw",
+          )
+          process = Withdrawl.new()
+          process.amount = params[:amount]
+          process.kodeBank = mitra.mitra_bank.kodeBank
+          process.nama = mitra.mitra_bank.nama
+          process.rekening = mitra.mitra_bank.rekening
+          process.mitra = @current_mitra
+          process.mitratransaction_id = trx.id
+          if process.save
+            render json: { message: "Success" }
+          else
+            render json: { error: process.errors }, status: :bad_request
+            raise ActiveRecord::Rollback
+          end
+        end
+      else
+        render json: { message: "Insuffient Balance" }, status: :bad_request
+      end
+    else
+      render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
     end
   end
 

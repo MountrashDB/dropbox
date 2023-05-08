@@ -21,4 +21,5 @@
 #
 class Mitratransaction < ApplicationRecord
   belongs_to :mitra
+  scope :balance, -> { pluck(:balance).last || 0 }
 end

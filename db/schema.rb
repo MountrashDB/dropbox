@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_08_180355) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -156,6 +156,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "mitra_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "is_valid"
+    t.string "kodeBank"
+    t.string "nama"
+    t.string "nama_bank"
+    t.string "rekening"
+    t.bigint "mitra_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mitra_id"], name: "index_mitra_banks_on_mitra_id"
+  end
+
   create_table "mitras", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "uuid"
     t.string "phone"
@@ -275,8 +287,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
   end
 
   create_table "withdrawls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "usertransaction_id", null: false
+    t.bigint "user_id"
+    t.bigint "usertransaction_id"
     t.float "amount"
     t.string "status"
     t.string "kodeBank"
@@ -285,7 +297,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "mitra_id"
-    t.integer "mitratransaction"
+    t.integer "mitratransaction_id"
     t.index ["user_id"], name: "index_withdrawls_on_user_id"
     t.index ["usertransaction_id"], name: "index_withdrawls_on_usertransaction_id"
   end
@@ -301,6 +313,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_07_140609) do
   add_foreign_key "kycs", "districts"
   add_foreign_key "kycs", "mitras"
   add_foreign_key "kycs", "provinces"
+  add_foreign_key "mitra_banks", "mitras"
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "user_banks", "users"
   add_foreign_key "usertransactions", "users"

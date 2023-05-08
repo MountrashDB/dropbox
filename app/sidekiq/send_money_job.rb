@@ -12,16 +12,17 @@ class SendMoneyJob
   @@client_secret = Rails.application.credentials.linkqu[:client_secret]
   @@fee = Rails.application.credentials.linkqu[:fee]
 
-  # @@url = "https://gateway-dev.linkqu.id"
-  # @@username = "LI307GXIN"
-  # @@pin = "2K2NPCBBNNTovgB"
-  # @@client_id = "testing"
-  # @@client_secret = "123"
-
   def perform(id)
     trx = Withdrawl.find(id)
-    user = User.find(trx.user_id)
-    balance = user.usertransactions.balance
+    if trx.user_id
+      user = User.find(trx.user_id)
+      balance = user.usertransactions.balance
+      tipe = "user"
+    else
+      mitra = Mitra.find(trx.mitra_id)
+      balance = mitra.mitratransactions.balance
+      tipe = "mitra"
+    end
     begin
       # Inquiry before payment
       url = URI.parse(@@url + "/linkqu-partner/transaction/withdraw/inquiry")
@@ -31,7 +32,7 @@ class SendMoneyJob
       request["Content-Type"] = "application/json"
       request["client-id"] = @@client_id
       request["client-secret"] = @@client_secret
-      partner_reff = "user|" + id.to_s
+      partner_reff = tipe + "|" + id.to_s
       data = {
         "username": @@username,
         "pin": @@pin,
@@ -41,10 +42,9 @@ class SendMoneyJob
         "accountname": trx.nama,
         "partner_reff": partner_reff,
         "sendername": "SmartDropbox",
-        "customeridentity": "user",
+        "customeridentity": tipe,
         "category": "03",
       }
-
       request.body = JSON.dump(data)
       response = https.request(request)
       result = JSON.parse(response.read_body)
@@ -68,7 +68,7 @@ class SendMoneyJob
         "partner_reff": partner_reff,
         "sendername": "SmartDropbox",
         "inquiry_reff": inquiry_reff,
-        "customeridentity": "user",
+        "customeridentity": tipe,
         "category": "03",
       }
 

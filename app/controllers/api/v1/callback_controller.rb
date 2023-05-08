@@ -12,7 +12,6 @@ class Api::V1::CallbackController < ActionController::API
       url: request.ip,
     )
     data = params[:partner_reff].split("|")
-    user = data[0]
     id = data[1]
     trx = Withdrawl.find(id)
     status = params[:status]

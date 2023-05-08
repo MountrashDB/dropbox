@@ -2,18 +2,18 @@
 #
 # Table name: withdrawls
 #
-#  id                 :bigint           not null, primary key
-#  amount             :float(24)
-#  kodeBank           :string(255)
-#  mitratransaction   :integer
-#  nama               :string(255)
-#  rekening           :string(255)
-#  status             :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  mitra_id           :integer
-#  user_id            :bigint           not null
-#  usertransaction_id :bigint           not null
+#  id                  :bigint           not null, primary key
+#  amount              :float(24)
+#  kodeBank            :string(255)
+#  nama                :string(255)
+#  rekening            :string(255)
+#  status              :string(255)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  mitra_id            :integer
+#  mitratransaction_id :integer
+#  user_id             :bigint
+#  usertransaction_id  :bigint
 #
 # Indexes
 #
@@ -32,7 +32,7 @@ class Withdrawl < ApplicationRecord
   belongs_to :usertransaction, optional: true
 
   belongs_to :mitra, optional: true
-  # belongs_to :usertransaction, optional: true
+  belongs_to :mitratransaction, optional: true
   validates_numericality_of :amount, greater_than_or_equal_to: 10000
 
   after_create :send_money

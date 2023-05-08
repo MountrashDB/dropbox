@@ -101,6 +101,9 @@ Rails.application.routes.draw do
         get "active", to: "mitras#mitra_active"
         get "dropbox", to: "mitras#dropbox"
         get "balance", to: "mitras#balance"
+        get "bank-info", to: "mitras#bank_info"
+        post "bank-info", to: "mitras#bank_info_update"
+        post "withdraw", to: "mitras#withdraw"
         post "forgot-password", to: "mitras#forgot_password"
         post "reset-password/:token", to: "mitras#reset_password"
         post "", to: "mitras#create"
@@ -109,8 +112,6 @@ Rails.application.routes.draw do
         scope "box" do
           post "datatable", to: "mitras#box_datatable"
         end
-        # delete ':uuid',            to: 'mitras#destroy'
-        # patch ':uuid',             to: 'mitras#update'
       end
 
       # Form KYC
