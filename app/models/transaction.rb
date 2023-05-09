@@ -83,7 +83,7 @@ class Transaction < ApplicationRecord
       self.mitra_amount = 0
       self.user_amount = 0
       self.harga = harga_botol
-      # self.diterima = false
+      self.diterima = false
       self.save
       NotifyChannel.broadcast_to self.user.uuid,
                                  status: "complete",
