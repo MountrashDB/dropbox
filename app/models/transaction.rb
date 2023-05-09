@@ -54,7 +54,7 @@ class Transaction < ApplicationRecord
       self.mitra_amount = mitra_amount
       self.user_amount = user_amount
       self.harga = harga_botol
-      # self.diterima = true
+      self.diterima = true
       self.save
       trx = Usertransaction.where(user_id: self.user_id).last
       description = "Reward Trx: " + self.id.to_s
