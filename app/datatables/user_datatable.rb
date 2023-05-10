@@ -28,6 +28,6 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    User.all.joins(:usertransactions)
+    User.all
   end
 end
