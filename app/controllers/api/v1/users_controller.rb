@@ -338,7 +338,7 @@ class Api::V1::UsersController < AdminController
       if total < balance
         Withdrawl.transaction do
           User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
-          User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
+          trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
 
           process = Withdrawl.new()
           process.amount = params[:amount]
