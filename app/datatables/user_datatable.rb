@@ -8,7 +8,7 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
       email: { source: "User.email", cond: :like, searchable: true },
       uuid: { source: "User.uuid", cond: :like },
       active: { source: "User.active", cond: :eq },
-      balance: { source: "User.usertransactions.balance", searchable: false },
+      balance: { source: "User.usertransactions.balance", searchable: false, orderable: true },
       created_at: { source: "User.created_at", cond: :eq },
     }
   end
@@ -28,6 +28,6 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    User.all
+    User.all.joins(:usertransactions)
   end
 end

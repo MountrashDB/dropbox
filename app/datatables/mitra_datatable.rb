@@ -31,6 +31,6 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    Mitra.all
+    Mitra.all.joins(:mitratransactions)
   end
 end
