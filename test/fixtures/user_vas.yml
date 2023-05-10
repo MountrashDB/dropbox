@@ -1,0 +1,35 @@
+# == Schema Information
+#
+# Table name: user_vas
+#
+#  id         :bigint           not null, primary key
+#  expired    :datetime
+#  kodeBank   :string(255)
+#  name       :string(255)
+#  rekening   :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  user_id    :bigint           not null
+#
+# Indexes
+#
+#  index_user_vas_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
+
+one:
+  user: one
+  kodeBank: MyString
+  rekening: MyString
+  name: MyString
+  expired: 2023-05-09 23:22:52
+
+two:
+  user: two
+  kodeBank: MyString
+  rekening: MyString
+  name: MyString
+  expired: 2023-05-09 23:22:52

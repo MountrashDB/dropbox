@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_08_180355) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_09_162252) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -199,6 +199,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_180355) do
     t.index ["mitra_id"], name: "index_mitratransactions_on_mitra_id"
   end
 
+  create_table "mountpays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "mitra_id", null: false
+    t.float "credit"
+    t.float "debit"
+    t.float "balance"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mitra_id"], name: "index_mountpays_on_mitra_id"
+    t.index ["user_id"], name: "index_mountpays_on_user_id"
+  end
+
   create_table "partners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "uuid"
     t.string "nama"
@@ -254,6 +267,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_180355) do
     t.datetime "updated_at", null: false
     t.boolean "is_valid"
     t.index ["user_id"], name: "index_user_banks_on_user_id"
+  end
+
+  create_table "user_vas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "kodeBank"
+    t.string "rekening"
+    t.string "name"
+    t.datetime "expired"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_vas_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -315,7 +339,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_08_180355) do
   add_foreign_key "kycs", "provinces"
   add_foreign_key "mitra_banks", "mitras"
   add_foreign_key "mitratransactions", "mitras"
+  add_foreign_key "mountpays", "mitras"
+  add_foreign_key "mountpays", "users"
   add_foreign_key "user_banks", "users"
+  add_foreign_key "user_vas", "users"
   add_foreign_key "usertransactions", "users"
   add_foreign_key "withdrawls", "users"
   add_foreign_key "withdrawls", "usertransactions"

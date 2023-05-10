@@ -95,4 +95,54 @@ class User < ApplicationRecord
       false
     end
   end
+
+  def creditkan(amount, description)
+    balance = self.usertransactions.balance
+    Usertransaction.create!(
+      user_id: self.id,
+      credit: amount,
+      debit: 0,
+      balance: balance + amount,
+      description: description,
+    )
+  end
+
+  def debitkan(amount, description)
+    balance = self.usertransactions.balance
+    Usertransaction.create!(
+      user_id: self.id,
+      credit: 0,
+      debit: amount,
+      balance: balance - amount,
+      description: description,
+    )
+  end
+
+  def self.create_va(bankcode, nama_rekening)
+    begin
+      url = URI.parse(@@url + "/linkqu-partner/transaction/create/vadedicated/add")
+      https = Net::HTTP.new(url.host, url.port)
+      https.use_ssl = true
+      request = Net::HTTP::Post.new(url)
+      request["Content-Type"] = "application/json"
+      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
+      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+      data = {
+        "username": @@username,
+        "pin": @@pin,
+        "bankcode": bankcode,
+        "customer_id": "user|1",
+        "customer_name": nama_rekening,
+        "customer_phone": "08129959717",
+        "customer_email": "test@dropbox.com",
+      }
+
+      request.body = JSON.dump(data)
+      response = https.request(request)
+      result = JSON.parse(response.read_body)
+      puts result
+    rescue
+      false
+    end
+  end
 end
