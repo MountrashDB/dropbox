@@ -39,11 +39,11 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
 
   def get_raw_records
     if options[:mitra_id]
-      Transaction.where(mitra_id: options[:mitra_id]).includes(:box, :user, :mitra)
+      Transaction.where(mitra_id: options[:mitra_id]).joins(:box, :user, :mitra)
     elsif options[:user_id]
-      Transaction.where(user_id: options[:user_id]).includes(:box, :user, :mitra)
+      Transaction.where(user_id: options[:user_id]).joins(:box, :user, :mitra)
     else
-      Transaction.all.includes(:box, :user, :mitra)
+      Transaction.all.joins(:box, :user, :mitra)
     end
   end
 end
