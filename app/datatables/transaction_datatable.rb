@@ -11,7 +11,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       box: { source: "Box.nama", cond: :like, searchable: true },
       mitra: { source: "Mitra.name", cond: :like, searchable: true },
       user: { source: "User.username", cond: :like, searchable: true },
-      image: { source: "Transaction.foto.url" },
+      image: { source: "Transaction.foto.url", searchable: false },
       created_at: { source: "Transaction.created_at", cond: :like, searchable: true },
     }
   end
