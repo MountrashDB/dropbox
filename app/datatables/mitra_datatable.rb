@@ -9,7 +9,7 @@ class MitraDatatable < AjaxDatatablesRails::ActiveRecord
       email: { source: "Mitra.email", cond: :like, orderable: true },
       contact: { source: "Mitra.contact", cond: :like },
       status: { source: "Mitra.status", cond: :eq, orderable: true },
-      balance: { source: "Mitra.mitratransactions.balance", cond: :eq, orderable: true },
+      balance: { source: "Mitra.mitratransactions.balance", searchable: false, orderable: true },
       created_at: { source: "Mitra.created_at", orderable: true },
     }
   end

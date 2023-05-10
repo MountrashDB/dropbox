@@ -8,7 +8,7 @@ class UserDatatable < AjaxDatatablesRails::ActiveRecord
       email: { source: "User.email", cond: :like, searchable: true },
       uuid: { source: "User.uuid", cond: :like },
       active: { source: "User.active", cond: :eq },
-      balance: { source: "User.usertransactions.balance" },
+      balance: { source: "User.usertransactions.balance", searchable: false },
       created_at: { source: "User.created_at", cond: :eq },
     }
   end
