@@ -7,19 +7,30 @@ class Api::V1::PaymentController < ApiController
   @@pin = Rails.application.credentials.linkqu[:pin]
 
   def bank_list
-    begin
-      url = URI.parse(@@url + "/linkqu-partner/masterbank/list")
-      https = Net::HTTP.new(url.host, url.port)
-      https.use_ssl = true
-      request = Net::HTTP::Get.new(url)
-      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
-      result = Rails.cache.fetch("masterbank_list", expires_in: 24.hours) do
+    result = Bank.order(name: :asc)
+    Rails.cache.fetch("banks", expires_in: 24.hours) do
+      begin
+        url = URI.parse(@@url + "/linkqu-partner/masterbank/list")
+        https = Net::HTTP.new(url.host, url.port)
+        https.use_ssl = true
+        request = Net::HTTP::Get.new(url)
+        request["client-id"] = Rails.application.credentials.linkqu[:client_id]
+        request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
         response = https.request(request)
-        JSON.parse(response.read_body)
+        results = JSON.parse(response.read_body)
+        Bank.destroy_all
+        results["data"].each do |d|
+          Bank.create!(
+            kode_bank: d["kodeBank"],
+            name: d["namaBank"],
+            is_active: d["isActive"],
+          )
+        end
+        result = Bank.order(name: :asc)
+      rescue Exception => e
+        logger.error "=== FAILED Get bank list ==="
+        logger.error e
       end
-    rescue
-      result = []
     end
     render json: result
   end
@@ -42,7 +53,6 @@ class Api::V1::PaymentController < ApiController
       "partner_reff": "20211223124530",
       "sendername": "Dropbox",
       "category": "04",
-      "customeridentity": "636483743246",
     }
 
     request.body = JSON.dump(data)

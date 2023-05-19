@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_09_162252) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_19_085050) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -54,6 +54,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_09_162252) do
     t.string "uuid"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "kode_bank"
+    t.string "name"
+    t.boolean "is_active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "botol_hargas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -277,6 +285,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_09_162252) do
     t.datetime "expired"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "fee"
+    t.boolean "active"
+    t.string "bank_name"
     t.index ["user_id"], name: "index_user_vas_on_user_id"
   end
 
