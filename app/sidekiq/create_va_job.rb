@@ -1,5 +1,6 @@
 class CreateVaJob
   include Sidekiq::Job
+  sidekiq_options retry: 0
 
   @@url = Rails.application.credentials.linkqu[:url]
   @@username = Rails.application.credentials.linkqu[:username]
