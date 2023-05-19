@@ -18,7 +18,7 @@ class Api::V1::PaymentController < ApiController
         request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
         response = https.request(request)
         results = JSON.parse(response.read_body)
-        Bank.destroy_all
+        Bank.delete_all
         results["data"].each do |d|
           Bank.create!(
             kode_bank: d["kodeBank"],
