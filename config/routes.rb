@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       scope "callback" do
         post "payment-linkqu", to: "callback#payment_linkqu"
+        post "va-user", to: "callback#va_user"
       end
       scope "box" do
         get "list", to: "boxes#list"
@@ -53,6 +54,8 @@ Rails.application.routes.draw do
         post "bank-validation", to: "payment#bank_validation"
         get "news", to: "users#get_rss"
         get "bank-info", to: "users#bank_info"
+        post "va-create", to: "users#va_create"
+        get "va-list", to: "users#va_list"
         get ":uuid", to: "users#show"
         delete ":uuid", to: "users#destroy"
         patch "", to: "users#update_profile"

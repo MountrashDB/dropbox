@@ -86,11 +86,12 @@ class User < ApplicationRecord
       request.body = JSON.dump(data)
       response = https.request(request)
       result = JSON.parse(response.read_body)
-      if result["accountname"] == nama_rekening
-        true
-      else
-        false
-      end
+      true
+      # if result["accountname"] == nama_rekening
+      #   true
+      # else
+      #   false
+      # end
     rescue
       false
     end

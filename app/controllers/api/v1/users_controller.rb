@@ -19,6 +19,8 @@ class Api::V1::UsersController < AdminController
                                      :bank_info,
                                      :bank_info_update,
                                      :withdraw,
+                                     :va_create,
+                                     :va_list,
                                    ]
 
   @@fee = Rails.application.credentials.linkqu[:fee]
@@ -360,6 +362,24 @@ class Api::V1::UsersController < AdminController
     else
       render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
     end
+  end
+
+  def va_create
+    if params[:kode_bank]
+      userva = UserVa.select(:bank_name, :rekening, :name, :fee).find_by(user_id: @current_user.id, kodeBank: params[:kode_bank])
+      if userva
+        render json: { message: "Already exists" }, status: :bad_request
+      else
+        CreateVaJob.perform_at(2.seconds, @current_user.id, params[:kode_bank])
+        render json: { message: "OK" }
+      end
+    else
+      render json: { message: "Parameter not complete" }, status: :bad_request
+    end
+  end
+
+  def va_list
+    render json: UserVa.select(:bank_name, :rekening, :kodeBank).where(user_id: @current_user.id)
   end
 
   private

@@ -3,7 +3,10 @@
 # Table name: user_vas
 #
 #  id         :bigint           not null, primary key
+#  active     :boolean
+#  bank_name  :string(255)
 #  expired    :datetime
+#  fee        :float(24)
 #  kodeBank   :string(255)
 #  name       :string(255)
 #  rekening   :string(255)
