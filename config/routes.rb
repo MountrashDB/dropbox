@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       scope "callback" do
         post "payment-linkqu", to: "callback#payment_linkqu"
         post "va-user", to: "callback#va_user"
+        post "topup", to: "callback#topup"
       end
       scope "box" do
         get "list", to: "boxes#list"

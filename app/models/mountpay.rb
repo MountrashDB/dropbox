@@ -9,8 +9,8 @@
 #  description :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  mitra_id    :bigint           not null
-#  user_id     :bigint           not null
+#  mitra_id    :bigint
+#  user_id     :bigint
 #
 # Indexes
 #
@@ -23,6 +23,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Mountpay < ApplicationRecord
-  belongs_to :user
-  belongs_to :mitra
+  belongs_to :user, optional: true
+  belongs_to :mitra, optional: true
+  scope :balance, -> { pluck(:balance).last || 0 }
 end

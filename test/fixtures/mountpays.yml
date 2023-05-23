@@ -9,8 +9,8 @@
 #  description :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  mitra_id    :bigint           not null
-#  user_id     :bigint           not null
+#  mitra_id    :bigint
+#  user_id     :bigint
 #
 # Indexes
 #

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_19_085050) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_23_150755) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -208,8 +208,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_19_085050) do
   end
 
   create_table "mountpays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "mitra_id", null: false
+    t.bigint "user_id"
+    t.bigint "mitra_id"
     t.float "credit"
     t.float "debit"
     t.float "balance"

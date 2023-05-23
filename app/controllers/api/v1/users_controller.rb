@@ -220,7 +220,8 @@ class Api::V1::UsersController < AdminController
   end
 
   def balance
-    render json: { balance: User.find(@current_user.id).usertransactions.balance }
+    user = User.find(@current_user.id)
+    render json: { balance: user.usertransactions.balance, mountpay: user.mountpay.balance }
   end
 
   def profile
@@ -336,7 +337,7 @@ class Api::V1::UsersController < AdminController
     user = User.find(@current_user.id)
     balance = user.usertransactions.balance
     total = params[:amount].to_f + @@fee
-    if user.user_bank.is_valid?
+    if user.user_bank&.is_valid?
       if total < balance
         Withdrawl.transaction do
           User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
