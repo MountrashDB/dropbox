@@ -78,6 +78,7 @@ class Transaction < ApplicationRecord
       NotifyChannel.broadcast_to self.user.uuid,
         status: "complete",
         image: foto_url,
+        point: user_amount,
         diterima: true
     else # Invalid botol
       self.mitra_amount = 0
@@ -88,6 +89,7 @@ class Transaction < ApplicationRecord
       NotifyChannel.broadcast_to self.user.uuid,
                                  status: "complete",
                                  image: foto_url,
+                                 point: 0,
                                  diterima: false
     end
   end
