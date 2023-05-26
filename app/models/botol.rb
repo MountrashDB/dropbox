@@ -9,8 +9,6 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-# Botol validation
-# Di atas 75% ---> botol beneran
 
 class Botol < ApplicationRecord
   has_many :botol_harga, dependent: :destroy
@@ -44,8 +42,6 @@ class Botol < ApplicationRecord
       })
       response = https.request(request)
       result = JSON.parse(response.read_body)
-      puts "=== result ==="
-      puts result.code
       is_botol = false
       result.each do |data|
         prob = data["probability"] * 100
@@ -54,8 +50,6 @@ class Botol < ApplicationRecord
           break
         end
       end
-      puts "=== is_botol ==="
-      puts is_botol
       is_botol
     rescue # Jaga-jaga kalo server validationnya ngadat
       true
