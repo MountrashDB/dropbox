@@ -24,6 +24,9 @@ class Api::V1::UsersController < AdminController
                                    ]
 
   @@fee = Rails.application.credentials.linkqu[:fee]
+  @@url = Rails.application.credentials.linkqu[:url]
+  @@username = Rails.application.credentials.linkqu[:username]
+  @@pin = Rails.application.credentials.linkqu[:pin]
 
   if Rails.env.production?
     @@token_expired = 3.days.to_i
@@ -366,17 +369,64 @@ class Api::V1::UsersController < AdminController
   end
 
   def va_create
+    # if params[:kode_bank]
+    #   userva = UserVa.select(:bank_name, :rekening, :name, :fee).find_by(user_id: @current_user.id, kodeBank: params[:kode_bank])
+    #   if userva
+    #     render json: { message: "Already exists" }, status: :bad_request
+    #   else
+    #     CreateVaJob.perform_at(2.seconds, @current_user.id, params[:kode_bank])
+    #     render json: { message: "OK" }
+    #   end
+    # else
+    #   render json: { message: "Parameter not complete" }, status: :bad_request
+    # end
+
     if params[:kode_bank]
-      userva = UserVa.select(:bank_name, :rekening, :name, :fee).find_by(user_id: @current_user.id, kodeBank: params[:kode_bank])
-      if userva
-        render json: { message: "Already exists" }, status: :bad_request
-      else
-        CreateVaJob.perform_at(2.seconds, @current_user.id, params[:kode_bank])
-        render json: { message: "OK" }
+      conn = Faraday.new(
+        url: @@url,
+        headers: {
+          "Content-Type" => "application/json",
+          "client-id" => Rails.application.credentials.linkqu[:client_id],
+          "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+        },
+      )
+
+      response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
+        req.body = {
+          username: @@username,
+          pin: @@pin,
+          bank_code: params[:kode_bank],
+          customer_id: "va|user|" + @current_user.uuid,
+          customer_name: @current_user.username,
+          customer_phone: @current_user.phone,
+          customer_email: @current_user.email,
+        }.to_json
       end
+      render json: response.body
     else
       render json: { message: "Parameter not complete" }, status: :bad_request
     end
+
+    # url = URI.parse(@@url + "/linkqu-partner/transaction/create/vadedicated/add")
+    # https = Net::HTTP.new(url.host, url.port)
+    # https.use_ssl = true
+    # request = Net::HTTP::Post.new(url)
+    # request["Content-Type"] = "application/json"
+    # request["client-id"] = Rails.application.credentials.linkqu[:client_id]
+    # request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+    # data = {
+    #   "username": @@username,
+    #   "pin": @@pin,
+    #   "bank_code": "008",
+    #   "customer_id": "va|user|a",
+    #   "customer_name": "Budi",
+    #   "customer_phone": "081291291212",
+    #   "customer_email": "budi@gmail.com",
+    # }
+    # request.body = JSON.dump(data)
+    # response = https.request(request)
+    # result = JSON.parse(response.read_body)
+    # render json: result
   end
 
   def va_list

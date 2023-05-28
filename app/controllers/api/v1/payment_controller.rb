@@ -2,22 +2,22 @@ class Api::V1::PaymentController < ApiController
   require "uri"
   require "net/http"
 
+  # require "async/http/internet"
+  # require "async/http/internet/instance"
+
   @@url = Rails.application.credentials.linkqu[:url]
   @@username = Rails.application.credentials.linkqu[:username]
   @@pin = Rails.application.credentials.linkqu[:pin]
 
   def bank_list
-    result = Bank.order(name: :asc)
     Rails.cache.fetch("banks", expires_in: 24.hours) do
       begin
-        url = URI.parse(@@url + "/linkqu-partner/masterbank/list")
-        https = Net::HTTP.new(url.host, url.port)
-        https.use_ssl = true
-        request = Net::HTTP::Get.new(url)
-        request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-        request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
-        response = https.request(request)
-        results = JSON.parse(response.read_body)
+        response = Faraday.get(@@url + "/linkqu-partner/masterbank/list", {
+          "Content-Type" => "application/json",
+          "client-id" => Rails.application.credentials.linkqu[:client_id],
+          "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+        })
+        results = JSON.parse(response.body)
         Bank.delete_all
         results["data"].each do |d|
           Bank.create!(
@@ -26,13 +26,12 @@ class Api::V1::PaymentController < ApiController
             is_active: d["isActive"],
           )
         end
-        result = Bank.order(name: :asc)
       rescue Exception => e
         logger.error "=== FAILED Get bank list ==="
         logger.error e
       end
     end
-    render json: result
+    render json: Bank.order(name: :asc)
   end
 
   def bank_validation

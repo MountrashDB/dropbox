@@ -97,6 +97,9 @@ gem "rufo"
 gem "aasm" # For record status
 gem "after_commit_everywhere" # For AASM after_commit
 gem "sidekiq"
+# gem "async"
+# gem "async-http" # For asynchoronoze HTTP to external URL (ga bikin hang program saat CURL)
+gem "faraday"
 # gem "sidekiq-status"
 # gem "sidekiq-cron"
 # gem "sidekiq-scheduler"

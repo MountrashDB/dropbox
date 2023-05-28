@@ -9,5 +9,17 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# require "async/http/internet"
+
 class Bank < ApplicationRecord
+  def self.bank_list
+    puts "=== Bank List ==="
+    # Async do
+    #   puts "=== READ ==="
+    #   internet = Async::HTTP::Internet.new
+    #   response = internet.get("https://news.mountrash.com/feed/").read
+    #   # Process the response here
+    #   return response.read
+    # end
+  end
 end

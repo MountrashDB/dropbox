@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         get "bank-info", to: "users#bank_info"
         post "va-create", to: "users#va_create"
         get "va-list", to: "users#va_list"
+        post "move", to: "user#move_mountpay"
         get ":uuid", to: "users#show"
         delete ":uuid", to: "users#destroy"
         patch "", to: "users#update_profile"
@@ -129,6 +130,13 @@ Rails.application.routes.draw do
 
       scope "payment" do
         get "bank-list", to: "payment#bank_list"
+      end
+
+      scope "ppob" do
+        scope "post" do
+          get "price/:type", to: "ppob#post_price"
+          post "price/:type", to: "ppob#post_inq"
+        end
       end
 
       # User webapp

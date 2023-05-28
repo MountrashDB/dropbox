@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_23_150755) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_24_143656) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -236,6 +236,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_150755) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "ppobs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "body"
+    t.string "status"
+    t.string "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ppobs_on_user_id"
+  end
+
   create_table "provinces", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "kode"
@@ -352,6 +362,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_150755) do
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "mountpays", "mitras"
   add_foreign_key "mountpays", "users"
+  add_foreign_key "ppobs", "users"
   add_foreign_key "user_banks", "users"
   add_foreign_key "user_vas", "users"
   add_foreign_key "usertransactions", "users"
