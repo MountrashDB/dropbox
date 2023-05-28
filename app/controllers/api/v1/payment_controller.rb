@@ -10,7 +10,7 @@ class Api::V1::PaymentController < ApiController
   @@pin = Rails.application.credentials.linkqu[:pin]
 
   def bank_list
-    Rails.cache.fetch("banks", expires_in: 24.hours) do
+    Rails.cache.fetch("banks-list", expires_in: 24.hours) do
       begin
         response = Faraday.get(@@url + "/linkqu-partner/masterbank/list", {
           "Content-Type" => "application/json",
