@@ -409,7 +409,7 @@ class Api::V1::UsersController < AdminController
   end
 
   def va_list
-    render json: UserVa.select(:bank_name, :rekening, :kodeBank, :fee, :name).where(user_id: @current_user.id).last
+    render json: UserVa.select(:bank_name, :rekening, :kodeBank, :name).where(user_id: @current_user.id).last
   end
 
   private
