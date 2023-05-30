@@ -27,6 +27,7 @@ class Api::V1::UsersController < AdminController
   @@url = Rails.application.credentials.linkqu[:url]
   @@username = Rails.application.credentials.linkqu[:username]
   @@pin = Rails.application.credentials.linkqu[:pin]
+  @@bank_code = "002" # 002 = Bank BRI
 
   if Rails.env.production?
     @@token_expired = 3.days.to_i
@@ -369,41 +370,46 @@ class Api::V1::UsersController < AdminController
   end
 
   def va_create
-    if params[:kode_bank]
-      userva = UserVa.select(:bank_name, :rekening, :name, :fee).find_by(user_id: @current_user.id, kodeBank: params[:kode_bank])
-      if userva
-        render json: userva
-      else
-        conn = Faraday.new(
-          url: @@url,
-          headers: {
-            "Content-Type" => "application/json",
-            "client-id" => Rails.application.credentials.linkqu[:client_id],
-            "client-secret" => Rails.application.credentials.linkqu[:client_secret],
-          },
-          request: { timeout: 3 },
-        )
-        response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
-          req.body = {
-            username: @@username,
-            pin: @@pin,
-            bank_code: params[:kode_bank],
-            customer_id: "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s,
-            customer_name: @current_user.username,
-            customer_phone: @current_user.phone,
-            customer_email: @current_user.email,
-          }.to_json
-          req.options.timeout = 3
-        end
-        render json: response.body
-      end
+    userva = UserVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(user_id: @current_user.id, kodeBank: @@bank_code)
+    if userva
+      render json: userva
     else
-      render json: { message: "Parameter not complete" }, status: :bad_request
+      conn = Faraday.new(
+        url: @@url,
+        headers: {
+          "Content-Type" => "application/json",
+          "client-id" => Rails.application.credentials.linkqu[:client_id],
+          "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+        },
+        request: { timeout: 3 },
+      )
+      response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
+        req.body = {
+          username: @@username,
+          pin: @@pin,
+          bank_code: @@bank_code,
+          customer_id: "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s,
+          customer_name: @current_user.username,
+          customer_phone: @current_user.phone,
+          customer_email: @current_user.email,
+        }.to_json
+        req.options.timeout = 3
+      end
+      result = JSON.parse(response.body)
+      hasil = UserVa.create!(
+        user_id: @current_user.id,
+        kodeBank: @@bank_code,
+        name: result["customer_name"],
+        rekening: result["virtual_account"],
+        fee: result["feeadmin"],
+        bank_name: result["bank_name"],
+      )
+      render json: { bank_name: hasil.bank_name, kodeBank: hasil.kodeBank, name: hasil.name, rekening: hasil.rekening }
     end
   end
 
   def va_list
-    render json: UserVa.select(:bank_name, :rekening, :kodeBank).where(user_id: @current_user.id)
+    render json: UserVa.select(:bank_name, :rekening, :kodeBank, :fee).where(user_id: @current_user.id).last
   end
 
   private

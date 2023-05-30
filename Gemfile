@@ -100,6 +100,7 @@ gem "sidekiq"
 # gem "async"
 # gem "async-http" # For asynchoronoze HTTP to external URL (ga bikin hang program saat CURL)
 gem "faraday"
+gem "async-http-faraday"
 # gem "sidekiq-status"
 # gem "sidekiq-cron"
 # gem "sidekiq-scheduler"

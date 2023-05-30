@@ -2,16 +2,16 @@ class Api::V1::PaymentController < ApiController
   require "uri"
   require "net/http"
 
-  # require "async/http/internet"
-  # require "async/http/internet/instance"
+  require "async/http/faraday"
 
   @@url = Rails.application.credentials.linkqu[:url]
   @@username = Rails.application.credentials.linkqu[:username]
   @@pin = Rails.application.credentials.linkqu[:pin]
 
   def bank_list
-    Rails.cache.fetch("banks-list-v2", expires_in: 24.hours) do
+    Rails.cache.fetch("banks-list-v6", expires_in: 24.hours) do
       begin
+        Faraday.default_adapter = :async_http
         response = Faraday.get(@@url + "/linkqu-partner/masterbank/list", {
           "Content-Type" => "application/json",
           "client-id" => Rails.application.credentials.linkqu[:client_id],
