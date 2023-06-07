@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         post "payment-linkqu", to: "callback#payment_linkqu"
         post "va-user", to: "callback#va_user"
         post "topup", to: "callback#topup"
+        post "iak", to: "callback#iak"
       end
       scope "box" do
         get "list", to: "boxes#list"
@@ -84,10 +85,10 @@ Rails.application.routes.draw do
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
         post "transaction/process/:uuid", to: "admin#transaction_process"
-        post "", to: "admin#create"
-        get ":uuid", to: "admin#show"
-        patch ":uuid", to: "admin#update"
-        delete ":uuid", to: "admin#destroy"
+        # post "", to: "admin#create"
+        # get ":uuid", to: "admin#show"
+        # patch ":uuid", to: "admin#update"
+        # delete ":uuid", to: "admin#destroy"
       end
 
       scope "mitra" do
@@ -133,9 +134,18 @@ Rails.application.routes.draw do
       end
 
       scope "ppob" do
+        post "check-nomor", to: "ppob#check_nomor"
         scope "post" do
           get "price/:type", to: "ppob#post_price"
-          post "price/:type", to: "ppob#post_inq"
+          post "inquiry", to: "ppob#post_inquiry"
+        end
+
+        scope "prepaid" do
+          get "price", to: "ppob#prepaid_price"
+          post "inquiry", to: "ppob#prepaid_inquiry"
+          post "inquiry-pln", to: "ppob#prepaid_inquiry_pln"
+          post "top-up", to: "ppob#prepaid_topup"
+          post "status", to: "ppob#prepaid_status"
         end
       end
 
@@ -160,6 +170,8 @@ Rails.application.routes.draw do
           get "test", to: "admin#home"
         end
       end
+
+      get "settings/:field", to: "setting#info"
     end
   end
   mount ActionCable.server => "/cable"

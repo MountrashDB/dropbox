@@ -224,6 +224,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pagy (6.0.1)
+    phonelib (0.8.2)
     protocol-hpack (1.4.2)
     protocol-http (0.24.1)
     protocol-http1 (0.15.0)
@@ -382,6 +383,7 @@ DEPENDENCIES
   jwt
   mysql2
   pagy
+  phonelib
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4, >= 7.0.4.2)

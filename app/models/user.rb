@@ -142,7 +142,6 @@ class User < ApplicationRecord
       request.body = JSON.dump(data)
       response = https.request(request)
       result = JSON.parse(response.read_body)
-      puts result
     rescue
       false
     end
