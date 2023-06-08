@@ -63,6 +63,7 @@ class Api::V1::CallbackController < ActionController::API
       body: params,
       url: request.ip,
     )
+    logger.info "=== IAK Callback ==="
     data = params[:data]
     ppob = Ppob.find_by(ref_id: data["ref_id"])
     ppob.update(body: params.to_json)
