@@ -1,24 +1,25 @@
 class BuyPpobJob
   include Sidekiq::Job
-  sidekiq_options retry: 0
+  sidekiq_options retry: 3
 
   # Production
-  # @@prepaid_url = Rails.application.credentials.iak[:prepaid]
-  # @@username = Rails.application.credentials.iak[:username]
-  # @@api_key = Rails.application.credentials.iak[:api_key]
-  # @@sign = Digest::MD5.hexdigest @@username + @@api_key
-  # @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
-  # @@postpaid_url = Rails.application.credentials.iak[:postpaid]
-
-  # Development
-  @@prepaid_url = "https://prepaid.iak.dev"
-  @@postpaid_url = "https://testpostpaid.mobilepulsa.net"
+  @@prepaid_url = Rails.application.credentials.iak[:prepaid]
   @@username = Rails.application.credentials.iak[:username]
-  @@api_key = "86061ea4b7c25e81"
+  @@api_key = Rails.application.credentials.iak[:api_key]
   @@sign = Digest::MD5.hexdigest @@username + @@api_key
   @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
+  @@postpaid_url = Rails.application.credentials.iak[:postpaid]
+
+  # Development
+  # @@prepaid_url = "https://prepaid.iak.dev"
+  # @@postpaid_url = "https://testpostpaid.mobilepulsa.net"
+  # @@username = Rails.application.credentials.iak[:username]
+  # @@api_key = "86061ea4b7c25e81"
+  # @@sign = Digest::MD5.hexdigest @@username + @@api_key
+  # @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
 
   def perform(ppob)
+    logger.info "=== ORDER PPOB ==="
     data = JSON.parse(ppob)
     ppob = Ppob.find(data["id"])
 
