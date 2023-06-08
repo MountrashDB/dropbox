@@ -66,11 +66,13 @@ class Api::V1::CallbackController < ActionController::API
     logger.info "=== IAK Callback ==="
     data = params[:data]
     ppob = Ppob.find_by(ref_id: data["ref_id"])
-    ppob.update(body: params.to_json)
-    if data["status"] == IAK_SUCCESS
-      ppob.successkan!
-    elsif data["status"] == IAK_FAILED
-      ppob.failedkan!
+    if ppob
+      ppob.update(body: params.to_json)
+      if data["status"] == IAK_SUCCESS
+        ppob.successkan!
+      elsif data["status"] == IAK_FAILED
+        ppob.failedkan!
+      end
     end
     render json: { response: "ok" }
   end
