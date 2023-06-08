@@ -46,7 +46,7 @@ class Ppob < ApplicationRecord
   @@profit = Rails.application.credentials.iak[:profit]
 
   belongs_to :user
-  after_create :debit_mountpay
+  # after_create :debit_mountpay
 
   aasm column: :status do
     state :process, initial: true
@@ -61,11 +61,12 @@ class Ppob < ApplicationRecord
     end
   end
 
+  @@retry_count = 0
+
   def self.pricelist(tipe, operator, product_code = "")
     cache_name = "price-#{tipe}-#{operator}-#{product_code}-v1"
     daftar_harga = Rails.cache.fetch(cache_name, expires_in: 24.hours) do
       if tipe && operator
-        retry_count = 0
         begin
           conn = Faraday.new(
             url: @@prepaid_url,
@@ -89,8 +90,8 @@ class Ppob < ApplicationRecord
             price_list
           end
         rescue => e
-          if retry_count < 3
-            retry_count += 1
+          if @@retry_count < 3
+            @@retry_count += 1
             retry
           else
             puts "=== ERROR ==="
@@ -132,33 +133,44 @@ class Ppob < ApplicationRecord
 
   def self.prepaid_status(ref_id)
     if ref_id
-      conn = Faraday.new(
-        url: @@prepaid_url,
-        headers: { "Content-Type" => "application/json" },
-        request: { timeout: 3 },
-      )
-      sign = Digest::MD5.hexdigest @@username + @@api_key + ref_id
-      body = {
-        username: @@username,
-        ref_id: ref_id,
-        sign: sign,
-      }
-      response = conn.post("/api/check-status") do |req|
-        req.body = body.to_json
+      begin
+        conn = Faraday.new(
+          url: @@prepaid_url,
+          headers: { "Content-Type" => "application/json" },
+          request: { timeout: 3 },
+        )
+        sign = Digest::MD5.hexdigest @@username + @@api_key + ref_id
+        body = {
+          username: @@username,
+          ref_id: ref_id,
+          sign: sign,
+        }
+        response = conn.post("/api/check-status") do |req|
+          req.body = body.to_json
+        end
+        response.body
+      rescue => e
+        if @@retry_count < 3
+          @@retry_count += 1
+          retry
+        else
+          puts "=== ERROR ==="
+          puts e.message
+          # Handle the failure case
+        end
       end
-      response.body
     else
       nil
     end
   end
 
-  def debit_mountpay
-    # Potong Mountpay
-    user = User.find(self.user_id)
-    user.mountpay_debitkan(self.amount, self.desc)
-    # BuyPpobJob.perform_at(2.seconds.from_now, self.ref_id, self.body_params.to_json)
-    BuyPpobJob.perform_at(2.seconds.from_now, self.to_json)
-  end
+  # def debit_mountpay
+  #   # Potong Mountpay
+  #   user = User.find(self.user_id)
+  #   user.mountpay_debitkan(self.amount, self.desc)
+  #   # BuyPpobJob.perform_at(2.seconds.from_now, self.ref_id, self.body_params.to_json)
+  #   BuyPpobJob.perform_at(2.seconds.from_now, self.to_json)
+  # end
 
   def reverse_balance
     # Kembalikan Mountpay

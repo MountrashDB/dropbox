@@ -1,6 +1,7 @@
 # https://api.iak.id/docs/reference/ZG9jOjEyNjIwNjcw-inquiry-telco-postpaid
 
 # https://api.mountrash.online/ppob/iak/callback ---> Old callback mountrash
+# 35.240.158.128 ---> IP mountrash
 class Api::V1::PpobController < AdminController
   before_action :check_user_token, only: [
                                      :check_nomor,
@@ -228,7 +229,8 @@ class Api::V1::PpobController < AdminController
           body_params: permit_prepaid,
           desc: "PPOB-#{permit_prepaid[:product_code]}-#{permit_prepaid[:customer_id]}",
         )
-
+        @current_user.mountpay_debitkan(harga_jual, record.desc)
+        BuyPpobJob.perform_at(2.seconds.from_now, record.to_json)
         render json: { ref_id: ref_id, status: 0, message: "PROCESS" }
       else
         render json: { message: "Insuffient balance. Please select smaller price or product", balance: balance, price: harga_jual }, status: :bad_request
@@ -241,7 +243,13 @@ class Api::V1::PpobController < AdminController
   def prepaid_status
     if params[:ref_id]
       result = JSON.parse(Ppob.prepaid_status(params[:ref_id]))
-      selected_fields = result["data"].select { |key, _| ["status", "ref_id", "message", "sn"].include?(key) }
+
+      ppob = Ppob.find_by(ref_id: params[:ref_id])
+      if ppob.ppob_type == "pln"
+        selected_fields = result["data"].select { |key, _| ["status", "ref_id", "message", "sn"].include?(key) }
+      else
+        selected_fields = result["data"].select { |key, _| ["status", "ref_id", "message"].include?(key) }
+      end
       render json: selected_fields
     else
       render json: { message: "Parameter is not correct" }, status: :bad_request
