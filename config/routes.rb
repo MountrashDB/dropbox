@@ -138,6 +138,8 @@ Rails.application.routes.draw do
         scope "post" do
           get "price/:type", to: "ppob#post_price"
           post "inquiry", to: "ppob#post_inquiry"
+          post "payment", to: "ppob#post_payment"
+          post "status", to: "ppob#post_status"
         end
 
         scope "prepaid" do

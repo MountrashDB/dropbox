@@ -6,8 +6,10 @@ class Api::V1::PpobController < AdminController
   before_action :check_user_token, only: [
                                      :check_nomor,
                                      :harga,
-                                     :post_inquiry,
                                      :prepaid_topup,
+                                     :post_inquiry,
+                                     :post_payment,
+                                     :post_status,
                                    ]
 
   # Production
@@ -165,6 +167,34 @@ class Api::V1::PpobController < AdminController
     end
   end
 
+  def post_payment
+    if params[:tr_id]
+      balance = @current_user.mountpay.balance
+      ppob = Ppob.find_by(tr_id: params[:tr_id])
+      harga_jual = ppob.vendor_price + @@profit
+      if ppob
+        render json: { balance: balance, harga_jual: harga_jual }
+      else
+        render json: { message: "Data not found" }, status: :not_found
+      end
+    else
+      render json: { message: "Parameter is not correct" }, status: :bad_request
+    end
+  end
+
+  def post_status
+    if params[:tr_id]
+      ppob = Ppob.find_by(tr_id: params[:tr_id])
+      if ppob
+        render json: { status: ppob.status, body: ppob.body }
+      else
+        render json: { message: "Data not found" }, status: :not_found
+      end
+    else
+      render json: { message: "Parameter is not correct" }, status: :bad_request
+    end
+  end
+
   def prepaid_inquiry
     if permit_prepaid.permitted?
       conn = Faraday.new(
@@ -243,7 +273,6 @@ class Api::V1::PpobController < AdminController
   def prepaid_status
     if params[:ref_id]
       result = JSON.parse(Ppob.prepaid_status(params[:ref_id]))
-
       ppob = Ppob.find_by(ref_id: params[:ref_id])
       if ppob.ppob_type == "pln"
         selected_fields = result["data"].select { |key, _| ["status", "ref_id", "message", "sn"].include?(key) }
