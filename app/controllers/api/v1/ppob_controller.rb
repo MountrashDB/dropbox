@@ -120,13 +120,14 @@ class Api::V1::PpobController < AdminController
         headers: { "Content-Type" => "application/json" },
         request: { timeout: 3 },
       )
+      sign = Digest::MD5.hexdigest @@username + @@api_key + "pl"
 
       response = conn.post("/api/v1/bill/check/" + params[:type]) do |req|
         req.body = {
           commands: "pricelist-pasca",
           status: "active",
           username: @@username,
-          sign: @@sign + "pl",
+          sign: sign,
         }.to_json
       end
       render json: response.body
