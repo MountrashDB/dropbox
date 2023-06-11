@@ -258,6 +258,30 @@ class Api::V1::PpobController < AdminController
     end
   end
 
+  def prepaid_inquiry_ovo
+    if permit_prepaid.permitted?
+      conn = Faraday.new(
+        url: @@prepaid_url,
+        headers: { "Content-Type" => "application/json" },
+        request: { timeout: 5 },
+      )
+      sign = Digest::MD5.hexdigest @@username + @@api_key + permit_prepaid[:customer_id]
+      login_body = {
+        username: @@username,
+        sign: sign,
+      }
+      response = conn.post("/api/inquiry-ovo") do |req|
+        req.body = login_body.merge(permit_prepaid).to_json
+      end
+      result = response.body
+
+      hasil = JSON.parse(response.body)
+      render json: result
+    else
+      render json: { message: "Parameter not complete" }, status: :bad_request
+    end
+  end
+
   def prepaid_topup
     balance = @current_user.mountpay.balance
     harga = Ppob.pricelist(permit_prepaid[:type], permit_prepaid[:operator], permit_prepaid[:product_code]) #Check last 24 hours price

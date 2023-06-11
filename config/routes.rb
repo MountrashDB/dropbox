@@ -146,6 +146,7 @@ Rails.application.routes.draw do
           get "price", to: "ppob#prepaid_price"
           post "inquiry", to: "ppob#prepaid_inquiry"
           post "inquiry-pln", to: "ppob#prepaid_inquiry_pln"
+          post "inquiry-ovo", to: "ppob#prepaid_inquiry_ovo"
           post "top-up", to: "ppob#prepaid_topup"
           post "status", to: "ppob#prepaid_status"
         end
