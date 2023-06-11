@@ -30,6 +30,9 @@ class Api::V1::PpobController < AdminController
 
   @@profit = Rails.application.credentials.iak[:profit]
 
+  @@pulsa_price_list = ["10000", "20000", "50000", "100000", "300000", "500000"]
+  @@pln_price_list = ["20000", "50000", "100000", "500000", "1000000"]
+
   def check_nomor
     if par = params[:customer_id]
       phone = Phonelib.parse(par)
@@ -68,11 +71,16 @@ class Api::V1::PpobController < AdminController
     end
   end
 
+  def filter_array_by_key(original_array, key_name, included_values)
+    original_array.select { |item| included_values.include?(item[key_name]) }
+  end
+
   def prepaid_price
     if permit_prepaid[:type] && permit_prepaid[:operator]
       price_list = Ppob.pricelist(permit_prepaid[:type], permit_prepaid[:operator])
+      filtered_array = filter_array_by_key(price_list, "product_nominal", @@pulsa_price_list)
       if price_list
-        render json: price_list
+        render json: filtered_array.sort_by { |item| item["product_price"] }
       else
         render json: { message: "Coba lagi" }, status: :bad_request
       end
@@ -154,11 +162,12 @@ class Api::V1::PpobController < AdminController
           user: @current_user,
           body: hasil,
           ppob_type: permit_postpaid[:type],
-          vendor_price: hasil["data"]["selling_price"].to_f,
-          amount: hasil["data"]["selling_price"].to_f + @@profit,
+          vendor_price: hasil["data"]["price"].to_f,
+          amount: hasil["data"]["price"].to_f + @@profit,
           profit: @@profit,
           ref_id: ref_id,
           tr_id: hasil["data"]["tr_id"],
+          desc: "PPOB-#{hasil["data"]["tr_id"]}",
         )
       end
       render json: result
@@ -173,7 +182,13 @@ class Api::V1::PpobController < AdminController
       ppob = Ppob.find_by(tr_id: params[:tr_id])
       harga_jual = ppob.vendor_price + @@profit
       if ppob
-        render json: { balance: balance, harga_jual: harga_jual }
+        if harga_jual < balance
+          @current_user.mountpay_debitkan(harga_jual, ppob.desc)
+          PostPaymentJob.perform_at(2.seconds.from_now)
+          render json: { tr_id: params[:tr_id], status: "process" }
+        else
+          render json: { message: "Insuffient balance. Please select smaller price or product", balance: balance, price: harga_jual }, status: :bad_request
+        end
       else
         render json: { message: "Data not found" }, status: :not_found
       end
