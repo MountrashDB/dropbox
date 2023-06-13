@@ -28,6 +28,6 @@ class KycDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    Kyc.all.includes(:mitras)
+    Kyc.all.joins(:mitra)
   end
 end
