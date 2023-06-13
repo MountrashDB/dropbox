@@ -1,3 +1,5 @@
+require "feedjira"
+
 class Api::V1::UsersController < AdminController
   include ActiveStorage::SetCurrent
 
@@ -107,17 +109,24 @@ class Api::V1::UsersController < AdminController
   end
 
   def google_login
-    if user = User.find_by(email: params[:email], google_id: params[:google_id])
-      if user && params[:google_id]
-        payload = {
-          user_uuid: user.uuid,
-          exp: Time.now.to_i + @@token_expired,
-        }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
-        render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
-      else
-        render json: { message: "Not found" }, status: :unauthorized
+    if params[:email] && params[:google_id]
+      user = User.find_by(email: params[:email], google_id: params[:google_id])
+      if !user
+        user = User.new()
+        user.username = params[:name]
+        user.email = params[:email]
+        user.google_id = params[:google_id]
+        user.username = params[:name] || "Noname"
+        user.active_code = nil
+        user.password = "blank password"
+        user.save!
       end
+      payload = {
+        user_uuid: user.uuid,
+        exp: Time.now.to_i + @@token_expired,
+      }
+      token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+      render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
     else
       render json: { message: "Not found" }, status: :unauthorized
     end
@@ -271,14 +280,28 @@ class Api::V1::UsersController < AdminController
     end
   end
 
+  def get_image_url(entry)
+    if entry.respond_to?(:enclosure) && entry.enclosure
+      return entry.enclosure.url
+    elsif entry.respond_to?(:image) && entry.image
+      return entry.image
+    elsif entry.respond_to?(:itunes_image) && entry.itunes_image
+      return entry.itunes_image
+    end
+
+    return nil
+  end
+
   def get_rss
     require "rss"
     # require 'open-uri'
     url = "https://news.mountrash.com/feed/"
     arr_items = []
     URI.open(url) do |rss|
+      puts rss
       feed = RSS::Parser.parse(rss)
       feed.items.each do |item|
+        puts item
         data = {
           title: item.title,
           link: item.link,

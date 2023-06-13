@@ -16,6 +16,7 @@
 #  uuid                   :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  google_id              :string(45)
 #  partner_id             :integer
 #
 # Indexes
@@ -32,7 +33,7 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
   # has_secure_password
   validates :username, length: { in: 1..35 }, presence: true
-  validates :phone, presence: true
+  # validates :phone, presence: true
   validates :email, length: { in: 1..100 }, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
