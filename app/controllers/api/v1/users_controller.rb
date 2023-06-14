@@ -419,7 +419,6 @@ class Api::V1::UsersController < AdminController
     if params[:bank_code]
       userva = UserVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(user_id: @current_user.id, kodeBank: params[:bank_code])
       if userva
-        puts "=== HERE ==="
         render json: { virtual_account: userva.rekening, status: "SUCCESS", customer_name: userva.name, response_desc: "Virtual Account Successfully Created" }
       else #Create new VA
         # begin
