@@ -5,6 +5,7 @@
 #  id           :bigint           not null, primary key
 #  amount       :float(24)
 #  body         :text(65535)
+#  body_params  :json
 #  desc         :string(255)
 #  ppob_type    :string(255)
 #  profit       :float(24)

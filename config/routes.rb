@@ -56,7 +56,7 @@ Rails.application.routes.draw do
         post "bank-validation", to: "payment#bank_validation"
         get "news", to: "users#get_rss"
         get "bank-info", to: "users#bank_info"
-        post "va-create", to: "users#va_create"
+        post "va-create", to: "users#va_create_multi"
         get "va-list", to: "users#va_list"
         post "move", to: "user#move_mountpay"
         get ":uuid", to: "users#show"

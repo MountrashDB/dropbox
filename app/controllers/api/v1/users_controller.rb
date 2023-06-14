@@ -23,6 +23,7 @@ class Api::V1::UsersController < AdminController
                                      :withdraw,
                                      :va_create,
                                      :va_list,
+                                     :va_create_multi,
                                    ]
 
   @@fee = Rails.application.credentials.linkqu[:fee]
@@ -392,7 +393,76 @@ class Api::V1::UsersController < AdminController
     end
   end
 
-  def va_create
+  #   {
+  #     "time": 10,
+  #     "expired": "",
+  #     "bank_code": "014",
+  #     "bank_name": "",
+  #     "customer_phone": "08111111111",
+  #     "customer_id": "va|user|601f1517-dc9e-44f4-9b7b-ea8b1f6eb2b2|69910",
+  #     "customer_name": "Arie Ardiansyah",
+  #     "customer_email": "user3@gmail.com",
+  #     "partner_reff": "",
+  #     "username": "LI662GDBL",
+  #     "pin": "------",
+  #     "status": "FAILED",
+  #     "response_code": "99",
+  #     "response_desc": "Produk Maintenance",
+  #     "virtual_account": "",
+  #     "partner_reff2": "",
+  #     "url_helper": "",
+  #     "reserved": false,
+  #     "signature": ""
+  # }
+
+  def va_create_multi
+    if params[:bank_code]
+      userva = UserVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(user_id: @current_user.id, kodeBank: params[:bank_code])
+      if userva
+        puts "=== HERE ==="
+        render json: { virtual_account: userva.rekening, status: "SUCCESS", customer_name: userva.name, response_desc: "Virtual Account Successfully Created" }
+      else #Create new VA
+        # begin
+        conn = Faraday.new(
+          url: @@url,
+          headers: {
+            "Content-Type" => "application/json",
+            "client-id" => Rails.application.credentials.linkqu[:client_id],
+            "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+          },
+          request: { timeout: 3 },
+        )
+        response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
+          req.body = {
+            username: @@username,
+            pin: @@pin,
+            bank_code: params[:bank_code],
+            customer_id: "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s,
+            customer_name: @current_user.username,
+            customer_phone: @current_user.phone,
+            customer_email: @current_user.email,
+          }.to_json
+          req.options.timeout = 3
+          # rescue => e
+          #   logger.fatal "=== VA create failed ==="
+        end
+        result = JSON.parse(response.body)
+        hasil = UserVa.create!(
+          user_id: @current_user.id,
+          kodeBank: params[:bank_code],
+          name: result["customer_name"],
+          rekening: result["virtual_account"],
+          fee: result["feeadmin"],
+          bank_name: result["bank_name"],
+        )
+        render json: { virtual_account: result["virtual_account"], status: result["status"], customer_name: result["customer_name"], response_desc: result["response_desc"] }
+      end
+    else
+      render json: { message: "Parameter not complete" }, status: :bad_request
+    end
+  end
+
+  def va_create_single
     userva = UserVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(user_id: @current_user.id, kodeBank: @@bank_code)
     if userva
       render json: userva

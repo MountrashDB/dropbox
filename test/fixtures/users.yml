@@ -16,6 +16,7 @@
 #  uuid                   :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  google_id              :string(45)
 #  partner_id             :integer
 #
 # Indexes
