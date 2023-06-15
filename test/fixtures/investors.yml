@@ -1,0 +1,27 @@
+# == Schema Information
+#
+# Table name: investors
+#
+#  id          :bigint           not null, primary key
+#  balance     :float(24)
+#  credit      :float(24)
+#  debit       :float(24)
+#  description :string(255)
+#  status      :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
+one:
+  status: MyString
+  credit: 1.5
+  debit: 1.5
+  balance: 1.5
+  description: MyString
+
+two:
+  status: MyString
+  credit: 1.5
+  debit: 1.5
+  balance: 1.5
+  description: MyString

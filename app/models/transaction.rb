@@ -51,6 +51,8 @@ class Transaction < ApplicationRecord
       box = Box.find(self.box_id)
       mitra_amount = box.mitra_share * harga_botol / 100
       user_amount = box.user_share * harga_botol / 100
+      investor_amount = harga_botol - mitra_amount - user_amount
+      Investor.creditkan(investor_amount, "Botol")
       self.mitra_amount = mitra_amount
       self.user_amount = user_amount
       self.harga = harga_botol

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_06_133151) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_14_145628) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -132,6 +132,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_133151) do
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_districts_on_city_id"
     t.index ["province_id"], name: "index_districts_on_province_id"
+  end
+
+  create_table "investors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "status"
+    t.float "credit"
+    t.float "debit"
+    t.float "balance"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "kycs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
