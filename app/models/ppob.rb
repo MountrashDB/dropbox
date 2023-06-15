@@ -55,10 +55,6 @@ class Ppob < ApplicationRecord
 
     event :successkan do
       transitions from: :process, to: :success
-      after do
-        ppob = Ppob.find(self.id)
-        Investor.creditkan(ppob.profit, "PPOB")
-      end
     end
 
     event :failedkan, after_commit: :reverse_balance do
