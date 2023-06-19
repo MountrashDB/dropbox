@@ -33,6 +33,7 @@ class Withdrawl < ApplicationRecord
 
   belongs_to :mitra, optional: true
   belongs_to :mitratransaction, optional: true
+  belongs_to :bank, optional: true, foreign_key: "kodeBank", primary_key: "kode_bank"
   validates_numericality_of :amount, greater_than_or_equal_to: 10000
 
   after_create :send_money

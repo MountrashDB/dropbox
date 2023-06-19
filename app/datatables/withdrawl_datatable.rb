@@ -6,7 +6,7 @@ class WithdrawlDatatable < AjaxDatatablesRails::ActiveRecord
       id: { source: "Withdrawl.id", cond: :eq },
       email: { source: "User.email", cond: :like },
       amount: { source: "Withdrawl.amount", cond: :eq },
-      kode_bank: { source: "Withdrawl.kodeBank", cond: :eq },
+      bank: { source: "Bank.name", cond: :eq },
       status: { source: "Withdrawl.status", cond: :eq },
       updated_at: { source: "Withdrawl.updated_at" },
     }
@@ -19,13 +19,13 @@ class WithdrawlDatatable < AjaxDatatablesRails::ActiveRecord
         email: record.user.email,
         amount: record.amount,
         status: record.status,
-        kode_bank: record.kodeBank,
+        bank: record.bank.name,
         updated_at: record.updated_at,
       }
     end
   end
 
   def get_raw_records
-    Withdrawl.all.joins(:user).order(updated_at: :desc)
+    Withdrawl.all.joins(:user, :bank).order(updated_at: :desc)
   end
 end
