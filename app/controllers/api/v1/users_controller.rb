@@ -447,7 +447,7 @@ class Api::V1::UsersController < AdminController
           #   logger.fatal "=== VA create failed ==="
         end
         result = JSON.parse(response.body)
-        if result["bank_name"]
+        if result["virtual_account"]
           hasil = UserVa.create!(
             user_id: @current_user.id,
             kodeBank: params[:bank_code],
