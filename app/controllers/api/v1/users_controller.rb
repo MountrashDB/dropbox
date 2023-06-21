@@ -442,18 +442,21 @@ class Api::V1::UsersController < AdminController
             customer_email: @current_user.email,
           }.to_json
           req.options.timeout = 3
+          puts req.body
           # rescue => e
           #   logger.fatal "=== VA create failed ==="
         end
         result = JSON.parse(response.body)
-        hasil = UserVa.create!(
-          user_id: @current_user.id,
-          kodeBank: params[:bank_code],
-          name: result["customer_name"],
-          rekening: result["virtual_account"],
-          fee: result["feeadmin"],
-          bank_name: result["bank_name"],
-        )
+        if result["bank_name"]
+          hasil = UserVa.create!(
+            user_id: @current_user.id,
+            kodeBank: params[:bank_code],
+            name: result["customer_name"],
+            rekening: result["virtual_account"],
+            fee: result["feeadmin"],
+            bank_name: result["bank_name"],
+          )
+        end
         render json: { virtual_account: result["virtual_account"], status: result["status"], customer_name: result["customer_name"], response_desc: result["response_desc"] }
       end
     else
