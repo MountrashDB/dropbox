@@ -332,6 +332,6 @@ class Api::V1::PpobController < AdminController
   end
 
   def permit_postpaid
-    params.permit(:hp, :code, :type)
+    params.permit(:hp, :code, :type, :month)
   end
 end
