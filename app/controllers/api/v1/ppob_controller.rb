@@ -32,6 +32,7 @@ class Api::V1::PpobController < AdminController
 
   @@pulsa_price_list = ["10000", "20000", "50000", "100000", "300000", "500000"]
   @@pln_price_list = ["20000", "50000", "100000", "500000", "1000000"]
+  @@ovo_price_list = [10000, 20000, 50000, 100000, 300000, 500000]
 
   def check_nomor
     if par = params[:customer_id]
@@ -78,7 +79,16 @@ class Api::V1::PpobController < AdminController
   def prepaid_price
     if permit_prepaid[:type] && permit_prepaid[:operator]
       price_list = Ppob.pricelist(permit_prepaid[:type], permit_prepaid[:operator])
-      filtered_array = filter_array_by_key(price_list, "product_nominal", @@pulsa_price_list)
+      case permit_prepaid[:type]
+      when "pulsa"
+        filtered_array = filter_array_by_key(price_list, "product_nominal", @@pulsa_price_list)
+      when "pln"
+        filtered_array = filter_array_by_key(price_list, "product_nominal", @@pln_price_list)
+      when "etoll"
+        filtered_array = filter_array_by_key(price_list, "product_price", @@ovo_price_list)
+      else
+        filtered_array = filter_array_by_key(price_list, "product_nominal", @@pulsa_price_list)
+      end
       if price_list
         render json: filtered_array.sort_by { |item| item["product_price"] }
       else
@@ -328,10 +338,10 @@ class Api::V1::PpobController < AdminController
   private
 
   def permit_prepaid
-    params.permit(:customer_id, :type, :operator, :product_code, :ppob)
+    params.permit(:customer_id, :type, :operator, :product_code, :ppob, :price)
   end
 
   def permit_postpaid
-    params.permit(:hp, :code, :type, :month)
+    params.permit(:hp, :code, :type, :month, :price, :ppob)
   end
 end
