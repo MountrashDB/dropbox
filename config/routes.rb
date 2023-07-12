@@ -85,7 +85,7 @@ Rails.application.routes.draw do
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
         post "transaction/process/:uuid", to: "admin#transaction_process"
-        # post "", to: "admin#create"
+        post "", to: "admin#create"
         # get ":uuid", to: "admin#show"
         # patch ":uuid", to: "admin#update"
         # delete ":uuid", to: "admin#destroy"
