@@ -13,6 +13,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       user: { source: "User.username", cond: :like, searchable: true },
       image: { source: "Transaction.foto.url", searchable: false },
       email: { source: "User.email", cond: :like, searchable: true },
+      botol: { source: "Transaction.botol_info", cond: :like, searchable: true },
       created_at: { source: "Transaction.created_at", cond: :like, searchable: true },
     }
   end
@@ -34,6 +35,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
         user: record.user.username,
         email: record.user.email,
         image: record.foto.url,
+        botol: record.botol_info,
         created_at: record.created_at,
       }
     end

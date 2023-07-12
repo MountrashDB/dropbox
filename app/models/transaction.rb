@@ -98,4 +98,17 @@ class Transaction < ApplicationRecord
                                  diterima: false
     end
   end
+
+  def botol_info
+    if self.botol_id
+      botol = Botol.find(self.botol_id)
+      if botol
+        botol.jenis
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
 end
