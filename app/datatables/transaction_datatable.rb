@@ -13,7 +13,6 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       user: { source: "User.username", cond: :like, searchable: true },
       image: { source: "Transaction.foto.url", searchable: false },
       email: { source: "User.email", cond: :like, searchable: true },
-      jenis: { source: "Botol.jenis", cond: :like, searchable: true },
       created_at: { source: "Transaction.created_at", cond: :like, searchable: true },
     }
   end
@@ -34,7 +33,6 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
         mitra: record.mitra.name,
         user: record.user.username,
         email: record.user.email,
-        jenis: record.botol.jenis,
         image: record.foto.url,
         created_at: record.created_at,
       }
@@ -43,11 +41,11 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
 
   def get_raw_records
     if options[:mitra_id]
-      Transaction.where(mitra_id: options[:mitra_id]).joins(:box, :user, :mitra, :botol)
+      Transaction.where(mitra_id: options[:mitra_id]).joins(:box, :user, :mitra)
     elsif options[:user_id]
-      Transaction.where(user_id: options[:user_id]).joins(:box, :user, :mitra, :botol)
+      Transaction.where(user_id: options[:user_id]).joins(:box, :user, :mitra)
     else
-      Transaction.all.joins(:box, :user, :mitra, :botol)
+      Transaction.all.joins(:box, :user, :mitra)
     end
   end
 end
