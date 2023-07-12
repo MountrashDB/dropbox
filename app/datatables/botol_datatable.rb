@@ -1,5 +1,4 @@
 class BotolDatatable < AjaxDatatablesRails::ActiveRecord
-
   def view_columns
     # Declare strings in this format: ModelName.column_name
     # or in aliased_join_table.column_name format
@@ -10,18 +9,24 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
     @view_columns ||= {
       id: { source: "Botol.id", cond: :eq },
       uuid: { source: "Botol.uuid", cond: :eq },
-      name: { source: "Botol.name", cond: :eq },       
-      ukuran: { source: "Botol.ukuran", cond: :eq }
+      name: { source: "Botol.name", cond: :eq },
+      product: { source: "Botol.product", cond: :eq },
+      jenis: { source: "Botol.jenis", cond: :eq },
+      barcode: { source: "Botol.barcode", cond: :eq },
+      ukuran: { source: "Botol.ukuran", cond: :eq },
     }
   end
 
   def data
     records.map do |record|
       {
-        id: record.id,        
+        id: record.id,
         uuid: record.uuid,
-        name: record.name,        
-        ukuran: record.ukuran
+        name: record.name,
+        product: record.product,
+        jenis: record.jenis,
+        barcode: record.barcode,
+        ukuran: record.ukuran,
       }
     end
   end
@@ -30,5 +35,4 @@ class BotolDatatable < AjaxDatatablesRails::ActiveRecord
     # insert query here
     Botol.all
   end
-
 end
