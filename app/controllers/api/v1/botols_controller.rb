@@ -22,6 +22,9 @@ class Api::V1::BotolsController < AdminController
     botol = Botol.new()
     botol.name = params[:name]
     botol.ukuran = params[:ukuran]
+    botol.jenis = params[:jenis]
+    botol.product = params[:product]
+    botol.barcode = params[:barcode]
     # botol.images.attach(params[:images])
     botol.images = params[:images]
     if botol.save
