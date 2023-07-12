@@ -86,9 +86,9 @@ Rails.application.routes.draw do
         post "withdraw", to: "admin#withdrawl"
         post "transaction/process/:uuid", to: "admin#transaction_process"
         post "", to: "admin#create"
-        # get ":uuid", to: "admin#show"
-        # patch ":uuid", to: "admin#update"
-        # delete ":uuid", to: "admin#destroy"
+        get ":uuid", to: "admin#show"
+        patch ":uuid", to: "admin#update"
+        delete ":uuid", to: "admin#destroy"
       end
 
       scope "mitra" do
