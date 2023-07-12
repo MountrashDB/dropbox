@@ -15,6 +15,9 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
       max: { source: "Box.max", cond: :eq },
       botol_total: { source: "Box.botol_total", cond: :eq },
       mitra_share: { source: "Box.mitra_share" },
+      price_pcs: { source: "Box.price_pcs" },
+      price_kg: { source: "Box.price_kg" },
+      mitra_share: { source: "Box.mitra_share" },
       user_share: { source: "Box.user_share" },
       created_at: { source: "Box.created_at" },
     }
@@ -35,6 +38,8 @@ class BoxDatatable < AjaxDatatablesRails::ActiveRecord
         mitra_share: record.mitra_share,
         max: record.max,
         botol_total: record.botol_total,
+        price_pcs: record.price_pcs,
+        price_kg: record.price_kg,
         user_share: record.user_share,
         created_at: record.created_at,
       }

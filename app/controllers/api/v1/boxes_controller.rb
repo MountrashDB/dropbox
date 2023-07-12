@@ -27,6 +27,8 @@ class Api::V1::BoxesController < AdminController
     box.user_share = params[:user_share]
     box.latitude = params[:latitude]
     box.longitude = params[:longitude]
+    box.price_pcs = params[:price_pcs]
+    box.price_kg = params[:price_kg]
     box.admin_id = @current_admin.id
     box.mitra_id = Mitra.find_by(uuid: params[:mitra_uuid]).id
     if box.save
@@ -49,8 +51,12 @@ class Api::V1::BoxesController < AdminController
       box.user_share = params[:user_share]
       box.latitude = params[:latitude]
       box.longitude = params[:longitude]
+      box.price_pcs = params[:price_pcs]
+      box.price_kg = params[:price_kg]
       box.admin_id = @current_admin.id
-      box.mitra_id = Mitra.find_by(uuid: params[:mitra_uuid]).id
+      if mitra = Mitra.find_by(uuid: params[:mitra_uuid])
+        box.mitra_id = mitra.id
+      end
       if box.save
         render json: BoxBlueprint.render(box)
       else

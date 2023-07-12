@@ -6,10 +6,12 @@
 #  diterima     :boolean
 #  harga        :float(24)
 #  mitra_amount :float(24)
+#  status       :string(255)      default("in")
 #  user_amount  :float(24)
 #  uuid         :string(255)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  botol_id     :integer
 #  box_id       :integer
 #  mitra_id     :integer
 #  user_id      :integer
@@ -21,6 +23,7 @@ class Transaction < ApplicationRecord
   belongs_to :mitra
   belongs_to :user
   belongs_to :box
+  belongs_to :botol, optional: true
 
   after_create :set_balance
   before_create :send_notify
@@ -46,9 +49,9 @@ class Transaction < ApplicationRecord
     # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
     foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
     botol_valid = Botol.validate(foto_url)
-    harga_botol = 65 # Nanti disesuaikan sesuai botol yang masuk
+    box = Box.find(self.box_id)
+    harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
     if botol_valid
-      box = Box.find(self.box_id)
       mitra_amount = box.mitra_share * harga_botol / 100
       user_amount = box.user_share * harga_botol / 100
       investor_amount = harga_botol - mitra_amount - user_amount
@@ -95,39 +98,4 @@ class Transaction < ApplicationRecord
                                  diterima: false
     end
   end
-
-  # def set_balance_old
-  #   foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
-
-  #   if Botol.validate(foto_url)
-  #     self.harga = harga_botol
-  #     self.diterima = true
-  #     self.save
-  #     trx = Usertransaction.where(user_id: self.user_id).last
-  #     description = "Reward Trx: " + self.id.to_s
-  #     if trx
-  #       balance = trx.balance
-  #       trx = Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: balance + self.user_amount, description: description)
-  #     else
-  #       Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
-  #     end
-
-  #     trx = Mitratransaction.where(mitra_id: self.mitra_id).last
-  #     if trx
-  #       balance = trx.balance
-  #       trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: balance + self.mitra_amount, description: description)
-  #     else
-  #       Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
-  #     end
-  #     NotifyChannel.broadcast_to self.user.uuid,
-  #       status: "complete",
-  #       image: foto_url,
-  #       diterima: true
-  #   else
-  #     NotifyChannel.broadcast_to self.user.uuid,
-  #                                status: "complete",
-  #                                image: foto_url,
-  #                                diterima: false
-  #   end
-  # end
 end

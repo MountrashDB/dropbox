@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_14_145628) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_124448) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -82,6 +82,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_145628) do
     t.string "ukuran"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "barcode"
+    t.integer "jenis"
+    t.string "product"
   end
 
   create_table "boxes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -106,6 +109,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_145628) do
     t.string "type_progress"
     t.integer "user_id"
     t.integer "botol_total"
+    t.float "price_pcs"
+    t.float "price_kg"
   end
 
   create_table "callbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -291,6 +296,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_145628) do
     t.float "user_amount"
     t.float "harga"
     t.boolean "diterima"
+    t.string "status", default: "in"
+    t.integer "botol_id"
   end
 
   create_table "user_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

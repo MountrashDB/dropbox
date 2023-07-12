@@ -77,6 +77,10 @@ Rails.application.routes.draw do
         post "upload/:uuid", to: "transaction#upload"
       end
 
+      scope "transaction" do
+        patch ":uuid", to: "transaction#update_botol"
+      end
+
       scope "admin" do
         post "login", to: "admin#login"
         post "forgot", to: "admin#forgot"

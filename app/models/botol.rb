@@ -3,7 +3,10 @@
 # Table name: botols
 #
 #  id         :bigint           not null, primary key
+#  barcode    :string(255)
+#  jenis      :integer
 #  name       :string(255)
+#  product    :string(255)
 #  ukuran     :string(255)
 #  uuid       :string(255)
 #  created_at :datetime         not null
@@ -17,6 +20,8 @@ class Botol < ApplicationRecord
     attachable.variant :fix, resize_to_limit: [300, 300]
   end
   before_create :set_uuid
+
+  enum jenis: [:kaca, :plastik, :kaleng, :duplex, :plastik_sachet]
   # before_save :resize_images
   SERVER_VALIDATION = "https://bottlenobottle.hasbala.cloud/predict"
 

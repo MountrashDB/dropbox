@@ -13,6 +13,8 @@
 #  mitra_info    :string(255)
 #  mitra_share   :float(24)
 #  nama          :string(255)
+#  price_kg      :float(24)
+#  price_pcs     :float(24)
 #  qr_code       :string(255)
 #  qty           :float(24)
 #  revenue       :float(24)
