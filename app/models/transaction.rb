@@ -28,6 +28,7 @@ class Transaction < ApplicationRecord
   after_create :set_balance
   before_create :send_notify
   scope :berhasil, -> { where(diterima: true) }
+  after_update :reverse_balance
 
   def set_foto_folder(folder_name)
     # This method sets the folder for the foto attachment
@@ -109,6 +110,21 @@ class Transaction < ApplicationRecord
       end
     else
       nil
+    end
+  end
+
+  def reverse_balance
+    if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
+      investor_amount = self.harga - self.user_amount - self.mitra_amount
+      if self.diterima == false
+        Investor.debitkan(investor_amount, "Trx rejected")
+        User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
+        Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
+      else
+        Investor.creditkan(investor_amount, "Trx accepted")
+        User.find(self.user_id).creditkan(self.user_amount, "Trx accepted")
+        Mitra.find(self.mitra_id).creditkan(self.mitra_amount, "Trx accepted")
+      end
     end
   end
 end

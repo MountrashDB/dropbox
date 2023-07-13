@@ -94,4 +94,26 @@ class Mitra < ApplicationRecord
       false
     end
   end
+
+  def creditkan(amount, description)
+    balance = self.mitratransactions.balance
+    Mitratransaction.create!(
+      mitra_id: self.id,
+      credit: amount,
+      debit: 0,
+      balance: balance + amount,
+      description: description,
+    )
+  end
+
+  def debitkan(amount, description)
+    balance = self.mitratransactions.balance
+    Mitratransaction.create!(
+      mitra_id: self.id,
+      credit: 0,
+      debit: amount,
+      balance: balance - amount,
+      description: description,
+    )
+  end
 end

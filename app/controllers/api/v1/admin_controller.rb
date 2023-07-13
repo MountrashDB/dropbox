@@ -112,8 +112,9 @@ class Api::V1::AdminController < AdminController
 
   def transaction_process
     trx = Transaction.find_by(uuid: params[:uuid])
-    if trx.update!(diterima: params[:diterima]) && params[:diterima]
-      render json: { message: "Success" }
+    if trx
+      trx.update!(diterima: params[:diterima])
+      render json: trx
     else
       render json: { message: "Not found" }
     end

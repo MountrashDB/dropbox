@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       end
 
       scope "transaction" do
+        post "process/:uuid", to: "admin#transaction_process"
         patch ":uuid", to: "transaction#update_botol"
       end
 
@@ -88,7 +89,6 @@ Rails.application.routes.draw do
         post "datatable", to: "admin#datatable"
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
-        post "transaction/process/:uuid", to: "admin#transaction_process"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
         patch ":uuid", to: "admin#update"
