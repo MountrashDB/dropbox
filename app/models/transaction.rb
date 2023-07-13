@@ -120,6 +120,7 @@ class Transaction < ApplicationRecord
         Investor.debitkan(investor_amount, "Trx rejected")
         User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
         Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
+        Transaction.find(self.id).destroy
       else
         Investor.creditkan(investor_amount, "Trx accepted")
         User.find(self.user_id).creditkan(self.user_amount, "Trx accepted")
