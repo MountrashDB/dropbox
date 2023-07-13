@@ -116,18 +116,23 @@ class Api::V1::UsersController < AdminController
         user = User.new()
         user.username = params[:name]
         user.email = params[:email]
+        user.active = true
         user.google_id = params[:google_id]
         user.username = params[:name] || "Noname"
         user.active_code = nil
         user.password = "blank password"
         user.save!
       end
-      payload = {
-        user_uuid: user.uuid,
-        exp: Time.now.to_i + @@token_expired,
-      }
-      token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
-      render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
+      if user.active == false
+        render json: { message: "Your account is not active" }, status: :unauthorized
+      else
+        payload = {
+          user_uuid: user.uuid,
+          exp: Time.now.to_i + @@token_expired,
+        }
+        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
+      end
     else
       render json: { message: "Not found" }, status: :unauthorized
     end

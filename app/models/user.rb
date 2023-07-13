@@ -58,7 +58,7 @@ class User < ApplicationRecord
     token = headers["Authorization"].split(" ").last
     begin
       decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
-      @current_user = User.find_by(uuid: decode[0]["user_uuid"])
+      @current_user = User.find_by(uuid: decode[0]["user_uuid"], active: true)
     rescue JWT::ExpiredSignature
       false
     end
