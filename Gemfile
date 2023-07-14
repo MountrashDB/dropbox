@@ -81,7 +81,7 @@ gem "mysql2"
 # gem "devise"
 # gem "rack-cors"
 # gem "ajax-datatables-rails"
-# gem "cloudinary"                                # Assets upload
+gem "cloudinary"                                # Assets upload
 gem "capistrano", "~> 3.11"
 gem "capistrano-rails", "~> 1.4"
 gem "capistrano-passenger", "~> 0.2.0"
