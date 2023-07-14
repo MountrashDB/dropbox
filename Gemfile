@@ -75,12 +75,12 @@ end
 
 # gem "pagy"
 gem "mysql2"
-# gem "ransack"
-# gem "blueprinter"
-# gem "jwt"
-# gem "devise"
+gem "ransack"
+gem "blueprinter"
+gem "jwt"
+gem "devise"
 gem "rack-cors"
-# gem "ajax-datatables-rails"
+gem "ajax-datatables-rails"
 gem "cloudinary"                                # Assets upload
 gem "capistrano", "~> 3.11"
 gem "capistrano-rails", "~> 1.4"
