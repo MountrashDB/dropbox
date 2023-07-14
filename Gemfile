@@ -73,7 +73,7 @@ group :test do
   gem "webdrivers"
 end
 
-# gem "pagy"
+gem "pagy"
 gem "mysql2"
 gem "ransack"
 gem "blueprinter"

@@ -233,6 +233,7 @@ GEM
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    pagy (6.0.4)
     phonelib (0.8.2)
     protocol-hpack (1.4.2)
     protocol-http (0.24.4)
@@ -394,6 +395,7 @@ DEPENDENCIES
   jbuilder
   jwt
   mysql2
+  pagy
   phonelib
   puma (~> 5.0)
   rack-cors
