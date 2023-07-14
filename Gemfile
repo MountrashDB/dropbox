@@ -86,18 +86,18 @@ gem "capistrano", "~> 3.11"
 gem "capistrano-rails", "~> 1.4"
 gem "capistrano-passenger", "~> 0.2.0"
 gem "capistrano-rbenv", "~> 2.1", ">= 2.1.4"
-gem "rqrcode", "~> 2.0"
-gem "simple_token_authentication", "~> 1.0"
-gem "yajl-ruby", require: "yajl" # SPeed JSON rendering
-gem "draper"
-gem "imatcher"
-gem "rss"
-gem "rufo"
-gem "aasm" # For record status
-gem "after_commit_everywhere" # For AASM after_commit
-gem "sidekiq"
-gem "faraday"
-gem "async-http-faraday"
-gem "phonelib"
-gem "httparty"
-gem "feedjira"
+# gem "rqrcode", "~> 2.0"
+# gem "simple_token_authentication", "~> 1.0"
+# gem "yajl-ruby", require: "yajl" # SPeed JSON rendering
+# gem "draper"
+# gem "imatcher"
+# gem "rss"
+# gem "rufo"
+# gem "aasm" # For record status
+# gem "after_commit_everywhere" # For AASM after_commit
+# gem "sidekiq"
+# gem "faraday"
+# gem "async-http-faraday"
+# gem "phonelib"
+# gem "httparty"
+# gem "feedjira"
