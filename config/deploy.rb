@@ -4,7 +4,7 @@ lock "~> 3.17.1"
 set :application, "dropbox"
 set :repo_url, "https://github.com/MountrashDB/dropbox.git"
 set :deploy_to, "/home/deploy/#{fetch :application}"
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
 append :linked_files, "config/master.key"
 set :keep_releases, 5
 
@@ -25,7 +25,7 @@ set :keep_releases, 5
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", 'config/master.key'
+append :linked_files, "config/database.yml", "config/master.key", "config/application.yml"
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "tmp/webpacker", "public/system", "vendor", "storage"
