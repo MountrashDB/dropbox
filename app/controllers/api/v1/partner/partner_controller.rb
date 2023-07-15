@@ -43,7 +43,7 @@ class Api::V1::Partner::PartnerController < PartnerController
           uuid: partner.uuid,
           exp: Time.now.to_i + @@token_expired,
         }
-        jwt = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        jwt = JWT.encode payload, ENV["secret_key_base"], ENV["token_algorithm"]
         render json: { uuid: partner.uuid, jwt: jwt, email: partner.email, nama: partner.nama, api_key: partner.api_key, api_secret: partner.api_secret }
       else
         render json: { message: "Not yet verified" }, status: :not_found

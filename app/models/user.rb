@@ -45,9 +45,9 @@ class User < ApplicationRecord
   has_one :user_bank, dependent: :destroy
   before_create :set_uuid
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
 
   def set_uuid
     self.uuid = SecureRandom.uuid
@@ -57,7 +57,7 @@ class User < ApplicationRecord
   def self.get_user(headers)
     token = headers["Authorization"].split(" ").last
     begin
-      decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+      decode = JWT.decode token, ENV["secret_key_base"], true, { algorithm: ENV["token_algorithm"] }
       @current_user = User.find_by(uuid: decode[0]["user_uuid"], active: true)
     rescue JWT::ExpiredSignature
       false
@@ -71,8 +71,8 @@ class User < ApplicationRecord
       https.use_ssl = true
       request = Net::HTTP::Post.new(url)
       request["Content-Type"] = "application/json"
-      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+      request["client-id"] = ENV["linkqu_client_id"]
+      request["client-secret"] = ENV["linkqu_client_secret"]
       data = {
         "username": @@username,
         "pin": @@pin,
@@ -128,8 +128,8 @@ class User < ApplicationRecord
       https.use_ssl = true
       request = Net::HTTP::Post.new(url)
       request["Content-Type"] = "application/json"
-      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+      request["client-id"] = ENV["linkqu_client_id"]
+      request["client-secret"] = ENV["linkqu_client_secret"]
       data = {
         "username": @@username,
         "pin": @@pin,

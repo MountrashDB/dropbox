@@ -3,10 +3,10 @@ class PostPaymentJob
   sidekiq_options retry: 3
 
   # Production
-  @@username = Rails.application.credentials.iak[:username]
-  @@api_key = Rails.application.credentials.iak[:api_key]
+  @@username = ENV["iak_username"]
+  @@api_key = ENV["iak_api_key"]
   @@sign = Digest::MD5.hexdigest @@username + @@api_key
-  @@postpaid_url = Rails.application.credentials.iak[:postpaid]
+  @@postpaid_url = ENV["iak_postpaid"]
 
   def perform(ppob)
     logger.info "=== PAY PPOB ==="

@@ -5,12 +5,12 @@ class SendMoneyJob
   include Sidekiq::Job
   sidekiq_options retry: 0
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
-  @@client_id = Rails.application.credentials.linkqu[:client_id]
-  @@client_secret = Rails.application.credentials.linkqu[:client_secret]
-  @@fee = Rails.application.credentials.linkqu[:fee]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
+  @@client_id = ENV["linkqu_client_id"]
+  @@client_secret = ENV["linkqu_client_secret"]
+  @@fee = ENV["linkqu_fee"]
 
   def perform(id)
     trx = Withdrawl.find(id)

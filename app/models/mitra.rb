@@ -41,9 +41,9 @@ class Mitra < ApplicationRecord
   has_one_attached :image, dependent: :destroy, service: :cloudinary
   scope :active, -> { where(status: 1) }
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
 
   def set_uuid
     self.uuid = SecureRandom.uuid
@@ -54,7 +54,7 @@ class Mitra < ApplicationRecord
   def self.get_mitra(headers)
     token = headers["Authorization"].split(" ").last
     begin
-      decode = JWT.decode token, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+      decode = JWT.decode token, ENV["secret_key_base"], true, { algorithm: ENV["token_algorithm"] }
       @current_mitra = Mitra.find_by(uuid: decode[0]["mitra_uuid"])
     rescue JWT::ExpiredSignature
       false
@@ -68,8 +68,8 @@ class Mitra < ApplicationRecord
       https.use_ssl = true
       request = Net::HTTP::Post.new(url)
       request["Content-Type"] = "application/json"
-      request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-      request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+      request["client-id"] = ENV["linkqu_client_id"]
+      request["client-secret"] = ENV["linkqu_client_secret"]
       data = {
         "username": @@username,
         "pin": @@pin,

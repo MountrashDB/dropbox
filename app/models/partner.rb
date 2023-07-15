@@ -36,7 +36,7 @@ class Partner < ApplicationRecord
   def self.get_header(headers)
     jwt = headers["Authorization"].split(" ").last
     begin
-      decode = JWT.decode jwt, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+      decode = JWT.decode jwt, ENV["secret_key_base"], true, { algorithm: ENV["token_algorithm"] }
       partner = Partner.find_by(uuid: decode[0]["uuid"])
     rescue JWT::ExpiredSignature
       false
@@ -44,7 +44,7 @@ class Partner < ApplicationRecord
   end
 
   def self.get_jwt(jwt)
-    decode = JWT.decode jwt, Rails.application.credentials.secret_key_base, true, { algorithm: Rails.application.credentials.token_algorithm }
+    decode = JWT.decode jwt, ENV["secret_key_base"], true, { algorithm: ENV["token_algorithm"] }
     partner = Partner.find_by(uuid: decode[0]["uuid"])
   end
 

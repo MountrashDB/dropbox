@@ -26,10 +26,10 @@ class Api::V1::UsersController < AdminController
                                      :va_create_multi,
                                    ]
 
-  @@fee = Rails.application.credentials.linkqu[:fee]
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@fee = ENV["linkqu_fee"]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
   @@bank_code = "002" # 002 = Bank BRI
 
   if Rails.env.production?
@@ -99,7 +99,7 @@ class Api::V1::UsersController < AdminController
           user_uuid: user.uuid,
           exp: Time.now.to_i + @@token_expired,
         }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        token = JWT.encode payload, ENV["secret_key_base"], ENV["token_algorithm"]
         render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
       else
         render json: { message: "Not found" }, status: :unauthorized
@@ -130,7 +130,7 @@ class Api::V1::UsersController < AdminController
           user_uuid: user.uuid,
           exp: Time.now.to_i + @@token_expired,
         }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        token = JWT.encode payload, ENV["secret_key_base"], ENV["token_algorithm"]
         render json: { token: token, email: user.email, username: user.username, uuid: user.uuid, id: user.id }
       end
     else
@@ -431,8 +431,8 @@ class Api::V1::UsersController < AdminController
           url: @@url,
           headers: {
             "Content-Type" => "application/json",
-            "client-id" => Rails.application.credentials.linkqu[:client_id],
-            "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+            "client-id" => ENV["linkqu_client_id"],
+            "client-secret" => ENV["linkqu_client_secret"],
           },
           request: { timeout: 3 },
         )
@@ -478,8 +478,8 @@ class Api::V1::UsersController < AdminController
         url: @@url,
         headers: {
           "Content-Type" => "application/json",
-          "client-id" => Rails.application.credentials.linkqu[:client_id],
-          "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+          "client-id" => ENV["linkqu_client_id"],
+          "client-secret" => ENV["linkqu_client_secret"],
         },
         request: { timeout: 3 },
       )

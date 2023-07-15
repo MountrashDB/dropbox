@@ -2,9 +2,9 @@ class Api::V1::CallbackController < ActionController::API
   require "uri"
   require "net/http"
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
 
   IAK_PROCESS = "0"
   IAK_SUCCESS = "1"

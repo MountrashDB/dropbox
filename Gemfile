@@ -101,3 +101,4 @@ gem "async-http-faraday"
 gem "phonelib"
 gem "httparty"
 gem "feedjira"
+gem "figaro" # For create rails ENV and application.yml

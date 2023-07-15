@@ -13,22 +13,22 @@ class Api::V1::PpobController < AdminController
                                    ]
 
   # Production
-  @@prepaid_url = Rails.application.credentials.iak[:prepaid]
-  @@username = Rails.application.credentials.iak[:username]
-  @@api_key = Rails.application.credentials.iak[:api_key]
+  @@prepaid_url = ENV["iak_prepaid"]
+  @@username = ENV["iak_username"]
+  @@api_key = ENV["iak_api_key"]
   @@sign = Digest::MD5.hexdigest @@username + @@api_key
   @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
-  @@postpaid_url = Rails.application.credentials.iak[:postpaid]
+  @@postpaid_url = ENV["iak_postpaid"]
 
   # Development
   # @@prepaid_url = "https://prepaid.iak.dev"
   # @@postpaid_url = "https://testpostpaid.mobilepulsa.net"
-  # @@username = Rails.application.credentials.iak[:username]
+  # @@username = ENV["iak_username"]
   # @@api_key = "86061ea4b7c25e81"
   # @@sign = Digest::MD5.hexdigest @@username + @@api_key
   # @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
 
-  @@profit = Rails.application.credentials.iak[:profit]
+  @@profit = ENV["iak_profit"]
 
   @@pulsa_price_list = ["10000", "20000", "50000", "100000", "300000", "500000"]
   @@pln_price_list = ["20000", "50000", "100000", "500000", "1000000"]

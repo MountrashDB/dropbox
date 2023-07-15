@@ -38,7 +38,7 @@ class Withdrawl < ApplicationRecord
 
   after_create :send_money
 
-  @@fee = Rails.application.credentials.linkqu[:fee]
+  @@fee = ENV["linkqu_fee"]
 
   aasm column: :status do
     state :requesting, initial: true

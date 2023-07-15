@@ -3,23 +3,22 @@ class BuyPpobJob
   sidekiq_options retry: 3
 
   # Production
-  @@prepaid_url = Rails.application.credentials.iak[:prepaid]
-  @@username = Rails.application.credentials.iak[:username]
-  @@api_key = Rails.application.credentials.iak[:api_key]
+  @@prepaid_url = ENV["iak_prepaid"]
+  @@username = ENV["iak_username"]
+  @@api_key = ENV["iak_api_key"]
   @@sign = Digest::MD5.hexdigest @@username + @@api_key
   @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
-  @@postpaid_url = Rails.application.credentials.iak[:postpaid]
+  @@postpaid_url = ENV["iak_postpaid"]
 
   # Development
   # @@prepaid_url = "https://prepaid.iak.dev"
   # @@postpaid_url = "https://testpostpaid.mobilepulsa.net"
-  # @@username = Rails.application.credentials.iak[:username]
+  # @@username = ENV["iak_username"]
   # @@api_key = "86061ea4b7c25e81"
   # @@sign = Digest::MD5.hexdigest @@username + @@api_key
   # @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
 
   def perform(ppob)
-    logger.info "=== ORDER PPOB ==="
     data = JSON.parse(ppob)
     ppob = Ppob.find(data["id"])
 

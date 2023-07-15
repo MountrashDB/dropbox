@@ -27,7 +27,7 @@ class Api::V1::MitrasController < AdminController
     @@token_expired = 30.days.to_i
   end
 
-  @@fee = Rails.application.credentials.linkqu[:fee]
+  @@fee = ENV["linkqu_fee"]
 
   def active
     render json: { message: "active" }
@@ -162,7 +162,7 @@ class Api::V1::MitrasController < AdminController
           mitra_uuid: mitra.uuid,
           exp: Time.now.to_i + @@token_expired,
         }
-        token = JWT.encode payload, Rails.application.credentials.secret_key_base, Rails.application.credentials.token_algorithm
+        token = JWT.encode payload, ENV["secret_key_base"], ENV["token_algorithm"]
         kyc = Kyc.where(mitra_id: mitra.id).last
         render json: { token: token, kyc_status: kyc != nil ? kyc.status : -1, uuid: mitra.uuid, id: mitra.id }
       else

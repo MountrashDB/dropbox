@@ -29,9 +29,9 @@ require "openssl"
 class UserVa < ApplicationRecord
   belongs_to :user
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
 
   def self.create_va(user_id, bankcode)
     user = User.find(user_id)
@@ -45,8 +45,8 @@ class UserVa < ApplicationRecord
         https.use_ssl = true
         request = Net::HTTP::Post.new(url)
         request["Content-Type"] = "application/json"
-        request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-        request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+        request["client-id"] = ENV["linkqu_client_id"]
+        request["client-secret"] = ENV["linkqu_client_secret"]
         data = {
           "username": @@username,
           "pin": @@pin,

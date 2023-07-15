@@ -4,9 +4,9 @@ class Api::V1::PaymentController < ApiController
 
   require "async/http/faraday"
 
-  @@url = Rails.application.credentials.linkqu[:url]
-  @@username = Rails.application.credentials.linkqu[:username]
-  @@pin = Rails.application.credentials.linkqu[:pin]
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
 
   def bank_list
     Rails.cache.fetch("banks-list-v6", expires_in: 24.hours) do
@@ -14,8 +14,8 @@ class Api::V1::PaymentController < ApiController
         Faraday.default_adapter = :async_http
         response = Faraday.get(@@url + "/linkqu-partner/masterbank/list", {
           "Content-Type" => "application/json",
-          "client-id" => Rails.application.credentials.linkqu[:client_id],
-          "client-secret" => Rails.application.credentials.linkqu[:client_secret],
+          "client-id" => ENV["linkqu_client_id"],
+          "client-secret" => ENV["linkqu_client_secret"],
         })
         results = JSON.parse(response.body)
         Bank.delete_all
@@ -41,8 +41,8 @@ class Api::V1::PaymentController < ApiController
     https.use_ssl = true
     request = Net::HTTP::Post.new(url)
     request["Content-Type"] = "application/json"
-    request["client-id"] = Rails.application.credentials.linkqu[:client_id]
-    request["client-secret"] = Rails.application.credentials.linkqu[:client_secret]
+    request["client-id"] = ENV["linkqu_client_id"]
+    request["client-secret"] = ENV["linkqu_client_secret"]
     data = {
       "username": @@username,
       "pin": @@pin,

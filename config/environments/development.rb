@@ -1,7 +1,7 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  config.hosts << "9bb0-2001-448a-2020-5ec4-39e8-4eef-240b-4b11.ngrok-free.app"
+  config.hosts << "d604-2001-448a-2020-5ec4-3885-8b3c-8ac7-2baf.ngrok-free.app"
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time
@@ -63,9 +63,9 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
   Cloudinary.config do |config|
-    config.cloud_name = Rails.application.credentials.cloudinary[:cloud_name]
-    config.api_key = Rails.application.credentials.cloudinary[:api_key]
-    config.api_secret = Rails.application.credentials.cloudinary[:api_secret]
+    config.cloud_name = ENV["cloudinary_cloud_name"]
+    config.api_key = ENV["cloudinary_api_key"]
+    config.api_secret = ENV["cloudinary_api_secret"]
     config.secure = true
   end
 end

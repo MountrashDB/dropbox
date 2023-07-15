@@ -6,7 +6,7 @@ class BotolhargaDatatable < AjaxDatatablesRails::ActiveRecord
     @view_columns ||= {
       uuid: { source: "BotolHarga.uuid", cond: :eq },
       harga: { source: "BotolHarga.harga", cond: :eq },
-      botol: { source: "Botol.name", cond: :like, searchable: true},
+      botol: { source: "Botol.uuid, Botol.name", cond: :like, searchable: true},
       box: { source: "Box.nama", cond: :like, searchble: true}
     }
   end
@@ -16,14 +16,23 @@ class BotolhargaDatatable < AjaxDatatablesRails::ActiveRecord
       {
         uuid: record.uuid,
         harga: record.harga,
-        botol: record.botol.name,
+        botol_name: record.botol.name,
+        botol_uuid: record.botol.uuid,
         box: record.box.nama
       }
     end
   end
 
+  def botol_id
+    @botol_id ||= options[:botol_id]
+  end
+
   def get_raw_records
-    BotolHarga.all
+    if @botol_id
+      BotolHarga.where(botol_id: @botol_id)
+    else
+      BotolHarga.all
+    end
   end
 
 end

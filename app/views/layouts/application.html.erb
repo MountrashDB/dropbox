@@ -8,7 +8,6 @@
     <%= csp_meta_tag %>    
   </head>
   <body>
-  <img src="https://res.cloudinary.com/dghu0ntvd/image/upload/vl2g1rhoca77si4oox13wrt7jkh2.jpeg" />
     <%= yield %>
     <script>
     
@@ -19,14 +18,15 @@
         const chatWebSocket = openConnection()
         chatWebSocket.binaryType = "arraybuffer";
         chatWebSocket.onopen = (even) => {
-            const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"601f1517-dc9e-44f4-9b7b-ea8b1f6eb2b8\"}"}
+            const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"06dde85c-851b-4c79-9b3f-0158118ef456\"}"}
             chatWebSocket.send(JSON.stringify(subscribeMsg))
         }
-        chatWebSocket.onmessage = (event) => {
+        chatWebSocket.onmessage = (event) => {          
           var server_data = JSON.parse(event.data)
           if (typeof server_data.message === 'object') {
-            console.log(server_data.message.image)
-            console.log(server_data.message.diterima)
+            console.log(server_data.message)
+            // console.log(server_data.message.image)
+            // console.log(server_data.message.diterima)
           }         
         }
     })        

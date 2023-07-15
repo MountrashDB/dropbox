@@ -6,14 +6,13 @@
 #  is_active  :boolean
 #  kode_bank  :string(255)
 #  name       :string(255)
+#  url_image  :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-# require "async/http/internet"
 
 class Bank < ApplicationRecord
   def self.bank_list
-    puts "=== Bank List ==="
     # Async do
     #   puts "=== READ ==="
     #   internet = Async::HTTP::Internet.new
