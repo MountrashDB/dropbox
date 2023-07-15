@@ -28,7 +28,7 @@ class Api::V1::PpobController < AdminController
   # @@sign = Digest::MD5.hexdigest @@username + @@api_key
   # @@sign_prepaid = Digest::MD5.hexdigest @@username + @@api_key + "pl"
 
-  @@profit = ENV["iak_profit"]
+  @@profit = ENV["iak_profit"].to_i
 
   @@pulsa_price_list = ["10000", "20000", "50000", "100000", "300000", "500000"]
   @@pln_price_list = ["20000", "50000", "100000", "500000", "1000000"]
