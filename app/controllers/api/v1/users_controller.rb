@@ -26,7 +26,7 @@ class Api::V1::UsersController < AdminController
                                      :va_create_multi,
                                    ]
 
-  @@fee = ENV["linkqu_fee"]
+  @@fee = ENV["linkqu_fee"].to_f
   @@url = ENV["linkqu_url"]
   @@username = ENV["linkqu_username"]
   @@pin = ENV["linkqu_pin"]
