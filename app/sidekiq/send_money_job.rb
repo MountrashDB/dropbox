@@ -10,7 +10,7 @@ class SendMoneyJob
   @@pin = ENV["linkqu_pin"]
   @@client_id = ENV["linkqu_client_id"]
   @@client_secret = ENV["linkqu_client_secret"]
-  @@fee = ENV["linkqu_fee"]
+  @@fee = ENV["linkqu_fee"].to_f
 
   def perform(id)
     trx = Withdrawl.find(id)

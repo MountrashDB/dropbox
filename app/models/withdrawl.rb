@@ -38,7 +38,7 @@ class Withdrawl < ApplicationRecord
 
   after_create :send_money
 
-  @@fee = ENV["linkqu_fee"]
+  @@fee = ENV["linkqu_fee"].to_f
 
   aasm column: :status do
     state :requesting, initial: true

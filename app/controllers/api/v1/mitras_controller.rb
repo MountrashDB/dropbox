@@ -27,7 +27,7 @@ class Api::V1::MitrasController < AdminController
     @@token_expired = 30.days.to_i
   end
 
-  @@fee = ENV["linkqu_fee"]
+  @@fee = ENV["linkqu_fee"].to_f
 
   def active
     render json: { message: "active" }
