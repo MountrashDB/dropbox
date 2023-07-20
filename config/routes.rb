@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         post "va-create", to: "users#va_create_multi"
         get "va-list", to: "users#va_list"
         post "move", to: "user#move_mountpay"
+        get "history", to: "history#index"
         get ":uuid", to: "users#show"
         delete ":uuid", to: "users#destroy"
         patch "", to: "users#update_profile"

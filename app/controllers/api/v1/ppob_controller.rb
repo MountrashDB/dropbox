@@ -195,6 +195,7 @@ class Api::V1::PpobController < AdminController
       if ppob
         if harga_jual < balance
           @current_user.mountpay_debitkan(harga_jual, ppob.desc)
+          @current_user.history_tambahkan(harga_jual, "PPOB", ppob.desc)
           PostPaymentJob.perform_at(2.seconds.from_now)
           render json: { tr_id: params[:tr_id], status: "process" }
         else
@@ -310,6 +311,7 @@ class Api::V1::PpobController < AdminController
           desc: "PPOB-#{permit_prepaid[:product_code]}-#{permit_prepaid[:customer_id]}",
         )
         @current_user.mountpay_debitkan(harga_jual, record.desc)
+        @current_user.history_tambahkan(harga_jual, record.desc)
         BuyPpobJob.perform_at(2.seconds.from_now, record.to_json)
         render json: { ref_id: ref_id, status: 0, message: "PROCESS" }
       else

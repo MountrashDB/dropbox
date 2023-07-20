@@ -42,6 +42,7 @@ class User < ApplicationRecord
   has_many :transactions, dependent: :destroy
   has_many :usertransactions, dependent: :destroy
   has_many :mountpay, dependent: :destroy
+  has_many :histories, dependent: :destroy
   has_one :user_bank, dependent: :destroy
   before_create :set_uuid
 
@@ -166,6 +167,15 @@ class User < ApplicationRecord
       credit: 0,
       debit: amount,
       balance: balance - amount,
+      description: description,
+    )
+  end
+
+  def history_tambahkan(amount, title, description)
+    History.create!(
+      user_id: self.id,
+      amount: amount,
+      title: title,
       description: description,
     )
   end

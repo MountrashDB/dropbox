@@ -384,6 +384,8 @@ class Api::V1::UsersController < AdminController
           process.user = @current_user
           process.usertransaction_id = trx.id
           if process.save
+            desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
+            User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
             render json: { message: "Success" }
           else
             render json: { error: process.errors }, status: :bad_request

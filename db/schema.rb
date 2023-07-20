@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_124448) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_133019) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -137,6 +137,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_124448) do
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_districts_on_city_id"
     t.index ["province_id"], name: "index_districts_on_province_id"
+  end
+
+  create_table "histories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.float "amount"
+    t.string "title"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_histories_on_user_id"
   end
 
   create_table "investors", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -380,6 +390,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_124448) do
   add_foreign_key "cities", "provinces"
   add_foreign_key "districts", "cities"
   add_foreign_key "districts", "provinces"
+  add_foreign_key "histories", "users"
   add_foreign_key "kycs", "cities"
   add_foreign_key "kycs", "districts"
   add_foreign_key "kycs", "mitras"
