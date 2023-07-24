@@ -4,7 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  barcode    :string(255)
-#  jenis      :integer
+#  jenis      :string(255)
 #  name       :string(255)
 #  product    :string(255)
 #  ukuran     :string(255)

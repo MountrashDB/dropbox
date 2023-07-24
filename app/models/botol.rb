@@ -4,7 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  barcode    :string(255)
-#  jenis      :integer
+#  jenis      :string(255)
 #  name       :string(255)
 #  product    :string(255)
 #  ukuran     :string(255)
@@ -21,7 +21,32 @@ class Botol < ApplicationRecord
   end
   before_create :set_uuid
 
-  enum jenis: [:kaca, :plastik, :kaleng, :duplex, :plastik_sachet]
+  # enum jenis: [:kaca,
+  #              :plastik,
+  #              :kaleng,
+  #              :duplex,
+  #              :plastik_sachet,
+  #              :other,
+  #              :ovale,
+  #              :eskulin,
+  #              :master,
+  #              :resik_v,
+  #              :b_n_b,
+  #              :pouch_plastik,
+  #              :botol_plastik,
+  #              :pt,
+  #              :lifebuoy,
+  #              :dove,
+  #              :walls,
+  #              :cif,
+  #              :fair_lovely,
+  #              :walls_paddle_pop,
+  #              :pepsodent,
+  #              :rexona,
+  #              :molto,
+  #              :bango,
+  #              :rinso,
+  #              :vaseline]
   # before_save :resize_images
   SERVER_VALIDATION = "https://bottlenobottle.hasbala.cloud/predict"
 
