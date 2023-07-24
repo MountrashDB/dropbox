@@ -1,4 +1,4 @@
-table = CSV.parse(File.read("/media/arie/ad56d4df-7910-4232-bfac-73335c95d39a/home/arie/Web/ruby/Bell/dropbox/public/botols.csv"), headers: true)
+table = CSV.parse(File.read("/home/deploy/dropbox/current/public/botols.csv"), headers: true)
 
 table.each do |botol|
   barcode = botol["Barcode"]&.strip
