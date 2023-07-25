@@ -338,7 +338,7 @@ class Api::V1::UsersController < AdminController
 
   def bank_info_update
     userbank = UserBank.find_by(user_id: @current_user.id)
-    bank_validation = User.validate_bank(params[:kodeBank], params[:rekening], params[:nama].upcase)
+    bank_validation = User.validate_bank(params[:kodeBank], params[:rekening], params[:nama]&.upcase)
     if userbank
       userbank.nama = params[:nama]
       userbank.nama_bank = params[:nama_bank]
