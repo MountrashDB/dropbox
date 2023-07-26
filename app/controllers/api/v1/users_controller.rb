@@ -64,6 +64,7 @@ class Api::V1::UsersController < AdminController
     user.username = params[:username]
     user.email = params[:email]
     user.phone = params[:phone]
+    user.active = true
     user.password = params[:password]
     user.password_confirmation = params[:password_confirmation]
     begin
@@ -152,18 +153,18 @@ class Api::V1::UsersController < AdminController
     end
   end
 
-  # def update
-  #   user = User.find_by(uuid: params[:uuid])
-  #   if user
-  #     user.username = params[:username]
-  #     user.email = params[:email]
-  #     user.active = params[:active]
-  #     user.save
-  #     render json: user
-  #   else
-  #     render json: {message: "Not found"}, status: :not_found
-  #   end
-  # end
+  def update
+    user = User.find_by(uuid: params[:uuid])
+    if user
+      # user.username = params[:username]
+      # user.email = params[:email]
+      user.active = params[:active]
+      user.save
+      render json: user
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end
 
   def update_user # Used by admin
     user = User.find_by(uuid: params[:user_uuid])
@@ -330,7 +331,7 @@ class Api::V1::UsersController < AdminController
         is_valid: user_bank.is_valid,
       }
     else
-      render json: {
+      render json: { #
         message: "Empty",
       }
     end
