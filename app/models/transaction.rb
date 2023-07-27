@@ -43,7 +43,10 @@ class Transaction < ApplicationRecord
   end
 
   def send_notify
-    NotifyChannel.broadcast_to self.user.uuid, status: "process"
+    # NotifyChannel.broadcast_to self.user.uuid, status: "process"
+    NotifyChannel.broadcast_to self.user.uuid,
+                               status: "Validating...",
+                               image: self.foto.url
   end
 
   def set_balance
