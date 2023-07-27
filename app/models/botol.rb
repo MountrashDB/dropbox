@@ -21,33 +21,6 @@ class Botol < ApplicationRecord
   end
   before_create :set_uuid
 
-  # enum jenis: [:kaca,
-  #              :plastik,
-  #              :kaleng,
-  #              :duplex,
-  #              :plastik_sachet,
-  #              :other,
-  #              :ovale,
-  #              :eskulin,
-  #              :master,
-  #              :resik_v,
-  #              :b_n_b,
-  #              :pouch_plastik,
-  #              :botol_plastik,
-  #              :pt,
-  #              :lifebuoy,
-  #              :dove,
-  #              :walls,
-  #              :cif,
-  #              :fair_lovely,
-  #              :walls_paddle_pop,
-  #              :pepsodent,
-  #              :rexona,
-  #              :molto,
-  #              :bango,
-  #              :rinso,
-  #              :vaseline]
-  # before_save :resize_images
   SERVER_VALIDATION = "https://bottlenobottle.hasbala.cloud/predict"
 
   def set_uuid
@@ -60,29 +33,30 @@ class Botol < ApplicationRecord
     end
   end
 
-  def self.validate(image_url)
-    begin
-      url = URI.parse(SERVER_VALIDATION)
-      https = Net::HTTP.new(url.host, url.port)
-      https.use_ssl = true
-      request = Net::HTTP::Post.new(url)
-      request["Content-Type"] = "application/json"
-      request.body = JSON.dump({
-        "url": image_url,
-      })
-      response = https.request(request)
-      result = JSON.parse(response.read_body)
-      is_botol = false
-      result.each do |data|
-        prob = data["probability"] * 100
-        if prob > 75
-          is_botol = true
-          break
-        end
-      end
-      is_botol
-    rescue # Jaga-jaga kalo server validationnya ngadat
-      true
-    end
+  def self.validate(foto)
+    result = Cloudinary::Uploader.upload(foto, :detection => "coco", :auto_tagging => 0.8)
+    # begin
+    #   url = URI.parse(SERVER_VALIDATION)
+    #   https = Net::HTTP.new(url.host, url.port)
+    #   https.use_ssl = true
+    #   request = Net::HTTP::Post.new(url)
+    #   request["Content-Type"] = "application/json"
+    #   request.body = JSON.dump({
+    #     "url": image_url,
+    #   })
+    #   response = https.request(request)
+    #   result = JSON.parse(response.read_body)
+    #   is_botol = false
+    #   result.each do |data|
+    #     prob = data["probability"] * 100
+    #     if prob > 75
+    #       is_botol = true
+    #       break
+    #     end
+    #   end
+    #   is_botol
+    # rescue # Jaga-jaga kalo server validationnya ngadat
+    #   true
+    # end
   end
 end

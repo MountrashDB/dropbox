@@ -33,7 +33,7 @@ class Api::V1::UsersController < AdminController
   @@bank_code = "002" # 002 = Bank BRI
 
   if Rails.env.production?
-    @@token_expired = 3.days.to_i
+    @@token_expired = 30.days.to_i
   else
     @@token_expired = 30.days.to_i
   end
@@ -210,22 +210,21 @@ class Api::V1::UsersController < AdminController
       harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
       mitra_amount = box.mitra_share * harga_botol / 100
       user_amount = box.user_share * harga_botol / 100
-
       transaction = Transaction.new()
       transaction.mitra = box.mitra
       transaction.user = box.user
       transaction.box_id = box.id
-      # transaction.harga = harga_botol
+      transaction.harga = harga_botol
       # transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
       # transaction.mitra_amount = mitra_amount
       # transaction.user_amount = user_amount
       image = params[:foto]
       if image.present?
-        transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
+        result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
         transaction.set_foto_folder("transaction")
       end
       if transaction.save
-        render json: { message: "Success" }
+        render json: { message: "Checking..." }
       else
         render json: transaction.errors
       end

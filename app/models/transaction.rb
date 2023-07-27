@@ -47,8 +47,12 @@ class Transaction < ApplicationRecord
   end
 
   def set_balance
+    BotolDetectionJob.perform_at(2.seconds.from_now, self.id)
+  end
+
+  def set_balance_old
     # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
-    foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
+    # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
     botol_valid = Botol.validate(foto_url)
     box = Box.find(self.box_id)
     harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
@@ -115,16 +119,24 @@ class Transaction < ApplicationRecord
 
   def reverse_balance
     if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
-      investor_amount = self.harga - self.user_amount - self.mitra_amount
       if self.diterima == false
-        Investor.debitkan(investor_amount, "Trx rejected")
-        User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
-        Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
+        # Investor.debitkan(investor_amount, "Trx rejected")
+        # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
+        # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
         Transaction.find(self.id).destroy
       else
+        box = Box.find(self.box_id)
+        mitra_amount = box.mitra_share * self.harga / 100
+        user_amount = box.user_share * self.harga / 100
+        investor_amount = self.harga - user_amount - mitra_amount
         Investor.creditkan(investor_amount, "Trx accepted")
-        User.find(self.user_id).creditkan(self.user_amount, "Trx accepted")
-        Mitra.find(self.mitra_id).creditkan(self.mitra_amount, "Trx accepted")
+        User.find(self.user_id).creditkan(user_amount, "Trx accepted")
+        Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+        NotifyChannel.broadcast_to self.user.uuid,
+                                   status: "complete",
+                                   image: self.foto.url,
+                                   point: user_amount,
+                                   diterima: true
       end
     end
   end
