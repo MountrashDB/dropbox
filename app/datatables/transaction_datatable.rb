@@ -48,7 +48,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       Transaction.where(user_id: options[:user_id]).joins(:box, :user, :mitra)
     else
       # Transaction.all.joins(:box, :user, :mitra).where(:user => { :active => true })
-      Transaction.all.joins(:box, :user, :mitra).where(:user => { :active => true })
+      Transaction.all.joins(:box, :user, :mitra)
     end
   end
 end
