@@ -26,7 +26,6 @@ class Transaction < ApplicationRecord
   belongs_to :botol, optional: true
 
   after_create :set_balance
-  before_create :set_uuid
   before_create :send_notify
   scope :berhasil, -> { where(diterima: true) }
   after_update :reverse_balance
