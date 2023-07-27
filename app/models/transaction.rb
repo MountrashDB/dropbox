@@ -46,7 +46,7 @@ class Transaction < ApplicationRecord
     # NotifyChannel.broadcast_to self.user.uuid, status: "process"
     NotifyChannel.broadcast_to self.user.uuid,
                                status: "process...",
-                               message: "Validating..."
+                               message: "Validating...",
                                image: self.foto.url
   end
 
