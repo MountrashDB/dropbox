@@ -95,7 +95,7 @@ class Transaction < ApplicationRecord
         image: foto_url,
         point: user_amount,
         diterima: true,
-        message: "Diterima"
+        message: "Congratulations you get a point of"
     else # Invalid botol
       self.mitra_amount = 0
       self.user_amount = 0
@@ -131,6 +131,12 @@ class Transaction < ApplicationRecord
         # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
         # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
         Transaction.find(self.id).destroy
+        NotifyChannel.broadcast_to self.user.uuid,
+                                   status: "complete",
+                                   image: foto_url,
+                                   point: 0,
+                                   diterima: false,
+                                   message: "Rejected"
       else
         box = Box.find(self.box_id)
         mitra_amount = box.mitra_share * self.harga / 100
