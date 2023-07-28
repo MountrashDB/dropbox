@@ -58,57 +58,57 @@ class Transaction < ApplicationRecord
   def set_balance_old
     # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key, :width => 300, :height => 300, :crop => :scale)
     # foto_url = Cloudinary::Utils.cloudinary_url(self.foto.key)
-    botol_valid = Botol.validate(foto_url)
-    box = Box.find(self.box_id)
-    harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
-    if botol_valid
-      mitra_amount = box.mitra_share * harga_botol / 100
-      user_amount = box.user_share * harga_botol / 100
-      investor_amount = harga_botol - mitra_amount - user_amount
-      Investor.creditkan(investor_amount, "Botol")
-      self.mitra_amount = mitra_amount
-      self.user_amount = user_amount
-      self.harga = harga_botol
-      self.diterima = true
-      self.save
-      trx = Usertransaction.where(user_id: self.user_id).last
-      description = "Reward Trx: " + self.id.to_s
-      if trx
-        balance = trx.balance
-        user_amount = self.user_amount ? self.user_amount : 0
-        trx = Usertransaction.create!(user_id: self.user_id, credit: user_amount, balance: balance + user_amount, description: description)
-      else
-        Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
-      end
+    # botol_valid = Botol.validate(foto_url)
+    # box = Box.find(self.box_id)
+    # harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
+    # if botol_valid
+    #   mitra_amount = box.mitra_share * harga_botol / 100
+    #   user_amount = box.user_share * harga_botol / 100
+    #   investor_amount = harga_botol - mitra_amount - user_amount
+    #   Investor.creditkan(investor_amount, "Botol")
+    #   self.mitra_amount = mitra_amount
+    #   self.user_amount = user_amount
+    #   self.harga = harga_botol
+    #   self.diterima = true
+    #   self.save
+    #   trx = Usertransaction.where(user_id: self.user_id).last
+    #   description = "Reward Trx: " + self.id.to_s
+    #   if trx
+    #     balance = trx.balance
+    #     user_amount = self.user_amount ? self.user_amount : 0
+    #     trx = Usertransaction.create!(user_id: self.user_id, credit: user_amount, balance: balance + user_amount, description: description)
+    #   else
+    #     Usertransaction.create!(user_id: self.user_id, credit: self.user_amount, balance: self.user_amount, description: description)
+    #   end
 
-      trx = Mitratransaction.where(mitra_id: self.mitra_id).last
-      if trx
-        balance = trx.balance ? trx.balance : 0
-        mitra_amount = self.mitra_amount ? self.mitra_amount : 0
-        trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: mitra_amount, balance: balance + mitra_amount, description: description)
-      else
-        Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
-      end
-      Box.insert_botol(self.box_id)
-      NotifyChannel.broadcast_to self.user.uuid,
-        status: "complete",
-        image: foto_url,
-        point: user_amount,
-        diterima: true,
-        message: "Congratulations you get a point of"
-    else # Invalid botol
-      self.mitra_amount = 0
-      self.user_amount = 0
-      self.harga = harga_botol
-      self.diterima = false
-      self.save
-      NotifyChannel.broadcast_to self.user.uuid,
-                                 status: "complete",
-                                 image: foto_url,
-                                 point: 0,
-                                 diterima: false,
-                                 message: "Ditolak"
-    end
+    #   trx = Mitratransaction.where(mitra_id: self.mitra_id).last
+    #   if trx
+    #     balance = trx.balance ? trx.balance : 0
+    #     mitra_amount = self.mitra_amount ? self.mitra_amount : 0
+    #     trx = Mitratransaction.create!(mitra_id: self.mitra_id, credit: mitra_amount, balance: balance + mitra_amount, description: description)
+    #   else
+    #     Mitratransaction.create!(mitra_id: self.mitra_id, credit: self.mitra_amount, balance: self.mitra_amount, description: description)
+    #   end
+    #   Box.insert_botol(self.box_id)
+    #   NotifyChannel.broadcast_to self.user.uuid,
+    #     status: "complete",
+    #     image: foto_url,
+    #     point: user_amount,
+    #     diterima: true,
+    #     message: "Congratulations you get a point of"
+    # else # Invalid botol
+    #   self.mitra_amount = 0
+    #   self.user_amount = 0
+    #   self.harga = harga_botol
+    #   self.diterima = false
+    #   self.save
+    #   NotifyChannel.broadcast_to self.user.uuid,
+    #                              status: "complete",
+    #                              image: foto_url,
+    #                              point: 0,
+    #                              diterima: false,
+    #                              message: "Ditolak"
+    # end
   end
 
   def botol_info
