@@ -94,7 +94,8 @@ class Transaction < ApplicationRecord
         status: "complete",
         image: foto_url,
         point: user_amount,
-        diterima: true
+        diterima: true,
+        message: "Diterima"
     else # Invalid botol
       self.mitra_amount = 0
       self.user_amount = 0
@@ -105,7 +106,8 @@ class Transaction < ApplicationRecord
                                  status: "complete",
                                  image: foto_url,
                                  point: 0,
-                                 diterima: false
+                                 diterima: false,
+                                 message: "Ditolak"
     end
   end
 
