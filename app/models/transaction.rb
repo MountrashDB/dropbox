@@ -132,7 +132,7 @@ class Transaction < ApplicationRecord
         # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
         NotifyChannel.broadcast_to self.user.uuid,
                                    status: "complete",
-                                   image: foto_url,
+                                   image: self.foto.url,
                                    point: 0,
                                    diterima: false,
                                    message: "Rejected"
