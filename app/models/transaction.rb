@@ -130,13 +130,13 @@ class Transaction < ApplicationRecord
         # Investor.debitkan(investor_amount, "Trx rejected")
         # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
         # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
-        Transaction.find(self.id).destroy
         NotifyChannel.broadcast_to self.user.uuid,
                                    status: "complete",
                                    image: foto_url,
                                    point: 0,
                                    diterima: false,
                                    message: "Rejected"
+        Transaction.find(self.id).destroy
       else
         box = Box.find(self.box_id)
         mitra_amount = box.mitra_share * self.harga / 100
