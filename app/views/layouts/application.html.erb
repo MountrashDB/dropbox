@@ -5,31 +5,30 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= action_cable_meta_tag %>
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>    
+    <%= csp_meta_tag %>
   </head>
   <body>
     <%= yield %>
     <script>
-    
-    function openConnection() {
-        return new WebSocket("ws://localhost:3000/cable");
-    }
-    document.addEventListener("DOMContentLoaded", () => {
-        const chatWebSocket = openConnection()
-        chatWebSocket.binaryType = "arraybuffer";
-        chatWebSocket.onopen = (even) => {
-            const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"06dde85c-851b-4c79-9b3f-0158118ef456\"}"}
-            chatWebSocket.send(JSON.stringify(subscribeMsg))
-        }
-        chatWebSocket.onmessage = (event) => {          
-          var server_data = JSON.parse(event.data)
-          if (typeof server_data.message === 'object') {
-            console.log(server_data.message)
-            // console.log(server_data.message.image)
-            // console.log(server_data.message.diterima)
-          }         
-        }
-    })        
+      function openConnection() {
+          return new WebSocket("ws://api.smartdropbox.online/cable");
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+          const chatWebSocket = openConnection()
+          chatWebSocket.binaryType = "arraybuffer";
+          chatWebSocket.onopen = (even) => {
+              const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"06dde85c-851b-4c79-9b3f-0158118ef456\"}"}
+              chatWebSocket.send(JSON.stringify(subscribeMsg))
+          }
+          chatWebSocket.onmessage = (event) => {
+            var server_data = JSON.parse(event.data)
+            if (typeof server_data.message === 'object') {
+              console.log(server_data.message)
+              // console.log(server_data.message.image)
+              // console.log(server_data.message.diterima)
+            }
+          }
+      })
     </script>
   </body>
 </html>
