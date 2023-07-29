@@ -11,8 +11,20 @@ class BotolDetectionJob
         transaction.diterima = true
       else
         transaction.diterima = false
+        NotifyChannel.broadcast_to transaction.user.uuid,
+                                   status: "complete",
+                                   image: transaction.foto.url,
+                                   point: 0,
+                                   diterima: false,
+                                   message: "Rejected"
       end
     rescue
+      NotifyChannel.broadcast_to transaction.user.uuid,
+                                 status: "complete",
+                                 image: transaction.foto.url,
+                                 point: 0,
+                                 diterima: false,
+                                 message: "Rejected"
       transaction.diterima = false
     end
     transaction.save
