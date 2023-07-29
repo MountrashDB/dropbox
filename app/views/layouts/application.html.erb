@@ -17,7 +17,7 @@
           const chatWebSocket = openConnection()
           chatWebSocket.binaryType = "arraybuffer";
           chatWebSocket.onopen = (even) => {
-              const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"06dde85c-851b-4c79-9b3f-0158118ef456\"}"}
+              const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"NotifyChannel\", \"uuid\":\"<%= @uuid %>\"}"}
               chatWebSocket.send(JSON.stringify(subscribeMsg))
           }
           chatWebSocket.onmessage = (event) => {
