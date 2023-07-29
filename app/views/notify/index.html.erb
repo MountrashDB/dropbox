@@ -10,7 +10,7 @@
     <h1>Testing</h1>
     <script>
       function openConnection() {
-          return new WebSocket("ws://localhost:3000/cable");
+          return new WebSocket("ws://api.smartdropbox.online/cable");
       }
       document.addEventListener("DOMContentLoaded", () => {
           const chatWebSocket = openConnection()
