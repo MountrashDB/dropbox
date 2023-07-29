@@ -4,7 +4,7 @@ Sidekiq::Web.use ActionDispatch::Session::CookieStore, key: "_interslice_session
 Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
 
-  get "notify/index"
+  get "notify/:uuid", to: "notify#index"
 
   # devise_for :mitras
   # devise_for :admins
