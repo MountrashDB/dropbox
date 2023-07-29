@@ -125,7 +125,7 @@ class Transaction < ApplicationRecord
   end
 
   def reverse_balance
-    if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
+    if self.diterima != self.diterima_before_last_save or self.diterima == nil #Jika berubah di field diterima
       if self.diterima == false
         # Investor.debitkan(investor_amount, "Trx rejected")
         # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
