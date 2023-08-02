@@ -120,6 +120,16 @@ class Api::V1::AdminController < AdminController
     end
   end
 
+  def transaction_delete
+    trx = Transaction.find_by(uuid: params[:uuid])
+    if trx
+      trx.destroy
+      render json: { message: "Deleted" }
+    else
+      render json: { message: "Not found" }
+    end
+  end
+
   def withdrawl
     render json: WithdrawlDatatable.new(params)
   end

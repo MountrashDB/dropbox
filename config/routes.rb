@@ -2,6 +2,7 @@ require "sidekiq/web"
 Sidekiq::Web.use ActionDispatch::Cookies
 Sidekiq::Web.use ActionDispatch::Session::CookieStore, key: "_interslice_session"
 Rails.application.routes.draw do
+  devise_for :banksampahs
   mount Sidekiq::Web => "/sidekiq"
 
   get "notify/:uuid", to: "notify#index"
@@ -79,6 +80,7 @@ Rails.application.routes.draw do
       end
 
       scope "transaction" do
+        delete ":uuid", to: "admin#transaction_delete"
         post "process/:uuid", to: "admin#transaction_process"
         patch ":uuid", to: "transaction#update_botol"
       end
@@ -123,6 +125,15 @@ Rails.application.routes.draw do
         scope "box" do
           post "datatable", to: "mitras#box_datatable"
         end
+      end
+
+      scope "banksampah" do
+        post "register", to: "banksampah#register"
+        get "activation-code/:code", to: "banksampah#active_code"
+        post "login", to: "banksampah#login"
+        post "datatable", to: "banksampah#datatable"
+        get "profile", to: "banksampah#profile"
+        get ":uuid", to: "banksampah#show"
       end
 
       # Form KYC
