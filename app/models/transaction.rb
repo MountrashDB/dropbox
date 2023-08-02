@@ -148,6 +148,7 @@ class Transaction < ApplicationRecord
                                    image: self.foto.url,
                                    point: user_amount,
                                    diterima: true,
+                                   balance: user.usertransactions.balance,
                                    message: "Congratulations you get a point of"
       end
     end
