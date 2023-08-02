@@ -131,6 +131,7 @@ class Transaction < ApplicationRecord
         # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
         # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
         # Transaction.find(self.id).destroy
+        puts "=== Tdk dihapus ==="
       else
         box = Box.find(self.box_id)
         mitra_amount = box.mitra_share * self.harga / 100
