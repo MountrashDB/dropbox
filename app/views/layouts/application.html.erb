@@ -11,7 +11,8 @@
     <%= yield %>
     <script>
       function openConnection() {
-          return new WebSocket("wss://api.smartdropbox.online/cable");
+          // return new WebSocket("wss://api.smartdropbox.online/cable");
+          return new WebSocket("ws://localhost:3000/cable");
       }
       document.addEventListener("DOMContentLoaded", () => {
           const chatWebSocket = openConnection()

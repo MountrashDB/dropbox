@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_24_142701) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_30_163753) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -63,6 +63,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_142701) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "url_image"
+  end
+
+  create_table "banksampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.string "name"
+    t.string "code"
+    t.string "activation_code"
+    t.string "phone"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.boolean "active"
+    t.string "address"
+    t.bigint "province_id"
+    t.bigint "city_id"
+    t.bigint "district_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_banksampahs_on_city_id"
+    t.index ["district_id"], name: "index_banksampahs_on_district_id"
+    t.index ["email"], name: "index_banksampahs_on_email", unique: true
+    t.index ["province_id"], name: "index_banksampahs_on_province_id"
+    t.index ["reset_password_token"], name: "index_banksampahs_on_reset_password_token", unique: true
   end
 
   create_table "botol_hargas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -246,6 +271,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_142701) do
     t.index ["user_id"], name: "index_mountpays_on_user_id"
   end
 
+  create_table "orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.bigint "user_id", null: false
+    t.bigint "box_id", null: false
+    t.string "status"
+    t.float "fee"
+    t.float "total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["box_id"], name: "index_orders_on_box_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "partners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "uuid"
     t.string "nama"
@@ -385,6 +423,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_142701) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "banksampahs", "cities"
+  add_foreign_key "banksampahs", "districts"
+  add_foreign_key "banksampahs", "provinces"
   add_foreign_key "botol_hargas", "botols"
   add_foreign_key "botol_hargas", "boxes"
   add_foreign_key "cities", "provinces"
@@ -399,6 +440,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_142701) do
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "mountpays", "mitras"
   add_foreign_key "mountpays", "users"
+  add_foreign_key "orders", "boxes"
+  add_foreign_key "orders", "users"
   add_foreign_key "ppobs", "users"
   add_foreign_key "user_banks", "users"
   add_foreign_key "user_vas", "users"
