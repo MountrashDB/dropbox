@@ -196,7 +196,7 @@ class Api::V1::PpobController < AdminController
         if harga_jual < balance
           @current_user.mountpay_debitkan(harga_jual, ppob.desc)
           @current_user.history_tambahkan(harga_jual, "PPOB", ppob.desc)
-          PostPaymentJob.perform_at(2.seconds.from_now)
+          PostPaymentJob.perform_at(2.seconds.from_now, ppob.id)
           render json: { tr_id: params[:tr_id], status: "process" }
         else
           render json: { message: "Insuffient balance. Please select smaller price or product", balance: balance, price: harga_jual }, status: :bad_request
