@@ -8,9 +8,9 @@ class PostPaymentJob
   @@sign = Digest::MD5.hexdigest @@username + @@api_key
   @@postpaid_url = ENV["iak_postpaid"]
 
-  def perform(ppob)
+  def perform(ppob_id)
     logger.info "=== PAY PPOB ==="
-    ppob = Ppob.find(ppob.id)
+    ppob = Ppob.find(ppob_id)
     conn = Faraday.new(
       url: @@prepaid_url,
       headers: { "Content-Type" => "application/json" },
