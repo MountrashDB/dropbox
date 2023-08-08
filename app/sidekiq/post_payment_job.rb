@@ -12,7 +12,7 @@ class PostPaymentJob
     logger.info "=== PAY PPOB ==="
     ppob = Ppob.find(ppob_id)
     conn = Faraday.new(
-      url: @@prepaid_url,
+      url: @@postpaid_url,
       headers: { "Content-Type" => "application/json" },
       request: { timeout: 3 },
     )
