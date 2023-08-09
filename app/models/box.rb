@@ -44,7 +44,7 @@ class Box < ApplicationRecord
   before_create :set_uuid
   scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
 
-  MAX_FAILED = 10
+  MAX_FAILED = 3
   NON_ACTIVE = "nonactive"
 
   def set_uuid
