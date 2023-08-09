@@ -5,14 +5,14 @@ class BotolDetectionJob
   def perform(args)
     transaction = Transaction.find(args)
     result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.5)
-    logger.info "=== Checking ==="
+    Rails.logger.error "=== Checking ==="
     begin
       confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
       confidence = 0.8 # Untuk sementara
       if confidence > 0.5
         transaction.diterima = true
       else
-        logger.info "=== Rejected ==="
+        Rails.logger.error "=== Rejected ==="
 
         transaction.mitra_amount = 0
         transaction.user_amount = 0
@@ -25,8 +25,8 @@ class BotolDetectionJob
                                    message: "Rejected"
       end
     rescue Exception => e
-      logger.error "=== Error Detection ==="
-      logger.error e
+      Rails.logger.error "=== Error Detection ==="
+      Rails.logger.error e
       transaction.mitra_amount = 0
       transaction.user_amount = 0
       NotifyChannel.broadcast_to transaction.user.uuid,
