@@ -144,6 +144,7 @@ class Transaction < ApplicationRecord
         Investor.creditkan(investor_amount, "Trx accepted")
         User.find(self.user_id).creditkan(user_amount, "Trx accepted")
         Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+        Rails.logger.info "=== Send Notify ==="
         NotifyChannel.broadcast_to self.user.uuid,
                                    status: "complete",
                                    image: self.foto.url,
