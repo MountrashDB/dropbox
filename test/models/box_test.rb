@@ -6,6 +6,7 @@
 #  botol_total   :integer
 #  cycles        :string(255)
 #  dates         :datetime
+#  failed        :integer          default(0)
 #  jenis         :string(255)
 #  latitude      :string(255)
 #  longitude     :string(255)

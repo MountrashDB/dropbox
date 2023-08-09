@@ -205,7 +205,7 @@ class Api::V1::UsersController < AdminController
   end
 
   def insert
-    box = Box.find_by(uuid: params[:uuid])
+    box = Box.find_by(uuid: params[:uuid], type_progress: "active")
     if box
       harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
       mitra_amount = box.mitra_share * harga_botol / 100

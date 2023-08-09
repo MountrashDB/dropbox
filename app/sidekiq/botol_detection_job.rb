@@ -11,10 +11,12 @@ class BotolDetectionJob
       confidence = result["info"]["detection"]["object_detection"]["data"]["openimages"]["tags"]["bottle"][0]["confidence"]
       if confidence > 0.5
         transaction.diterima = true
+        Box.reset_failed(transaction.box_id)
       else
         transaction.mitra_amount = 0
         transaction.user_amount = 0
         transaction.diterima = false
+        Box.insert_failed(transaction.box_id)
         ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
           status: "complete",
           image: foto_url,
@@ -27,6 +29,7 @@ class BotolDetectionJob
       transaction.mitra_amount = 0
       transaction.user_amount = 0
       transaction.diterima = false
+      Box.insert_failed(transaction.box_id)
       ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
         status: "complete",
         image: foto_url,

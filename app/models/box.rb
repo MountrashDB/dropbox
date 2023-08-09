@@ -6,6 +6,7 @@
 #  botol_total   :integer
 #  cycles        :string(255)
 #  dates         :datetime
+#  failed        :integer          default(0)
 #  jenis         :string(255)
 #  latitude      :string(255)
 #  longitude     :string(255)
@@ -43,6 +44,9 @@ class Box < ApplicationRecord
   before_create :set_uuid
   scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
 
+  MAX_FAILED = 10
+  NON_ACTIVE = "nonactive"
+
   def set_uuid
     self.uuid = SecureRandom.uuid
     self.qr_code = self.uuid
@@ -53,6 +57,25 @@ class Box < ApplicationRecord
     if box
       total = box.botol_total || 0
       box.update!(botol_total: total + 1)
+    end
+  end
+
+  def self.insert_failed(id)
+    box = Box.find(id)
+    if box
+      failed = box.failed || 0
+      total = failed + 1
+      box.update!(failed: total)
+      if total > MAX_FAILED
+        box.update(type_progress: NON_ACTIVE, failed: 0)
+      end
+    end
+  end
+
+  def self.reset_failed(id)
+    box = Box.find(id)
+    if box
+      box.update!(failed: 0)
     end
   end
 end
