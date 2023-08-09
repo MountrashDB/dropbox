@@ -125,34 +125,35 @@ class Transaction < ApplicationRecord
   end
 
   def reverse_balance
-    if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
-      if self.diterima == false
-        # Investor.debitkan(investor_amount, "Trx rejected")
-        # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
-        # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
-        # Transaction.find(self.id).destroy
-        puts "=== Tdk dihapus ==="
-      else
-        box = Box.find(self.box_id)
-        mitra_amount = box.mitra_share * self.harga / 100
-        user_amount = box.user_share * self.harga / 100
-        investor_amount = self.harga - user_amount - mitra_amount
-        # transaction = Transaction.find(self.id)
-        # transaction.mitra_amount = mitra_amount
-        # transaction.user_amount = user_amount
-        # transaction.save
-        Investor.creditkan(investor_amount, "Trx accepted")
-        User.find(self.user_id).creditkan(user_amount, "Trx accepted")
-        Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
-        Rails.logger.info "=== Send Notify ==="
-        NotifyChannel.broadcast_to self.user.uuid,
-                                   status: "complete",
-                                   image: self.foto.url,
-                                   point: user_amount,
-                                   diterima: true,
-                                   balance: user.usertransactions.balance,
-                                   message: "Congratulations you get a point of"
-      end
+    # if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
+    if self.diterima == false
+      # Investor.debitkan(investor_amount, "Trx rejected")
+      # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
+      # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
+      # Transaction.find(self.id).destroy
+      puts "=== Tdk dihapus ==="
+    else
+      box = Box.find(self.box_id)
+      mitra_amount = box.mitra_share * self.harga / 100
+      user_amount = box.user_share * self.harga / 100
+      investor_amount = self.harga - user_amount - mitra_amount
+      # transaction = Transaction.find(self.id)
+      # transaction.mitra_amount = mitra_amount
+      # transaction.user_amount = user_amount
+      # transaction.save
+      Investor.creditkan(investor_amount, "Trx accepted")
+      User.find(self.user_id).creditkan(user_amount, "Trx accepted")
+      Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+      Rails.logger.info "=== Send Notify ==="
+      NotifyChannel.broadcast_to self.user.uuid,
+                                 status: "complete",
+                                 image: self.foto.url,
+                                 point: user_amount,
+                                 diterima: true,
+                                 balance: user.usertransactions.balance,
+                                 message: "Congratulations you get a point of"
     end
   end
+
+  # end
 end
