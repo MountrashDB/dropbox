@@ -5,9 +5,6 @@ class BotolDetectionJob
   def perform(uid)
     transaction = Transaction.find(uid)
     # result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.5)
-    Rails.logger.error "=== uid ==="
-    Rails.logger.error uid
-    Rails.logger.error "=== Checking ==="
     # begin
     # confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
     transaction.diterima = true
