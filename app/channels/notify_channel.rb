@@ -14,7 +14,7 @@ class NotifyChannel < ApplicationCable::Channel
 
   def unsubscribed
     @uuid = params[:uuid]
-    Box.where(user: User.find_by(uuid: @uuid)).update(user_id: nil)
+    # Box.where(user: User.find_by(uuid: @uuid)).update(user_id: nil)
     # Any cleanup needed when channel is unsubscribed
   end
 end
