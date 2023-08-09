@@ -11,7 +11,6 @@ class BotolDetectionJob
       if confidence > 0.5
         transaction.diterima = true
       else
-        transaction.diterima = false
         transaction.mitra_amount = 0
         transaction.user_amount = 0
         transaction.diterima = false
