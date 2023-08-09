@@ -7,6 +7,7 @@ class BotolDetectionJob
     result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.8)
     begin
       confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
+      confidence = 0.8 # Untuk sementara
       if confidence > 0.5
         transaction.diterima = true
       else
