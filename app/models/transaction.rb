@@ -125,6 +125,7 @@ class Transaction < ApplicationRecord
   end
 
   def reverse_balance
+    Rails.logger.error "=== Reverse Balance ==="
     # if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
     if self.diterima == false
       # Investor.debitkan(investor_amount, "Trx rejected")
