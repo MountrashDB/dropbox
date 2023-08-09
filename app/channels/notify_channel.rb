@@ -1,8 +1,8 @@
 class NotifyChannel < ApplicationCable::Channel
   def subscribed
-    # stream_from "NotifyChannel_#{params[:uuid]}"
-    @uuid = params[:uuid]
-    stream_for @uuid
+    stream_from "NotifyChannel_#{params[:uuid]}"
+    # @uuid = params[:uuid]
+    # stream_for @uuid
   end
 
   # NotifyChannel.broadcast_to "abcd", image: "http://www.google.com", diterima: true
@@ -14,6 +14,7 @@ class NotifyChannel < ApplicationCable::Channel
 
   def unsubscribed
     @uuid = params[:uuid]
+    puts "=== Unsubscribe ==="
     # Box.where(user: User.find_by(uuid: @uuid)).update(user_id: nil)
     # Any cleanup needed when channel is unsubscribed
   end
