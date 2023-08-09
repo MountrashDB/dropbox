@@ -84,10 +84,10 @@ class Transaction < ApplicationRecord
       mitra_amount = box.mitra_share * self.harga / 100
       user_amount = box.user_share * self.harga / 100
       investor_amount = self.harga - user_amount - mitra_amount
-      # transaction = Transaction.find(self.id)
-      # transaction.mitra_amount = mitra_amount
-      # transaction.user_amount = user_amount
-      # transaction.save
+      transaction = Transaction.find(self.id)
+      transaction.mitra_amount = mitra_amount
+      transaction.user_amount = user_amount
+      transaction.save
       Investor.creditkan(investor_amount, "Trx accepted")
       User.find(self.user_id).creditkan(user_amount, "Trx accepted")
       Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
