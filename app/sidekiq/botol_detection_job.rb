@@ -11,6 +11,8 @@ class BotolDetectionJob
       if confidence > 0.5
         transaction.diterima = true
       else
+        logger.info "=== Rejected ==="
+
         transaction.mitra_amount = 0
         transaction.user_amount = 0
         transaction.diterima = false
