@@ -4,7 +4,8 @@ class BotolDetectionJob
 
   def perform(args)
     transaction = Transaction.find(args)
-    result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.8)
+    result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.5)
+    logger.info "=== Checking ==="
     begin
       confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
       confidence = 0.8 # Untuk sementara
