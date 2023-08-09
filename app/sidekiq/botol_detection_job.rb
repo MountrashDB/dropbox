@@ -2,14 +2,14 @@ class BotolDetectionJob
   include Sidekiq::Job
   sidekiq_options retry: 3
 
-  def perform(args)
-    transaction = Transaction.find(args)
-    result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.5)
-    Rails.logger.error "=== Args ==="
-    Rails.logger.error args
+  def perform(uid)
+    transaction = Transaction.find(uid)
+    # result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco", :auto_tagging => 0.5)
+    Rails.logger.error "=== uid ==="
+    Rails.logger.error uid
     Rails.logger.error "=== Checking ==="
     # begin
-    confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
+    # confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
     transaction.diterima = true
     #   confidence = 0.8 # Untuk sementara
     #   if confidence > 0.5
