@@ -75,11 +75,7 @@ class Transaction < ApplicationRecord
   end
 
   def reverse_balance
-    Rails.logger.error "=== Reverse Balance ==="
-    Rails.logger.error self.diterima
-    # if self.diterima != self.diterima_before_last_save #Jika berubah di field diterima
     if self.diterima
-      puts "=== Diterima ==="
       # Investor.debitkan(investor_amount, "Trx rejected")
       # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
       # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
@@ -95,15 +91,7 @@ class Transaction < ApplicationRecord
       Investor.creditkan(investor_amount, "Trx accepted")
       User.find(self.user_id).creditkan(user_amount, "Trx accepted")
       Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
-      Rails.logger.error "=== Send Notify ==="
-      Rails.logger.error self.user.uuid
-      # NotifyChannel.broadcast_to self.user.uuid,
-      #                            status: "complete",
-      #                            image: self.foto.url,
-      #                            point: user_amount,
-      #                            diterima: true,
-      #                            balance: user.usertransactions.balance,
-      #                            message: "Congratulations you get a point of"
+
       ActionCable.server.broadcast("NotifyChannel_#{self.user.uuid}", {
         status: "complete",
         image: self.foto.url,
@@ -114,6 +102,4 @@ class Transaction < ApplicationRecord
       })
     end
   end
-
-  # end
 end
