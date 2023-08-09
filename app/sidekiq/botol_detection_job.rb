@@ -21,7 +21,9 @@ class BotolDetectionJob
                                    diterima: false,
                                    message: "Rejected"
       end
-    rescue
+    rescue Exception => e
+      logger.error "=== Error Detection ==="
+      logger.error e
       transaction.mitra_amount = 0
       transaction.user_amount = 0
       NotifyChannel.broadcast_to transaction.user.uuid,
