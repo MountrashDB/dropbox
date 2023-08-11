@@ -31,6 +31,7 @@ class Api::V1::UsersController < AdminController
   @@username = ENV["linkqu_username"]
   @@pin = ENV["linkqu_pin"]
   @@bank_code = "002" # 002 = Bank BRI
+  MIN_WITHDRAW = 50000
 
   if Rails.env.production?
     @@token_expired = 30.days.to_i
@@ -372,25 +373,29 @@ class Api::V1::UsersController < AdminController
     total = params[:amount].to_f + @@fee
     if user.user_bank&.is_valid?
       if total < balance
-        Withdrawl.transaction do
-          User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
-          trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
+        if total < MIN_WITHDRAW
+          Withdrawl.transaction do
+            User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
+            trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
 
-          process = Withdrawl.new()
-          process.amount = params[:amount]
-          process.kodeBank = user.user_bank.kodeBank
-          process.nama = user.user_bank.nama
-          process.rekening = user.user_bank.rekening
-          process.user = @current_user
-          process.usertransaction_id = trx.id
-          if process.save
-            desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
-            User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
-            render json: { message: "Success" }
-          else
-            render json: { error: process.errors }, status: :bad_request
-            raise ActiveRecord::Rollback
+            process = Withdrawl.new()
+            process.amount = params[:amount]
+            process.kodeBank = user.user_bank.kodeBank
+            process.nama = user.user_bank.nama
+            process.rekening = user.user_bank.rekening
+            process.user = @current_user
+            process.usertransaction_id = trx.id
+            if process.save
+              desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
+              User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
+              render json: { message: "Success" }
+            else
+              render json: { error: process.errors }, status: :bad_request
+              raise ActiveRecord::Rollback
+            end
           end
+        else
+          render json: { message: "Minimum withdraw is #{MIN_WITHDRAW}" }, status: :bad_request
         end
       else
         render json: { message: "Insuffient Balance" }, status: :bad_request
