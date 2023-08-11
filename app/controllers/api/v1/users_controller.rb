@@ -373,7 +373,7 @@ class Api::V1::UsersController < AdminController
     total = params[:amount].to_f + @@fee
     if user.user_bank&.is_valid?
       if total < balance
-        if total < MIN_WITHDRAW
+        if total >= MIN_WITHDRAW
           Withdrawl.transaction do
             User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
             trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
