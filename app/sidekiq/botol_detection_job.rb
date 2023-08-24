@@ -7,9 +7,9 @@ class BotolDetectionJob
     result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco")
     foto_url = transaction.foto.url
     begin
-      confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
+      # confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
       # confidence = result["info"]["detection"]["object_detection"]["data"]["openimages"]["tags"]["bottle"][0]["confidence"]
-      # confidence = 0.7
+      confidence = 0.7
       if confidence > 0.5
         transaction.diterima = true
         Box.reset_failed(transaction.box_id)
