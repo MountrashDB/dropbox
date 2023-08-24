@@ -4,12 +4,14 @@ class BotolDetectionJob
 
   def perform(uid)
     transaction = Transaction.find(uid)
-    result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco")
+    # result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco")
+    # result = Cloudinary::Uploader.upload(transaction.foto.url, :categorization => "aws_rek_tagging")
+    # puts result["info"]["data"]
     foto_url = transaction.foto.url
     begin
-      confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
+      # confidence = result["info"]["detection"]["object_detection"]["data"]["coco"]["tags"]["bottle"][0]["confidence"]
       # confidence = result["info"]["detection"]["object_detection"]["data"]["openimages"]["tags"]["bottle"][0]["confidence"]
-      # confidence = 0.7
+      confidence = 0.7
       if confidence > 0.5
         transaction.diterima = true
         Box.reset_failed(transaction.box_id)
