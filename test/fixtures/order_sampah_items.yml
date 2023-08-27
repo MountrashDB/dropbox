@@ -1,11 +1,9 @@
 # == Schema Information
 #
-# Table name: order_details
+# Table name: order_sampah_items
 #
 #  id              :bigint           not null, primary key
-#  harga           :float(24)
 #  qty             :float(24)
-#  satuan          :string(255)
 #  sub_total       :float(24)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -14,18 +12,23 @@
 #
 # Indexes
 #
-#  index_order_details_on_order_sampah_id  (order_sampah_id)
-#  index_order_details_on_tipe_sampah_id   (tipe_sampah_id)
+#  index_order_sampah_items_on_order_sampah_id  (order_sampah_id)
+#  index_order_sampah_items_on_tipe_sampah_id   (tipe_sampah_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (order_sampah_id => order_sampahs.id)
 #  fk_rails_...  (tipe_sampah_id => tipe_sampahs.id)
 #
-class OrderDetail < ApplicationRecord
-  belongs_to :order_sampah
-  belongs_to :tipe_sampah
-  validates :order_sampah_id, presence: true
-  validates :tipe_sampah_id, presence: true
-  validates :satuan, presence: true
-end
+
+one:
+  ordersampah: one
+  tipesampah: one
+  qty: 1.5
+  sub_total: 1.5
+
+two:
+  ordersampah: two
+  tipesampah: two
+  qty: 1.5
+  sub_total: 1.5

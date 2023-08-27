@@ -24,6 +24,10 @@ class Api::V1::UsersController < AdminController
                                      :va_create,
                                      :va_list,
                                      :va_create_multi,
+                                     :list_banksampah,
+                                     :tipe_sampah,
+                                     :order_sampah,
+                                     :order_status,
                                    ]
 
   @@fee = ENV["linkqu_fee"].to_f
@@ -31,6 +35,7 @@ class Api::V1::UsersController < AdminController
   @@username = ENV["linkqu_username"]
   @@pin = ENV["linkqu_pin"]
   @@bank_code = "002" # 002 = Bank BRI
+  @@fee_sampah = 2.5 # In percentage
   MIN_WITHDRAW = 50000
 
   if Rails.env.production?
@@ -517,6 +522,78 @@ class Api::V1::UsersController < AdminController
 
   def va_list
     render json: UserVa.select(:bank_name, :rekening, :kodeBank, :name).where(user_id: @current_user.id).last
+  end
+
+  def list_banksampah
+    banks = Banksampah.order(name: :asc)
+    render json: BankSampahBlueprint.render(banks)
+  end
+
+  def tipe_sampah
+    tipes = TipeSampah.order(name: :asc)
+    render json: { total: 0, data: TipeSampahBlueprint.render_as_json(tipes) }
+  end
+
+  def order_sampah
+    if banksampah = Banksampah.find_by(id: params[:banksampah_id]) && params[:banksampah_id]
+      total = 0
+      if items = params[:_json]
+        begin
+          ActiveRecord::Base.transaction do
+            orderan = OrderSampah.new()
+            orderan.fee = @@fee_sampah
+            orderan.banksampah_id = params[:banksampah_id]
+            orderan.user_id = @current_user.id
+            orderan.save
+            items.each do |item|
+              if item["tipe_sampah_id"] && item["qty"]
+                harga = HargaSampah.find_by(banksampah_id: params[:banksampah_id], tipe_sampah_id: item["tipe_sampah_id"])
+                if harga
+                  if item["satuan"] == "kg"
+                    sub_total = harga.harga_kg * item["qty"].to_f
+                    harga_jual = harga.harga_kg
+                  else
+                    sub_total = harga.harga_satuan * item["qty"].to_f
+                    harga_jual = harga.harga_satuan
+                  end
+                  total = total + sub_total
+                  detail = OrderDetail.new()
+                  detail.order_sampah_id = orderan.id
+                  detail.tipe_sampah_id = item["tipe_sampah_id"]
+                  detail.harga = harga_jual
+                  detail.qty = item["qty"]
+                  detail.satuan = item["satuan"]
+                  detail.sub_total = sub_total
+                  if !detail.save
+                    render json: { error: detail.errors }
+                    return
+                  end
+                end
+              end
+            end
+            fee_sampah = @@fee_sampah / 100 * total
+            orderan.sub_total = total
+            orderan.total = fee_sampah + total
+            orderan.save
+            render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
+          end
+        rescue => e
+          render json: { hidden_message: e, message: "Some error in your parameter." }, status: :bad_request
+        end
+      else
+        render json: { message: "At least one order item" }, status: :bad_request
+      end
+    else
+      render json: { message: "Parameter not complete or Record not found" }, status: :bad_request
+    end
+  end
+
+  def order_status
+    if orderan = OrderSampah.find_by(uuid: params[:order_id], user_id: @current_user.id)
+      render json: { order: orderan }
+    else
+      render json: { message: "Record not found" }, status: :bad_request
+    end
   end
 
   private

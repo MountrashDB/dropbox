@@ -44,14 +44,16 @@ class Banksampah < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
   validates :name, presence: true
   validates :email, length: { in: 1..100 }, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+  validates :phone, phone: { possible: true, allow_blank: true, types: [:voip, :mobile] }
   belongs_to :province, optional: true
   belongs_to :city, optional: true
   belongs_to :district, optional: true
   before_create :set_init
+  after_create :send_email
 
   def set_init
     self.uuid = SecureRandom.uuid
-    self.activation_code = rand(100000000..999999999)
+    self.activation_code = SecureRandom.uuid
   end
 
   def self.get_banksampah(headers)
@@ -62,5 +64,9 @@ class Banksampah < ApplicationRecord
     rescue JWT::ExpiredSignature
       false
     end
+  end
+
+  def send_email
+    BanksampahMailer.welcome_email(self).deliver_now!
   end
 end

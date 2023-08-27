@@ -58,6 +58,16 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "dropbox_production"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.smtp_settings = {
+    address: Rails.application.credentials.mail.smtp,
+    port: Rails.application.credentials.mail.port,
+    user_name: Rails.application.credentials.mail.username,
+    password: Rails.application.credentials.mail.password,
+    authentication: "plain",
+    enable_starttls_auto: true,
+    open_timeout: 5,
+    read_timeout: 5,
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

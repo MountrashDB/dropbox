@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_26_161326) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -165,6 +165,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
     t.index ["province_id"], name: "index_districts_on_province_id"
   end
 
+  create_table "harga_sampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "banksampah_id", null: false
+    t.bigint "tipe_sampah_id", null: false
+    t.float "harga_kg"
+    t.float "harga_satuan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["banksampah_id"], name: "index_harga_sampahs_on_banksampah_id"
+    t.index ["tipe_sampah_id"], name: "index_harga_sampahs_on_tipe_sampah_id"
+  end
+
   create_table "histories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.float "amount"
@@ -272,6 +283,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
     t.index ["user_id"], name: "index_mountpays_on_user_id"
   end
 
+  create_table "order_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "order_sampah_id", null: false
+    t.bigint "tipe_sampah_id", null: false
+    t.string "satuan"
+    t.float "harga"
+    t.float "qty"
+    t.float "sub_total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_sampah_id"], name: "index_order_details_on_order_sampah_id"
+    t.index ["tipe_sampah_id"], name: "index_order_details_on_tipe_sampah_id"
+  end
+
+  create_table "order_sampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "banksampah_id", null: false
+    t.float "sub_total"
+    t.float "total"
+    t.string "status"
+    t.string "uuid"
+    t.float "fee"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["banksampah_id"], name: "index_order_sampahs_on_banksampah_id"
+    t.index ["user_id"], name: "index_order_sampahs_on_user_id"
+  end
+
   create_table "orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "uuid"
     t.bigint "user_id", null: false
@@ -330,6 +368,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
     t.text "body"
     t.text "headers"
     t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tipe_sampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -432,6 +477,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
   add_foreign_key "cities", "provinces"
   add_foreign_key "districts", "cities"
   add_foreign_key "districts", "provinces"
+  add_foreign_key "harga_sampahs", "banksampahs"
+  add_foreign_key "harga_sampahs", "tipe_sampahs"
   add_foreign_key "histories", "users"
   add_foreign_key "kycs", "cities"
   add_foreign_key "kycs", "districts"
@@ -441,6 +488,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_09_130620) do
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "mountpays", "mitras"
   add_foreign_key "mountpays", "users"
+  add_foreign_key "order_details", "order_sampahs"
+  add_foreign_key "order_details", "tipe_sampahs"
+  add_foreign_key "order_sampahs", "banksampahs"
+  add_foreign_key "order_sampahs", "users"
   add_foreign_key "orders", "boxes"
   add_foreign_key "orders", "users"
   add_foreign_key "ppobs", "users"

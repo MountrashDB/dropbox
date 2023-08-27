@@ -57,6 +57,10 @@ Rails.application.routes.draw do
         post "bank-validation", to: "payment#bank_validation"
         get "news", to: "users#get_rss"
         get "bank-info", to: "users#bank_info"
+        get "bank-sampah", to: "users#list_banksampah"
+        get "tipe-sampah", to: "users#tipe_sampah"
+        post "order-sampah/:banksampah_id", to: "users#order_sampah"
+        get "order-status/:order_id", to: "users#order_status"
         post "va-create", to: "users#va_create_multi"
         get "va-list", to: "users#va_list"
         post "move", to: "user#move_mountpay"
@@ -129,10 +133,16 @@ Rails.application.routes.draw do
 
       scope "banksampah" do
         post "register", to: "banksampah#register"
-        get "activation-code/:code", to: "banksampah#active_code"
         post "login", to: "banksampah#login"
         post "datatable", to: "banksampah#datatable"
         get "profile", to: "banksampah#profile"
+        get "tipe-sampah", to: "banksampah#tipe_sampah"
+        scope "inventory" do
+          patch "/:tipe_id", to: "banksampah#inventory_update"
+          delete "/:tipe_id", to: "banksampah#inventory_delete"
+          get "/:tipe_id", to: "banksampah#inventory_read"
+          get "", to: "banksampah#inventory_list"
+        end
         get ":uuid", to: "banksampah#show"
       end
 
@@ -189,9 +199,10 @@ Rails.application.routes.draw do
           get "test", to: "admin#home"
         end
       end
-
       get "settings/:field", to: "setting#info"
     end
   end
+  get "banksampah/activation-code/:code", to: "api/v1/banksampah#active_code", as: "active_code"
+
   mount ActionCable.server => "/cable"
 end
