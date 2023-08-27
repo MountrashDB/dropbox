@@ -28,6 +28,7 @@ class Api::V1::UsersController < AdminController
                                      :tipe_sampah,
                                      :order_sampah,
                                      :order_status,
+                                     :order_cancel,
                                    ]
 
   @@fee = ENV["linkqu_fee"].to_f
@@ -531,7 +532,9 @@ class Api::V1::UsersController < AdminController
 
   def tipe_sampah
     tipes = TipeSampah.order(name: :asc)
-    render json: { total: 0, data: TipeSampahBlueprint.render_as_json(tipes) }
+    orderan = OrderSampah.where(user_id: @current_user.id, status: "requested").last
+    total = orderan != nil ? orderan.total : 0
+    render json: { total: total, data: TipeSampahBlueprint.render_as_json(tipes) }
   end
 
   def order_sampah
@@ -590,6 +593,15 @@ class Api::V1::UsersController < AdminController
 
   def order_status
     if orderan = OrderSampah.find_by(uuid: params[:order_id], user_id: @current_user.id)
+      render json: { order: orderan }
+    else
+      render json: { message: "Record not found" }, status: :bad_request
+    end
+  end
+
+  def order_cancel
+    if orderan = OrderSampah.find_by(uuid: params[:order_uuid], user_id: @current_user.id)
+      orderan.destroy
       render json: { order: orderan }
     else
       render json: { message: "Record not found" }, status: :bad_request

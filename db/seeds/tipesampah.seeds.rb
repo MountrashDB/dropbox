@@ -1,4 +1,4 @@
-puts "=== Start TipeSampaah seeding ... ==="
+puts "=== Start TipeSampah seeding ... ==="
 tipes = [
   { id: 1, name: "Sampah Plastik", image_url: "https://res.cloudinary.com/dghu0ntvd/image/upload/v1692968573/jenis/Mount-plastik_wntvxk.png" },
   { id: 2, name: "Sampah Metal", image_url: "https://res.cloudinary.com/dghu0ntvd/image/upload/v1692968573/jenis/Mount-metal_z9aoxw.png" },
@@ -17,4 +17,4 @@ tipes.each do |data|
   end
 end
 
-puts "=== Province seeding done... ==="
+puts "=== TipeSampah seeding done... ==="
