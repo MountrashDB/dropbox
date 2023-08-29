@@ -145,7 +145,7 @@ class Api::V1::BanksampahController < AdminController
     if sampah
       render json: sampah
     else
-      render json: sampah.errors
+      render json: { message: "Not found" }, status: :not_found
     end
   end
 
