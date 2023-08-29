@@ -11,6 +11,7 @@ class Api::V1::BanksampahController < AdminController
                                            :sampah_update,
                                            :sampah_delete,
                                            :datatable,
+                                           :order_sampah_read,
                                          ]
 
   if Rails.env.production?
@@ -170,6 +171,19 @@ class Api::V1::BanksampahController < AdminController
 
   def datatable
     render json: SampahDatatable.new(params, current_banksampah: @current_banksampah)
+  end
+
+  def order_sampah_read
+    if params[:uuid]
+      orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+      if orderan
+        render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
+      else
+        render json: { message: "Not found" }, status: :not_found
+      end
+    else
+      render json: { message: "Parameter not complete" }, status: :not_found
+    end
   end
 
   private

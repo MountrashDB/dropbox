@@ -143,6 +143,7 @@ Rails.application.routes.draw do
         get "tipe-sampah", to: "banksampah#tipe_sampah"
         post "sampah", to: "banksampah#sampah_create"
         get "sampah/:uuid", to: "banksampah#sampah_read"
+        get "order-sampah/:uuid", to: "banksampah#order_sampah_read"
         patch "sampah/:uuid", to: "banksampah#sampah_update"
         delete "sampah/:uuid", to: "banksampah#sampah_delete"
         post "datatable", to: "banksampahs#datatable"
