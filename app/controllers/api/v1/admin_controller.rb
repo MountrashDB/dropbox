@@ -131,8 +131,8 @@ class Api::V1::AdminController < AdminController
   # end
 
   def transaction_delete
-    if params[:ids]
-      Transaction.where(uuid: params[:ids]).destroy_all
+    if params[:uuids]
+      Transaction.where(uuid: params[:uuids]).destroy_all
       render json: { message: "Deleted" }
     else
       render json: { message: "Parameter not complete" }
