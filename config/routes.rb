@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         get "bank-info", to: "users#bank_info"
         get "bank-sampah", to: "users#list_banksampah"
         get "tipe-sampah", to: "users#tipe_sampah"
+        get "list-sampah/:banksampah_id", to: "users#list_sampah"
         post "order-sampah/:banksampah_id", to: "users#order_sampah"
         get "order-status/:order_id", to: "users#order_status"
         delete "order-cancel/:order_uuid", to: "users#order_cancel"
@@ -140,6 +141,12 @@ Rails.application.routes.draw do
         post "order_datatable", to: "banksampah#order_datatable"
         get "profile", to: "banksampah#profile"
         get "tipe-sampah", to: "banksampah#tipe_sampah"
+        post "sampah", to: "banksampah#sampah_create"
+        get "sampah/:uuid", to: "banksampah#sampah_read"
+        patch "sampah/:uuid", to: "banksampah#sampah_update"
+        delete "sampah/:uuid", to: "banksampah#sampah_delete"
+        post "datatable", to: "banksampahs#datatable"
+
         scope "inventory" do
           patch "/:tipe_id", to: "banksampah#inventory_update"
           delete "/:tipe_id", to: "banksampah#inventory_delete"

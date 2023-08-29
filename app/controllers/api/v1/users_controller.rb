@@ -29,6 +29,7 @@ class Api::V1::UsersController < AdminController
                                      :order_sampah,
                                      :order_status,
                                      :order_cancel,
+                                     :list_sampah,
                                    ]
 
   @@fee = ENV["linkqu_fee"].to_f
@@ -537,6 +538,17 @@ class Api::V1::UsersController < AdminController
     render json: { total: total, data: TipeSampahBlueprint.render_as_json(tipes) }
   end
 
+  def list_sampah
+    if params[:banksampah_id]
+      sampah = Sampah.where(banksampah_id: params[:banksampah_id], active: true).order(name: :asc)
+      orderan = OrderSampah.where(user_id: @current_user.id, status: "requested").last
+      total = orderan != nil ? orderan.total : 0
+      render json: { total: total, data: sampah }
+    else
+      render json: { message: "Bank sampah required" }, status: :bad_request
+    end
+  end
+
   def order_sampah
     if banksampah = Banksampah.find_by(id: params[:banksampah_id]) && params[:banksampah_id]
       total = 0
@@ -549,8 +561,9 @@ class Api::V1::UsersController < AdminController
             orderan.user_id = @current_user.id
             orderan.save
             items.each do |item|
-              if item["tipe_sampah_id"] && item["qty"]
-                harga = HargaSampah.find_by(banksampah_id: params[:banksampah_id], tipe_sampah_id: item["tipe_sampah_id"])
+              if item["sampah_id"] && item["qty"]
+                # harga = HargaSampah.find_by(banksampah_id: params[:banksampah_id], tipe_sampah_id: item["tipe_sampah_id"])
+                harga = Sampah.find(item["sampah_id"])
                 if harga
                   if item["satuan"] == "kg"
                     sub_total = harga.harga_kg * item["qty"].to_f
@@ -562,7 +575,7 @@ class Api::V1::UsersController < AdminController
                   total = total + sub_total
                   detail = OrderDetail.new()
                   detail.order_sampah_id = orderan.id
-                  detail.tipe_sampah_id = item["tipe_sampah_id"]
+                  detail.sampah_id = item["sampah_id"]
                   detail.harga = harga_jual
                   detail.qty = item["qty"]
                   detail.satuan = item["satuan"]

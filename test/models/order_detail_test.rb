@@ -10,17 +10,17 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  order_sampah_id :bigint           not null
-#  tipe_sampah_id  :bigint           not null
+#  sampah_id       :bigint           not null
 #
 # Indexes
 #
 #  index_order_details_on_order_sampah_id  (order_sampah_id)
-#  index_order_details_on_tipe_sampah_id   (tipe_sampah_id)
+#  index_order_details_on_sampah_id        (sampah_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (order_sampah_id => order_sampahs.id)
-#  fk_rails_...  (tipe_sampah_id => tipe_sampahs.id)
+#  fk_rails_...  (sampah_id => tipe_sampahs.id)
 #
 require "test_helper"
 

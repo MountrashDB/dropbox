@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: order_details
+# Table name: sampah_details
 #
 #  id              :bigint           not null, primary key
 #  harga           :float(24)
@@ -14,23 +14,27 @@
 #
 # Indexes
 #
-#  index_order_details_on_order_sampah_id  (order_sampah_id)
-#  index_order_details_on_sampah_id        (sampah_id)
+#  index_sampah_details_on_order_sampah_id  (order_sampah_id)
+#  index_sampah_details_on_sampah_id        (sampah_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (order_sampah_id => order_sampahs.id)
-#  fk_rails_...  (sampah_id => tipe_sampahs.id)
+#  fk_rails_...  (sampah_id => sampahs.id)
 #
 
 one:
-  order: one
-  botol: one
-  qty: 1
-  sub_total: 1
+  ordersampah: one
+  sampah: one
+  harga: 1.5
+  qty: 1.5
+  satuan: MyString
+  sub_total: 1.5
 
 two:
-  order: two
-  botol: two
-  qty: 1
-  sub_total: 1
+  ordersampah: two
+  sampah: two
+  harga: 1.5
+  qty: 1.5
+  satuan: MyString
+  sub_total: 1.5

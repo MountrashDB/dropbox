@@ -29,6 +29,7 @@ class OrderSampah < ApplicationRecord
   belongs_to :user
   belongs_to :banksampah
   has_many :order_details, dependent: :destroy
+  has_many :sampah_details, dependent: :destroy
   before_create :set_uuid
 
   aasm column: :status do

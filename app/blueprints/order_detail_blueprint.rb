@@ -1,5 +1,5 @@
 class OrderDetailBlueprint < Blueprinter::Base
   identifier :id
   fields :harga, :qty, :satuan, :sub_total
-  association :tipe_sampah, blueprint: TipeSampahBlueprint
+  association :sampah, blueprint: SampahBlueprint
 end

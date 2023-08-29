@@ -6,6 +6,11 @@ class Api::V1::BanksampahController < AdminController
                                            :inventory_read,
                                            :inventory_update,
                                            :inventory_delete,
+                                           :sampah_create,
+                                           :sampah_read,
+                                           :sampah_update,
+                                           :sampah_delete,
+                                           :datatable,
                                          ]
 
   if Rails.env.production?
@@ -125,7 +130,62 @@ class Api::V1::BanksampahController < AdminController
     end
   end
 
+  def sampah_create
+    sampah = Sampah.new(sampah_params)
+    sampah.banksampah_id = @current_banksampah.id
+    if sampah.save
+      render json: sampah
+    else
+      render json: sampah.errors
+    end
+  end
+
+  def sampah_read
+    sampah = Sampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+    if sampah
+      render json: sampah
+    else
+      render json: sampah.errors
+    end
+  end
+
+  def sampah_update
+    sampah = Sampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+    if sampah.update(sampah_params)
+      render json: sampah
+    else
+      render json: sampah.errors, status: :bad_request
+    end
+  end
+
+  def sampah_delete
+    sampah = Sampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+    if sampah
+      sampah.destroy
+      render json: sampah
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end
+
+  def datatable
+    render json: SampahDatatable.new(params, current_banksampah: @current_banksampah)
+  end
+
   private
+
+  def sampah_params
+    params.permit(
+      :name,
+      :code,
+      :active,
+      :description,
+      :harga_kg,
+      :harga_satuan,
+      :banksampah_id,
+      :tipe_sampah_id
+    )
+  end
 
   def banksampah_params
     params.permit(:name, :phone, :address, :image, :password, :password_confirmation)
