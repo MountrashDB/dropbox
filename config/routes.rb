@@ -85,7 +85,8 @@ Rails.application.routes.draw do
       end
 
       scope "transaction" do
-        delete ":uuid", to: "admin#transaction_delete"
+        # delete ":uuid", to: "admin#transaction_delete"
+        delete "", to: "admin#transaction_delete"
         post "process/:uuid", to: "admin#transaction_process"
         patch ":uuid", to: "transaction#update_botol"
       end
@@ -136,6 +137,7 @@ Rails.application.routes.draw do
         post "register", to: "banksampah#register"
         post "login", to: "banksampah#login"
         post "datatable", to: "banksampah#datatable"
+        post "order_datatable", to: "banksampah#order_datatable"
         get "profile", to: "banksampah#profile"
         get "tipe-sampah", to: "banksampah#tipe_sampah"
         scope "inventory" do

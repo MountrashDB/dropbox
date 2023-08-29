@@ -120,13 +120,22 @@ class Api::V1::AdminController < AdminController
     end
   end
 
+  # def transaction_delete
+  #   trx = Transaction.find_by(uuid: params[:uuid])
+  #   if trx
+  #     trx.destroy
+  #     render json: { message: "Deleted" }
+  #   else
+  #     render json: { message: "Not found" }
+  #   end
+  # end
+
   def transaction_delete
-    trx = Transaction.find_by(uuid: params[:uuid])
-    if trx
-      trx.destroy
+    if params[:ids]
+      Transaction.where(uuid: params[:ids]).destroy_all
       render json: { message: "Deleted" }
     else
-      render json: { message: "Not found" }
+      render json: { message: "Parameter not complete" }
     end
   end
 
