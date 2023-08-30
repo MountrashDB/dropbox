@@ -136,6 +136,7 @@ Rails.application.routes.draw do
 
       scope "banksampah" do
         post "register", to: "banksampah#register"
+        post "resend", to: "banksampah#resend"
         post "login", to: "banksampah#login"
         post "datatable", to: "banksampah#datatable"
         post "order_datatable", to: "banksampah#order_datatable"

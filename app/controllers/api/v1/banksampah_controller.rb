@@ -41,6 +41,15 @@ class Api::V1::BanksampahController < AdminController
     end
   end
 
+  def resend
+    if banksampah = Banksampah.find_by(email: params[:email])
+      BanksampahMailer.welcome_email(banksampah).deliver_now!
+      render json: { message: "Sent" }
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end
+
   def active_code
     if banksampah = Banksampah.find_by(activation_code: params[:code])
       banksampah.active = true
