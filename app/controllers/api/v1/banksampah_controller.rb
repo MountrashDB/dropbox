@@ -12,6 +12,7 @@ class Api::V1::BanksampahController < AdminController
                                            :sampah_delete,
                                            :datatable,
                                            :order_sampah_read,
+                                           :order_datatable,
                                          ]
 
   if Rails.env.production?
@@ -195,6 +196,10 @@ class Api::V1::BanksampahController < AdminController
     end
   end
 
+  def order_datatable
+    render json: OrderSampahDatatable.new(params, current_banksampah: @current_banksampah)
+  end
+
   private
 
   def sampah_params
@@ -211,6 +216,6 @@ class Api::V1::BanksampahController < AdminController
   end
 
   def banksampah_params
-    params.permit(:name, :phone, :address, :image, :password, :password_confirmation)
+    params.permit(:name, :phone, :address, :image, :password, :password_confirmation, :latitude, :longitude)
   end
 end

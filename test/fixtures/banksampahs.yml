@@ -9,6 +9,8 @@
 #  code                   :string(255)
 #  email                  :string(255)      default(""), not null
 #  encrypted_password     :string(255)      default(""), not null
+#  latitude               :string(255)
+#  longitude              :string(255)
 #  name                   :string(255)
 #  phone                  :string(255)
 #  remember_created_at    :datetime

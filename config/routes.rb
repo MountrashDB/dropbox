@@ -147,7 +147,8 @@ Rails.application.routes.draw do
         get "order-sampah/:uuid", to: "banksampah#order_sampah_read"
         patch "sampah/:uuid", to: "banksampah#sampah_update"
         delete "sampah/:uuid", to: "banksampah#sampah_delete"
-        post "datatable", to: "banksampahs#datatable"
+        post "datatable", to: "banksampah#datatable"
+        post "order-sampah-datatable", to: "banksampah#order_datatable"
 
         scope "inventory" do
           patch "/:tipe_id", to: "banksampah#inventory_update"
@@ -186,7 +187,7 @@ Rails.application.routes.draw do
           post "inquiry-pln", to: "ppob#prepaid_inquiry_pln"
           post "inquiry-ovo", to: "ppob#prepaid_inquiry_ovo"
           post "top-up", to: "ppob#prepaid_topup"
-          post "status", to: "ppob#prepaid_status"
+          post "status", to: "ppob#prepaid_status" #
         end
       end
 
@@ -218,4 +219,3 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => "/cable"
 end
-# Test lagi zzz
