@@ -539,8 +539,8 @@ class Api::V1::UsersController < AdminController
   end
 
   def list_sampah
-    if params[:banksampah_id]
-      sampah = Sampah.where(banksampah_id: params[:banksampah_id], active: true).order(name: :asc)
+    if params[:banksampah_id] && params[:tipe_sampah_id]
+      sampah = Sampah.where(banksampah_id: params[:banksampah_id], tipe_sampah_id: params[:tipe_sampah_id], active: true).order(name: :asc)
       orderan = OrderSampah.where(user_id: @current_user.id, status: "requested").last
       total = orderan != nil ? orderan.total : 0
       render json: { total: total, data: sampah }
