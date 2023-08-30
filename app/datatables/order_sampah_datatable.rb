@@ -4,6 +4,7 @@ class OrderSampahDatatable < AjaxDatatablesRails::ActiveRecord
     # or in aliased_join_table.column_name format
     @view_columns ||= {
       uuid: { source: "OrderSampah.uuid", cond: :like },
+      fee: { source: "OrderSampah.fee" },
       sub_total: { source: "OrderSampah.sub_total" },
       total: { source: "OrderSampah.total" },
       user: { source: "User.username", cond: :like },
@@ -18,6 +19,7 @@ class OrderSampahDatatable < AjaxDatatablesRails::ActiveRecord
         uuid: record.uuid,
         status: record.status,
         sub_total: record.sub_total,
+        fee: record.fee,
         total: record.total,
         user: record.user.username,
         created_at: record.created_at,
