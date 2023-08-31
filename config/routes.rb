@@ -59,7 +59,7 @@ Rails.application.routes.draw do
         get "bank-info", to: "users#bank_info"
         get "bank-sampah", to: "users#list_banksampah"
         get "tipe-sampah", to: "users#tipe_sampah"
-        get "list-sampah/:banksampah_id", to: "users#list_sampah"
+        post "list-sampah/:banksampah_id", to: "users#list_sampah"
         post "order-sampah/:banksampah_id", to: "users#order_sampah"
         get "order-status/:order_id", to: "users#order_status"
         delete "order-cancel/:order_uuid", to: "users#order_cancel"
