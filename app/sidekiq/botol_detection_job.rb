@@ -19,7 +19,6 @@ class BotolDetectionJob
           image: foto_url,
           point: transaction.user_amount,
           diterima: true,
-          balance: user.usertransactions.balance,
           message: "Congratulations you get a point of",
         })
         Box.reset_failed(transaction.box_id)
