@@ -14,6 +14,14 @@ class BotolDetectionJob
       confidence = 0.7
       if confidence > 0.5
         transaction.diterima = true
+        ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
+          status: "complete",
+          image: foto_url,
+          point: transaction.user_amount,
+          diterima: true,
+          balance: user.usertransactions.balance,
+          message: "Congratulations you get a point of",
+        })
         Box.reset_failed(transaction.box_id)
       else
         transaction.mitra_amount = 0
