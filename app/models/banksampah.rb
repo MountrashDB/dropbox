@@ -52,6 +52,8 @@ class Banksampah < ApplicationRecord
   belongs_to :district, optional: true
   before_create :set_init
   after_create :send_email
+  has_many :order_sampahs
+  has_many :sampahs
 
   def set_init
     self.uuid = SecureRandom.uuid
