@@ -562,30 +562,31 @@ class Api::V1::UsersController < AdminController
             orderan.fee = @@fee_sampah
             orderan.banksampah_id = params[:banksampah_id]
             orderan.user_id = @current_user.id
-            orderan.save
-            items.each do |item|
-              if item["sampah_id"] && item["qty"]
-                # harga = HargaSampah.find_by(banksampah_id: params[:banksampah_id], tipe_sampah_id: item["tipe_sampah_id"])
-                harga = Sampah.find(item["sampah_id"])
-                if harga
-                  if item["satuan"] == "kg"
-                    sub_total = harga.harga_kg * item["qty"].to_f
-                    harga_jual = harga.harga_kg
-                  else
-                    sub_total = harga.harga_satuan * item["qty"].to_f
-                    harga_jual = harga.harga_satuan
-                  end
-                  total = total + sub_total
-                  detail = OrderDetail.new()
-                  detail.order_sampah_id = orderan.id
-                  detail.sampah_id = item["sampah_id"]
-                  detail.harga = harga_jual
-                  detail.qty = item["qty"]
-                  detail.satuan = item["satuan"]
-                  detail.sub_total = sub_total
-                  if !detail.save
-                    render json: { error: detail.errors }
-                    return
+            if orderan.save
+              items.each do |item|
+                if item["sampah_id"] && item["qty"]
+                  # harga = HargaSampah.find_by(banksampah_id: params[:banksampah_id], tipe_sampah_id: item["tipe_sampah_id"])
+                  harga = Sampah.find(item["sampah_id"])
+                  if harga
+                    if item["satuan"] == "kg"
+                      sub_total = harga.harga_kg * item["qty"].to_f
+                      harga_jual = harga.harga_kg
+                    else
+                      sub_total = harga.harga_satuan * item["qty"].to_f
+                      harga_jual = harga.harga_satuan
+                    end
+                    total = total + sub_total
+                    detail = OrderDetail.new()
+                    detail.order_sampah_id = orderan.id
+                    detail.sampah_id = item["sampah_id"]
+                    detail.harga = harga_jual
+                    detail.qty = item["qty"]
+                    detail.satuan = item["satuan"]
+                    detail.sub_total = sub_total
+                    if !detail.save
+                      render json: { error: detail.errors }
+                      return
+                    end
                   end
                 end
               end
@@ -594,6 +595,7 @@ class Api::V1::UsersController < AdminController
             orderan.sub_total = total
             orderan.total = fee_sampah + total
             orderan.save
+
             render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
           end
         rescue => e
