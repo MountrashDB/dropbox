@@ -576,17 +576,17 @@ class Api::V1::UsersController < AdminController
                     harga_jual = harga.harga_satuan
                   end
                   total = total + sub_total
-                  detail = OrderDetail.new()
-                  detail.order_sampah_id = orderan.id
-                  detail.sampah_id = item["sampah_id"]
-                  detail.harga = harga_jual
-                  detail.qty = item["qty"]
-                  detail.satuan = item["satuan"]
-                  detail.sub_total = sub_total
-                  if !detail.save
-                    render json: { error: detail.errors }
-                    return
-                  end
+                  # detail = OrderDetail.new()
+                  # detail.order_sampah_id = orderan.id
+                  # detail.sampah_id = item["sampah_id"]
+                  # detail.harga = harga_jual
+                  # detail.qty = item["qty"]
+                  # detail.satuan = item["satuan"]
+                  # detail.sub_total = sub_total
+                  # if !detail.save
+                  #   render json: { error: detail.errors }
+                  #   return
+                  # end
                 end
               end
             end
