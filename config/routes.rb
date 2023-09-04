@@ -145,10 +145,12 @@ Rails.application.routes.draw do
         post "sampah", to: "banksampah#sampah_create"
         get "sampah/:uuid", to: "banksampah#sampah_read"
         get "order-sampah/:uuid", to: "banksampah#order_sampah_read"
+        patch "order-sampah/:uuid", to: "banksampah#order_sampah_update"
         patch "sampah/:uuid", to: "banksampah#sampah_update"
         delete "sampah/:uuid", to: "banksampah#sampah_delete"
         post "datatable", to: "banksampah#datatable"
         post "order-sampah-datatable", to: "banksampah#order_datatable"
+        patch "order-sampah-proses/:uuid", to: "banksampah#order_sampah_proses"
 
         scope "inventory" do
           patch "/:tipe_id", to: "banksampah#inventory_update"

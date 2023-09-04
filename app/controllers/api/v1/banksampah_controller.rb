@@ -12,7 +12,9 @@ class Api::V1::BanksampahController < AdminController
                                            :sampah_delete,
                                            :datatable,
                                            :order_sampah_read,
+                                           :order_sampah_update,
                                            :order_datatable,
+                                           :order_sampah_proses,
                                          ]
 
   if Rails.env.production?
@@ -20,6 +22,8 @@ class Api::V1::BanksampahController < AdminController
   else
     @@token_expired = 30.days.to_i
   end
+
+  @@fee_sampah = 2.5 # In percentage
 
   def active
     render json: { message: "active" }
@@ -196,8 +200,75 @@ class Api::V1::BanksampahController < AdminController
     end
   end
 
+  def order_sampah_update
+    if orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+      if params[:_json] && orderan
+        items = params[:_json]
+        total = 0
+        orderan.order_details.destroy_all
+        items.each do |item|
+          if item["sampah_id"] && item["qty"]
+            harga = Sampah.find(item["sampah_id"])
+            if harga
+              if item["satuan"] == "kg"
+                sub_total = harga.harga_kg * item["qty"].to_f
+                harga_jual = harga.harga_kg
+              else
+                sub_total = harga.harga_satuan * item["qty"].to_f
+                harga_jual = harga.harga_satuan
+              end
+              total = total + sub_total
+              detail = OrderDetail.new()
+              detail.order_sampah_id = orderan.id
+              detail.sampah_id = item["sampah_id"]
+              detail.harga = harga_jual
+              detail.qty = item["qty"]
+              detail.satuan = item["satuan"]
+              detail.sub_total = sub_total
+              if !detail.save
+                render json: { error: detail.errors }
+                return
+              end
+            end
+          end
+        end
+        fee_sampah = @@fee_sampah / 100 * total
+        orderan.sub_total = total
+        orderan.total = fee_sampah + total
+        orderan.save
+        render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(OrderDetail.where(order_sampah_id: orderan.id)) }
+      else
+        render json: { message: "At least one order item" }, status: :bad_request
+      end
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end
+
   def order_datatable
     render json: OrderSampahDatatable.new(params, current_banksampah: @current_banksampah)
+  end
+
+  def order_sampah_proses
+    if orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+      puts params[:status]
+      if status = params[:status]
+        begin
+          if status == "accepted"
+            orderan.diterima!
+          else
+            orderan.ditolak!
+          end
+          render json: orderan
+        rescue
+          render json: { message: "Cannot process or status cannot updated" }, status: :bad_request
+        end
+      else
+        render json: { message: "Select status [rejected/accepted] " }, status: :bad_request
+      end
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
   end
 
   private

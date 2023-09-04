@@ -34,13 +34,17 @@ class OrderSampah < ApplicationRecord
 
   aasm column: :status do
     state :requested, initial: true
-    state :paid, :rejected
+    state :accepted, :paid, :rejected
 
-    event :paidkan do
-      transitions from: :requested, to: :paid
+    event :diterima do
+      transitions from: :requested, to: :accepted
     end
 
-    event :rejectedkan do
+    event :paidkan do
+      transitions from: :accepted, to: :paid
+    end
+
+    event :ditolak do
       transitions from: :requested, to: :rejected
     end
   end
