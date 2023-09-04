@@ -4,7 +4,7 @@ class Api::V1::HistoryController < AdminController
                                    ]
 
   def index
-    history = @current_user.histories.order(created_at: :desc).limit(5)
+    history = @current_user.histories.order(created_at: :desc).limit(20)
     render json: HistoryBlueprint.render(history)
   end
 end

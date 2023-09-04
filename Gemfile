@@ -59,6 +59,8 @@ group :development do
   # gem "spring"
   # gem 'faker'
   gem "annotate"
+  gem "rufo"
+
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
@@ -92,7 +94,6 @@ gem "yajl-ruby", require: "yajl" # SPeed JSON rendering
 gem "draper"
 gem "imatcher"
 gem "rss"
-gem "rufo"
 gem "aasm" # For record status
 gem "after_commit_everywhere" # For AASM after_commit
 gem "sidekiq"

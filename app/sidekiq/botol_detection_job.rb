@@ -13,6 +13,7 @@ class BotolDetectionJob
       # confidence = result["info"]["detection"]["object_detection"]["data"]["openimages"]["tags"]["bottle"][0]["confidence"]
       confidence = 0.7
       if confidence > 0.5
+        puts "=== Terima ==="
         transaction.diterima = true
         ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
           status: "complete",
@@ -22,6 +23,7 @@ class BotolDetectionJob
           message: "Congratulations you get a point of",
         })
         Box.reset_failed(transaction.box_id)
+        transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
       else
         transaction.mitra_amount = 0
         transaction.user_amount = 0
@@ -34,8 +36,10 @@ class BotolDetectionJob
           diterima: false,
           message: "Rejected",
         })
+        transaction.user.history_tambahkan(0, "Botol", "Rejected")
       end
     rescue => e
+      puts "=== Tdk Terima ==="
       transaction.mitra_amount = 0
       transaction.user_amount = 0
       transaction.diterima = false
@@ -49,6 +53,7 @@ class BotolDetectionJob
         diterima: false,
         message: "Rejected",
       })
+      transaction.user.history_tambahkan(0, "Botol", "Rejected")
     end
     transaction.save
   end
