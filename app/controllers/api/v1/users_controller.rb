@@ -39,6 +39,7 @@ class Api::V1::UsersController < AdminController
   @@bank_code = "002" # 002 = Bank BRI
   @@fee_sampah = 2.5 # In percentage
   MIN_WITHDRAW = 50000
+  HOLD_WITHDRAW = true
 
   if Rails.env.production?
     @@token_expired = 30.days.to_i
@@ -378,37 +379,41 @@ class Api::V1::UsersController < AdminController
     user = User.find(@current_user.id)
     balance = user.usertransactions.balance
     total = params[:amount].to_f + @@fee
-    if user.user_bank&.is_valid?
-      if total < balance
-        if total >= MIN_WITHDRAW
-          Withdrawl.transaction do
-            User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
-            trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
+    if !HOLD_WITHDRAW
+      if user.user_bank&.is_valid?
+        if total < balance
+          if total >= MIN_WITHDRAW
+            Withdrawl.transaction do
+              User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
+              trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
 
-            process = Withdrawl.new()
-            process.amount = params[:amount]
-            process.kodeBank = user.user_bank.kodeBank
-            process.nama = user.user_bank.nama
-            process.rekening = user.user_bank.rekening
-            process.user = @current_user
-            process.usertransaction_id = trx.id
-            if process.save
-              desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
-              User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
-              render json: { message: "Success" }
-            else
-              render json: { error: process.errors }, status: :bad_request
-              raise ActiveRecord::Rollback
+              process = Withdrawl.new()
+              process.amount = params[:amount]
+              process.kodeBank = user.user_bank.kodeBank
+              process.nama = user.user_bank.nama
+              process.rekening = user.user_bank.rekening
+              process.user = @current_user
+              process.usertransaction_id = trx.id
+              if process.save
+                desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
+                User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
+                render json: { message: "Success" }
+              else
+                render json: { error: process.errors }, status: :bad_request
+                raise ActiveRecord::Rollback
+              end
             end
+          else
+            render json: { message: "Minimum withdraw is #{MIN_WITHDRAW}" }, status: :bad_request
           end
         else
-          render json: { message: "Minimum withdraw is #{MIN_WITHDRAW}" }, status: :bad_request
+          render json: { message: "Insuffient Balance" }, status: :bad_request
         end
       else
-        render json: { message: "Insuffient Balance" }, status: :bad_request
+        render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
       end
     else
-      render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
+      render json: { message: "Sorry, withdraw system is on HOLD. Please contact admin" }, status: :bad_request
     end
   end
 
@@ -454,11 +459,12 @@ class Api::V1::UsersController < AdminController
           req.body = {
             username: @@username,
             pin: @@pin,
-            bank_code: params[:bank_code],
+            bank_code: @@bank_code,
             customer_id: "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s,
             customer_name: @current_user.username,
             customer_phone: @current_user.phone,
             customer_email: @current_user.email,
+            signature: Banksampah.signature("POST", "/linkqu-partner/transaction/create/vadedicated/add"),
           }.to_json
           req.options.timeout = 3
           puts req.body
