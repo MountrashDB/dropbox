@@ -1,7 +1,11 @@
 class UserBlueprint < Blueprinter::Base
-    identifier :id
+  identifier :id
 
-    view :register do
-        fields :uuid, :email, :username, :active_code, :phone, :active
-    end
+  view :order_sampah do
+    fields :email, :username, :phone
+  end
+
+  view :register do
+    fields :uuid, :email, :username, :active_code, :phone, :active
+  end
 end
