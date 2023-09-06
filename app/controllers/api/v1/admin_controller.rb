@@ -143,6 +143,14 @@ class Api::V1::AdminController < AdminController
     render json: WithdrawlDatatable.new(params)
   end
 
+  def withdrawl_read
+    if withdraw = Withdrawl.find_by(id: params[:id])
+      render json: WithdrawlBlueprint.render(withdraw)
+    else
+      render json: { message: "Record not found" }, status: :not_found
+    end
+  end
+
   def withdrawl_proses
     if withdraw = Withdrawl.find_by(id: params[:id])
       begin

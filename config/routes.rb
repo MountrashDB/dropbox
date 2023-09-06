@@ -99,6 +99,7 @@ Rails.application.routes.draw do
         post "datatable", to: "admin#datatable"
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
+        get "withdraw/:id", to: "admin#withdrawl_read"
         patch "withdraw/:id", to: "admin#withdrawl_proses"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
