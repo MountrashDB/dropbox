@@ -30,6 +30,7 @@ class Api::V1::UsersController < AdminController
                                      :order_status,
                                      :order_cancel,
                                      :list_sampah,
+                                     :order_read,
                                    ]
 
   @@fee = ENV["linkqu_fee"].to_f
@@ -628,6 +629,14 @@ class Api::V1::UsersController < AdminController
     if orderan = OrderSampah.find_by(uuid: params[:order_uuid], user_id: @current_user.id)
       orderan.destroy
       render json: { order: orderan }
+    else
+      render json: { message: "Record not found" }, status: :bad_request
+    end
+  end
+
+  def order_read
+    if orderan = OrderSampah.find_by(uuid: params[:uuid], user_id: @current_user.id)
+      render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
     else
       render json: { message: "Record not found" }, status: :bad_request
     end

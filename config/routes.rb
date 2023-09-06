@@ -61,6 +61,7 @@ Rails.application.routes.draw do
         get "tipe-sampah", to: "users#tipe_sampah"
         post "list-sampah/:banksampah_id", to: "users#list_sampah"
         post "order-sampah/:banksampah_id", to: "users#order_sampah"
+        get "order-sampah/:uuid", to: "users#order_read"
         get "order-status/:order_id", to: "users#order_status"
         delete "order-cancel/:order_uuid", to: "users#order_cancel"
         post "va-create", to: "users#va_create_multi"
