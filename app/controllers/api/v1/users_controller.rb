@@ -38,12 +38,13 @@ class Api::V1::UsersController < AdminController
   @@pin = ENV["linkqu_pin"]
   @@bank_code = "002" # 002 = Bank BRI
   @@fee_sampah = 2.5 # In percentage
-  MIN_WITHDRAW = 50000
-  HOLD_WITHDRAW = true
+  HOLD_WITHDRAW = false
 
   if Rails.env.production?
+    MIN_WITHDRAW = 50000
     @@token_expired = 30.days.to_i
   else
+    MIN_WITHDRAW = 10000
     @@token_expired = 30.days.to_i
   end
 
@@ -397,7 +398,7 @@ class Api::V1::UsersController < AdminController
               if process.save
                 desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
                 User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
-                render json: { message: "Success" }
+                render json: { message: "You withdraw is waiting approval" }
               else
                 render json: { error: process.errors }, status: :bad_request
                 raise ActiveRecord::Rollback

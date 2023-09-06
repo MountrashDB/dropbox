@@ -142,4 +142,24 @@ class Api::V1::AdminController < AdminController
   def withdrawl
     render json: WithdrawlDatatable.new(params)
   end
+
+  def withdrawl_proses
+    if withdraw = Withdrawl.find_by(id: params[:id])
+      begin
+        if params[:status] == "approved"
+          withdraw.approved!
+          render json: withdraw
+        elsif params[:status] == "rejected"
+          withdraw.rejected!
+          render json: withdraw
+        else
+          render json: { message: "Wrong parameter or value" }, status: :bad_request
+        end
+      rescue => e
+        render json: { message: e }
+      end
+    else
+      render json: { message: "Record not found" }, status: :not_found
+    end
+  end
 end

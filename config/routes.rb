@@ -99,6 +99,7 @@ Rails.application.routes.draw do
         post "datatable", to: "admin#datatable"
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
+        patch "withdraw/:id", to: "admin#withdrawl_proses"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
         patch ":uuid", to: "admin#update"
@@ -151,6 +152,8 @@ Rails.application.routes.draw do
         post "datatable", to: "banksampah#datatable"
         post "order-sampah-datatable", to: "banksampah#order_datatable"
         patch "order-sampah-proses/:uuid", to: "banksampah#order_sampah_proses"
+        post "va-create", to: "banksampah#va_create_multi"
+        get "va-list", to: "banksampah#va_list"
 
         scope "inventory" do
           patch "/:tipe_id", to: "banksampah#inventory_update"
