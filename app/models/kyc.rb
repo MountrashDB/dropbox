@@ -40,14 +40,14 @@ class Kyc < ApplicationRecord
   belongs_to :city
   belongs_to :district
   belongs_to :mitra
-  has_one_attached :ktp_image, dependent: :destroy, service: :cloudinary 
+  has_one_attached :ktp_image, dependent: :destroy
 
   validates :ktp_image, :nama, :no_ktp, :tempat_tinggal, :tgl_lahir, :province_id, :city_id, :district_id, :mitra_id, presence: true
 
-  before_create :set_value  
+  before_create :set_value
 
   def set_value
     self.uuid = SecureRandom.uuid
     self.status = 0 #Waiting approve, 1 = Approved, 2 = Rejected
-  end 
+  end
 end

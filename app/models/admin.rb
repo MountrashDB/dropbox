@@ -31,7 +31,7 @@ class Admin < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_one_attached :image, dependent: :destroy, service: :cloudinary
+  has_one_attached :image, dependent: :destroy
   before_create :set_uuid
 
   def set_uuid

@@ -15,8 +15,8 @@
 
 class Botol < ApplicationRecord
   has_many :botol_harga, dependent: :destroy
-  has_one_attached :primary_image, dependent: :destroy, service: :cloudinary
-  has_many_attached :images, dependent: :destroy, service: :cloudinary do |attachable|
+  has_one_attached :primary_image, dependent: :destroy
+  has_many_attached :images, dependent: :destroy do |attachable|
     attachable.variant :fix, resize_to_limit: [300, 300]
   end
   before_create :set_uuid

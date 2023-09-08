@@ -38,7 +38,7 @@ class Mitra < ApplicationRecord
   has_one :mitra_bank, dependent: :destroy
 
   belongs_to :partner, optional: true
-  has_one_attached :image, dependent: :destroy, service: :cloudinary
+  has_one_attached :image, dependent: :destroy
   scope :active, -> { where(status: 1) }
 
   @@url = ENV["linkqu_url"]
