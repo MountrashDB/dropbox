@@ -18,7 +18,7 @@
 #
 class Transaction < ApplicationRecord
   include AASM
-  has_one_attached :foto, dependent: :destroy, service: :cloudinary
+  has_one_attached :foto, dependent: :destroy, service: :local
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user
