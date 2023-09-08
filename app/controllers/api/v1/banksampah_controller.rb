@@ -1,5 +1,6 @@
 class Api::V1::BanksampahController < AdminController
   include ActiveStorage::SetCurrent
+  # Test
   before_action :check_banksampah_token, only: [
                                            :profile,
                                            :inventory_list,
@@ -15,6 +16,9 @@ class Api::V1::BanksampahController < AdminController
                                            :order_sampah_update,
                                            :order_datatable,
                                            :order_sampah_proses,
+                                           :order_sampah_proses,
+                                           :va_create_multi,
+                                           :va_list,
                                          ]
 
   if Rails.env.production?
@@ -24,6 +28,11 @@ class Api::V1::BanksampahController < AdminController
   end
 
   @@fee_sampah = 2.5 # In percentage
+  @@fee = ENV["linkqu_fee"].to_f
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
+  @@bank_code = "002" # 002 = Bank BRI
 
   def active
     render json: { message: "active" }
@@ -191,7 +200,7 @@ class Api::V1::BanksampahController < AdminController
     if params[:uuid]
       orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
       if orderan
-        render json: { order: orderan, items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
+        render json: { order: OrderSampahBlueprint.render_as_json(orderan), items: OrderDetailBlueprint.render_as_json(orderan.order_details) }
       else
         render json: { message: "Not found" }, status: :not_found
       end
@@ -269,6 +278,53 @@ class Api::V1::BanksampahController < AdminController
     else
       render json: { message: "Not found" }, status: :not_found
     end
+  end
+
+  def va_create_multi
+    bsiva = BsiVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(banksampah_id: @current_banksampah.id, kodeBank: @@bank_code)
+    if bsiva
+      render json: bsiva
+    else
+      conn = Faraday.new(
+        url: @@url,
+        headers: {
+          "Content-Type" => "application/json",
+          "client-id" => ENV["linkqu_client_id"],
+          "client-secret" => ENV["linkqu_client_secret"],
+        },
+        request: { timeout: 3 },
+      )
+      # $path.$method.$amount.$expired.$bank_code.$partner_reff.$customer_id.$customer_name.$customer_email.$client-id
+      second_value = "#{trx.amount.to_i}#{trx.rekening}#{trx.kodeBank}#{partner_reff}#{inquiry_reff}#{@@client_id}"
+      signature = Banksampah.signature("/transaction/create/v", "POST", second_value)
+      response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
+        req.body = {
+          username: @@username,
+          pin: @@pin,
+          bank_code: @@bank_code,
+          customer_id: "va|bsi|" + @current_banksampah.uuid + "|" + rand(10000..99999).to_s,
+          customer_name: @current_banksampah.name,
+          customer_phone: @current_banksampah.phone,
+          customer_email: @current_banksampah.email,
+        }.to_json
+        req.options.timeout = 3
+      end
+      result = JSON.parse(response.body)
+      puts result
+      hasil = BsiVa.create!(
+        banksampah_id: @current_banksampah.id,
+        kodeBank: @@bank_code,
+        name: result["customer_name"],
+        rekening: result["virtual_account"],
+        fee: result["feeadmin"],
+        bank_name: result["bank_name"],
+      )
+      render json: { bank_name: hasil.bank_name, kodeBank: hasil.kodeBank, name: hasil.name, rekening: hasil.rekening }
+    end
+  end
+
+  def va_list
+    render json: BsiVa.select(:bank_name, :rekening, :kodeBank, :name).where(banksampah_id: @current_banksampah.id).last
   end
 
   private
