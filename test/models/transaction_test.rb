@@ -4,6 +4,7 @@
 #
 #  id           :bigint           not null, primary key
 #  diterima     :boolean
+#  gambar       :string(255)
 #  harga        :float(24)
 #  mitra_amount :float(24)
 #  status       :string(255)      default("in")

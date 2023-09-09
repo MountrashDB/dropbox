@@ -34,7 +34,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
         mitra: record.mitra.name,
         user: record.user.username,
         email: record.user.email,
-        image: record.foto.url,
+        image: record.gambar.url != nil ? record.gambar.url : record.foto.url,
         botol: record.botol_info,
         created_at: record.created_at,
       }
@@ -48,7 +48,7 @@ class TransactionDatatable < AjaxDatatablesRails::ActiveRecord
       Transaction.where(user_id: options[:user_id]).joins(:box, :user, :mitra)
     else
       # Transaction.all.joins(:box, :user, :mitra).where(:user => { :active => true })
-      Transaction.all.joins(:box, :user, :mitra)
+      Transaction.all.joins(:box, :user, :mitra).order(created_at: :desc)
     end
   end
 end

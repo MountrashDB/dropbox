@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_09_021415) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -449,6 +449,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_021415) do
     t.boolean "diterima"
     t.string "status", default: "in"
     t.integer "botol_id"
+    t.string "gambar"
   end
 
   create_table "user_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

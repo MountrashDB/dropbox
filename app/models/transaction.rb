@@ -20,7 +20,7 @@
 class Transaction < ApplicationRecord
   include AASM
   has_one_attached :foto, dependent: :destroy, service: :local
-  # mount_uploader :gambar, FotoUploader
+  mount_uploader :gambar, FotoUploader
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user
@@ -51,7 +51,8 @@ class Transaction < ApplicationRecord
       status: "process",
       message: "Memvalidasi...",
       point: self.user_amount,
-      image: self.foto.url,
+      # image: self.foto.url,
+      image: self.gambar.url,
     })
     # NotifyChannel.broadcast_to self.user.uuid,
     #                            status: "process",

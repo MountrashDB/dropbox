@@ -103,6 +103,7 @@ gem "phonelib"
 gem "httparty"
 gem "feedjira"
 gem "figaro" # For create rails ENV and application.yml
+gem "carrierwave", "~> 3.0" # Gantiin Cloudinary yang error
 
 # gem "ed25519", ">= 1.2", "< 2.0"
 # gem "bcrypt_pbkdf", ">= 1.0", "< 2.0"
