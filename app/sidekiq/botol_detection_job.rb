@@ -1,4 +1,5 @@
 class BotolDetectionJob
+  include ActiveStorage::SetCurrent
   include Sidekiq::Job
   sidekiq_options retry: 3
 
