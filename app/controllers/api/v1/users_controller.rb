@@ -229,14 +229,15 @@ class Api::V1::UsersController < AdminController
       # transaction.diterima = true # Harus dimaintain jika botol valid atau tidak
       transaction.mitra_amount = mitra_amount
       transaction.user_amount = user_amount
-      image = params[:foto]
-      if image.present?
-        # result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
-        # transaction.set_foto_folder("transaction")
-        transaction.foto.attach(image)
-      end
+      transaction.foto = params[:foto]
+      # image = params[:foto]
+      # if image.present?
+      #   result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
+      #   transaction.set_foto_folder("transaction")
+      #   # transaction.foto.attach(image)
+      # end
       if transaction.save
-        render json: { message: "Checking..." }
+        render json: { message: "Checking...", url: transaction.foto.url }
       else
         render json: transaction.errors
       end
