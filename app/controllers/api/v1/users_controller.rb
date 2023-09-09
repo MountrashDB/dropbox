@@ -231,8 +231,9 @@ class Api::V1::UsersController < AdminController
       transaction.user_amount = user_amount
       image = params[:foto]
       if image.present?
-        result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
-        transaction.set_foto_folder("transaction")
+        # result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
+        # transaction.set_foto_folder("transaction")
+        transaction.foto.attach(image)
       end
       if transaction.save
         render json: { message: "Checking..." }
