@@ -8,7 +8,7 @@ class BotolDetectionJob
     transaction = Transaction.find(uid)
     ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
       status: "complete",
-      image: foto_url,
+      image: transaction.foto.url,
       point: transaction.user_amount,
       diterima: true,
       message: "Congratulations you get a point of",
