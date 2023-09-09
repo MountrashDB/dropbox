@@ -4,6 +4,7 @@
 #
 #  id           :bigint           not null, primary key
 #  diterima     :boolean
+#  gambar       :string(255)
 #  harga        :float(24)
 #  mitra_amount :float(24)
 #  status       :string(255)      default("in")
@@ -18,7 +19,8 @@
 #
 class Transaction < ApplicationRecord
   include AASM
-  has_one_attached :foto, dependent: :destroy
+  has_one_attached :foto, dependent: :destroy, service: :local
+  # mount_uploader :gambar, FotoUploader
   before_create :set_uuid
   belongs_to :mitra
   belongs_to :user
