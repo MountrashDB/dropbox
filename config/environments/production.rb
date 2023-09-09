@@ -35,7 +35,6 @@ Rails.application.configure do
   # config.active_storage.service = :local
   # config.active_storage.service = :local
   config.active_storage.service = :local
-  config.active_storage.draw_routes = false
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
