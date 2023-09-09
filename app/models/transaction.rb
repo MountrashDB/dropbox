@@ -32,6 +32,7 @@ class Transaction < ApplicationRecord
   scope :berhasil, -> { where(diterima: true) }
   after_update :reverse_balance
   before_destroy :reverse_user_balance
+  after_commit :remove_gambar!, on: :destroy
 
   def set_foto_folder(folder_name)
     # This method sets the folder for the foto attachment
