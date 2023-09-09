@@ -102,5 +102,5 @@ Rails.application.configure do
     config.api_secret = ENV["cloudinary_api_secret"]
     config.secure = true
   end
-  Rails.application.config.action_cable.allowed_request_origins = ["https://api.smartdropbox.online"]
+  # Rails.application.config.action_cable.allowed_request_origins = ["https://api.smartdropbox.online"]
 end
