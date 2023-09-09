@@ -6,13 +6,13 @@ class BotolDetectionJob
   # Sementara tanpa validasi
   def perform(uid)
     transaction = Transaction.find(uid)
-    ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
-      status: "complete",
-      image: transaction.foto.url,
-      point: transaction.user_amount,
-      diterima: true,
-      message: "Congratulations you get a point of",
-    })
+    # ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
+    #   status: "complete",
+    #   # image: transaction.foto.url,
+    #   point: transaction.user_amount,
+    #   diterima: true,
+    #   message: "Congratulations you get a point of",
+    # })
     Box.reset_failed(transaction.box_id)
     transaction.diterima = true
     transaction.save
