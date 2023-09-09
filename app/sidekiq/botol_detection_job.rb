@@ -3,7 +3,23 @@ class BotolDetectionJob
   include Sidekiq::Job
   sidekiq_options retry: 3
 
+  # Sementara tanpa validasi
   def perform(uid)
+    transaction = Transaction.find(uid)
+    ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
+      status: "complete",
+      image: foto_url,
+      point: transaction.user_amount,
+      diterima: true,
+      message: "Congratulations you get a point of",
+    })
+    Box.reset_failed(transaction.box_id)
+    transaction.diterima = true
+    transaction.save
+    transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
+  end
+
+  def perform_old(uid)
     transaction = Transaction.find(uid)
     # result = Cloudinary::Uploader.upload(transaction.foto.url, :detection => "coco")
     # result = Cloudinary::Uploader.upload(transaction.foto.url, :categorization => "aws_rek_tagging")
