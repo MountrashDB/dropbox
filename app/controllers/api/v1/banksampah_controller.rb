@@ -19,6 +19,7 @@ class Api::V1::BanksampahController < AdminController
                                            :order_sampah_proses,
                                            :va_create_multi,
                                            :va_list,
+                                           :balance,
                                          ]
 
   if Rails.env.production?
@@ -30,6 +31,7 @@ class Api::V1::BanksampahController < AdminController
   @@fee_sampah = 2.5 # In percentage
   @@fee = ENV["linkqu_fee"].to_f
   @@url = ENV["linkqu_url"]
+  @@client_id = ENV["linkqu_client_id"]
   @@username = ENV["linkqu_username"]
   @@pin = ENV["linkqu_pin"]
   @@bank_code = "002" # 002 = Bank BRI
@@ -294,18 +296,20 @@ class Api::V1::BanksampahController < AdminController
         },
         request: { timeout: 3 },
       )
-      # $path.$method.$amount.$expired.$bank_code.$partner_reff.$customer_id.$customer_name.$customer_email.$client-id
-      second_value = "#{trx.amount.to_i}#{trx.rekening}#{trx.kodeBank}#{partner_reff}#{inquiry_reff}#{@@client_id}"
-      signature = Banksampah.signature("/transaction/create/v", "POST", second_value)
+      # $path.$method.$bank_code.$customer_id.$customer_name.$customer_email.$client-id
+      customer_id = "va|bsi|" + @current_banksampah.uuid + "|" + rand(10000..99999).to_s
+      second_value = "#{@@bank_code}#{customer_id}#{@current_banksampah.name}#{@current_banksampah.email}#{@@client_id}"
+      signature = Banksampah.signature("/transaction/create/vadedicated/add", "POST", second_value)
       response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
         req.body = {
           username: @@username,
           pin: @@pin,
           bank_code: @@bank_code,
-          customer_id: "va|bsi|" + @current_banksampah.uuid + "|" + rand(10000..99999).to_s,
+          customer_id: customer_id,
           customer_name: @current_banksampah.name,
           customer_phone: @current_banksampah.phone,
           customer_email: @current_banksampah.email,
+          signature: signature,
         }.to_json
         req.options.timeout = 3
       end
@@ -325,6 +329,11 @@ class Api::V1::BanksampahController < AdminController
 
   def va_list
     render json: BsiVa.select(:bank_name, :rekening, :kodeBank, :name).where(banksampah_id: @current_banksampah.id).last
+  end
+
+  def balance
+    bsi = Banksampah.find(@current_banksampah.id)
+    render json: { mountpay: bsi.mountpay.balance }
   end
 
   private

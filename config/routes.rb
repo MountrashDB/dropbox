@@ -156,6 +156,7 @@ Rails.application.routes.draw do
         patch "order-sampah-proses/:uuid", to: "banksampah#order_sampah_proses"
         post "va-create", to: "banksampah#va_create_multi"
         get "va-list", to: "banksampah#va_list"
+        get "balance", to: "banksampah#balance"
 
         scope "inventory" do
           patch "/:tipe_id", to: "banksampah#inventory_update"

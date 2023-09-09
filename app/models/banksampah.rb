@@ -54,6 +54,9 @@ class Banksampah < ApplicationRecord
   after_create :send_email
   has_many :order_sampahs
   has_many :sampahs
+  has_many :mountpay, dependent: :destroy
+
+  @@bank_code = "002" # 002 = Bank BRI
 
   def set_init
     self.uuid = SecureRandom.uuid
@@ -72,5 +75,43 @@ class Banksampah < ApplicationRecord
 
   def send_email
     BanksampahMailer.welcome_email(self).deliver_now!
+  end
+
+  # def self.signature(method, path, kodeBank, amount, accountnumber, partner_reff)
+  def self.signature(path, method, second_value)
+    #Formula Inquiry Signature ---->  $path.$method.$amount.$accountnumber.$bankcode.$partner_reff.$client-id
+    #Formula Payment Signature ---->  $path.$method.$amount.$accountnumber.$bankcode.$partner_reff.$inquiry_reff.$client-id
+    require "digest"
+
+    regex = /[^0-9a-zA-Z]/
+    client_id = ENV["linkqu_client_id"]
+    sign_key = ENV["linkqu_key"]
+    # second_value = "#{amount.to_i}#{accountnumber}#{kodeBank}#{partner_reff}#{client_id}".downcase.gsub(regex, "")
+    second_value = second_value.downcase.gsub(regex, "")
+    sign_to_string = "#{path}#{method}#{second_value}"
+    digest = OpenSSL::Digest.new("sha256")
+    signature = OpenSSL::HMAC.hexdigest(digest, sign_key, sign_to_string)
+  end
+
+  def mountpay_creditkan(amount, description)
+    balance = self.mountpay.balance
+    Mountpay.create!(
+      user_id: self.id,
+      credit: amount,
+      debit: 0,
+      balance: balance + amount,
+      description: description,
+    )
+  end
+
+  def mountpay_debitkan(amount, description)
+    balance = self.mountpay.balance
+    Mountpay.create!(
+      user_id: self.id,
+      credit: 0,
+      debit: amount,
+      balance: balance - amount,
+      description: description,
+    )
   end
 end

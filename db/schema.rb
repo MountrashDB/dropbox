@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_30_160129) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_09_021415) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -139,6 +139,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_160129) do
     t.float "price_pcs"
     t.float "price_kg"
     t.integer "failed", default: 0
+  end
+
+  create_table "bsi_transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "banksampah_id", null: false
+    t.float "balance"
+    t.float "credit"
+    t.float "debit"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["banksampah_id"], name: "index_bsi_transactions_on_banksampah_id"
+  end
+
+  create_table "bsi_vas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "banksampah_id", null: false
+    t.boolean "active"
+    t.string "bank_name"
+    t.datetime "expired"
+    t.float "fee"
+    t.string "kodeBank"
+    t.string "name"
+    t.string "rekening"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["banksampah_id"], name: "index_bsi_vas_on_banksampah_id"
   end
 
   create_table "callbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -281,6 +306,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_160129) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "banksampah_id"
     t.index ["mitra_id"], name: "index_mountpays_on_mitra_id"
     t.index ["user_id"], name: "index_mountpays_on_user_id"
   end
@@ -505,6 +531,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_160129) do
   add_foreign_key "banksampahs", "provinces"
   add_foreign_key "botol_hargas", "botols"
   add_foreign_key "botol_hargas", "boxes"
+  add_foreign_key "bsi_transactions", "banksampahs"
+  add_foreign_key "bsi_vas", "banksampahs"
   add_foreign_key "cities", "provinces"
   add_foreign_key "districts", "cities"
   add_foreign_key "districts", "provinces"

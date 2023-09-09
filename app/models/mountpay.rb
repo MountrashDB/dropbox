@@ -2,15 +2,16 @@
 #
 # Table name: mountpays
 #
-#  id          :bigint           not null, primary key
-#  balance     :float(24)
-#  credit      :float(24)
-#  debit       :float(24)
-#  description :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  mitra_id    :bigint
-#  user_id     :bigint
+#  id            :bigint           not null, primary key
+#  balance       :float(24)
+#  credit        :float(24)
+#  debit         :float(24)
+#  description   :string(255)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  banksampah_id :integer
+#  mitra_id      :bigint
+#  user_id       :bigint
 #
 # Indexes
 #
@@ -25,5 +26,6 @@
 class Mountpay < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :mitra, optional: true
+  belongs_to :banksampah, optional: true
   scope :balance, -> { pluck(:balance).last || 0 }
 end

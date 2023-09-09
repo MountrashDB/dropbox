@@ -51,9 +51,17 @@ class Api::V1::CallbackController < ActionController::API
     )
     data = params[:partner_reff].split("|")
     uuid = data[2]
-    user = User.find_by(uuid: uuid)
-    if user && params[:status] == "SUCCESS"
-      user.mountpay_creditkan(params[:credit_balance], params[:type])
+    tipe = data[1]
+    if tipe == "user"
+      user = User.find_by(uuid: uuid)
+      if user && params[:status] == "SUCCESS"
+        user.mountpay_creditkan(params[:credit_balance], params[:type])
+      end
+    elsif tipe == "bsi"
+      bsi = Banksampah.find_by(uuid: uuid)
+      if bsi && params[:status] == "SUCCESS"
+        bsi.mountpay_creditkan(params[:credit_balance], params[:type])
+      end
     end
     render json: { response: "ok" }
   end
