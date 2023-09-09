@@ -35,6 +35,7 @@ Rails.application.configure do
   # config.active_storage.service = :local
   # config.active_storage.service = :local
   config.active_storage.service = :local
+  config.active_storage.service_url = Rails.application.routes.default_url_options[:protocol] + "://" + Rails.application.routes.default_url_options[:host]
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
