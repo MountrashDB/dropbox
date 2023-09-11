@@ -40,13 +40,21 @@ class OrderSampah < ApplicationRecord
       transitions from: :requested, to: :accepted
     end
 
-    event :paidkan do
+    event :paidkan, after_commit: :bayarkan do
       transitions from: :accepted, to: :paid
     end
 
     event :ditolak do
       transitions from: :requested, to: :rejected
     end
+  end
+
+  def bayarkan
+    user = User.find(self.user_id)
+    bsi = Banksampah.find(self.banksampah_id)
+    amount = self.sub_total
+    user.mountpay_creditkan(amount, "Bsi Payment")
+    bsi.mountpay_debitkan(amount, "Bsi Payment")
   end
 
   def set_uuid

@@ -51,8 +51,6 @@ class Api::V1::CallbackController < ActionController::API
     )
     data = params[:partner_reff].split("|")
     uuid = data[2]
-    logger.error "=== UUID ==="
-    logger.error uuid
     tipe = data[1]
     if tipe == "user"
       user = User.find_by(uuid: uuid)
@@ -62,7 +60,6 @@ class Api::V1::CallbackController < ActionController::API
     elsif tipe == "bsi"
       bsi = Banksampah.find_by(uuid: uuid)
       if bsi && params[:status] == "SUCCESS"
-        logger.info "=== MASUK ==="
         bsi.mountpay_creditkan(params[:credit_balance], params[:type])
       end
     end

@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post "datatable", to: "banksampah#datatable"
         post "order-sampah-datatable", to: "banksampah#order_datatable"
         patch "order-sampah-proses/:uuid", to: "banksampah#order_sampah_proses"
+        post "order-sampah-payment/:uuid", to: "banksampah#order_sampah_payment"
         post "va-create", to: "banksampah#va_create_multi"
         get "va-list", to: "banksampah#va_list"
         get "balance", to: "banksampah#balance"

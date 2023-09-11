@@ -16,7 +16,7 @@ class Api::V1::BanksampahController < AdminController
                                            :order_sampah_update,
                                            :order_datatable,
                                            :order_sampah_proses,
-                                           :order_sampah_proses,
+                                           :order_sampah_payment,
                                            :va_create_multi,
                                            :va_list,
                                            :balance,
@@ -262,7 +262,6 @@ class Api::V1::BanksampahController < AdminController
 
   def order_sampah_proses
     if orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
-      puts params[:status]
       if status = params[:status]
         begin
           if status == "accepted"
@@ -276,6 +275,23 @@ class Api::V1::BanksampahController < AdminController
         end
       else
         render json: { message: "Select status [rejected/accepted] " }, status: :bad_request
+      end
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end
+
+  def order_sampah_payment
+    if orderan = OrderSampah.find_by(uuid: params[:uuid], banksampah_id: @current_banksampah.id)
+      if orderan.status == "accepted"
+        if orderan.sub_total < @current_banksampah.mountpay.balance
+          orderan.paidkan!
+          render json: { message: "Success", order: OrderSampahBlueprint.render_as_json(orderan) }
+        else
+          render json: { message: "Insufficient balance", total_order: orderan.total, balance: @current_banksampah.mountpay.balance }, status: :bad_request
+        end
+      else
+        render json: { message: "This order cannot pay", order: OrderSampahBlueprint.render_as_json(orderan) }, status: :bad_request
       end
     else
       render json: { message: "Not found" }, status: :not_found
