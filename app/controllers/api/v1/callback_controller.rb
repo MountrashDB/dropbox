@@ -51,8 +51,8 @@ class Api::V1::CallbackController < ActionController::API
     )
     data = params[:partner_reff].split("|")
     uuid = data[2]
-    logger.info "=== UUID ==="
-    logger.info uuid
+    logger.error "=== UUID ==="
+    logger.error uuid
     tipe = data[1]
     if tipe == "user"
       user = User.find_by(uuid: uuid)
