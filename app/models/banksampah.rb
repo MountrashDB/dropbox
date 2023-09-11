@@ -96,7 +96,7 @@ class Banksampah < ApplicationRecord
   def mountpay_creditkan(amount, description)
     balance = self.mountpay.balance
     Mountpay.create!(
-      user_id: self.id,
+      banksampah_id: self.id,
       credit: amount,
       debit: 0,
       balance: balance + amount,
@@ -107,7 +107,7 @@ class Banksampah < ApplicationRecord
   def mountpay_debitkan(amount, description)
     balance = self.mountpay.balance
     Mountpay.create!(
-      user_id: self.id,
+      banksampah_id: self.id,
       credit: 0,
       debit: amount,
       balance: balance - amount,
