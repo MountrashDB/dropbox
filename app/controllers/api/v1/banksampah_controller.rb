@@ -314,7 +314,6 @@ class Api::V1::BanksampahController < AdminController
         req.options.timeout = 3
       end
       result = JSON.parse(response.body)
-      puts result
       hasil = BsiVa.create!(
         banksampah_id: @current_banksampah.id,
         kodeBank: @@bank_code,
