@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
 
   root to: "home#index"
+  get "version", to: "home#version"
+
   namespace :api do
     namespace :v1 do
       scope "callback" do
