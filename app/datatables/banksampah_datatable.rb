@@ -6,7 +6,7 @@ class BanksampahDatatable < AjaxDatatablesRails::ActiveRecord
       active: { source: "Banksampah.active", cond: :like },
       email: { source: "Banksampah.email", cond: :like },
       created_at: { source: "Banksampah.created_at", cond: :like, searchable: true },
-
+      balance: { source: "Banksampah.mountpay.balance", sortable: false },
     }
   end
 
@@ -18,6 +18,7 @@ class BanksampahDatatable < AjaxDatatablesRails::ActiveRecord
         email: record.email,
         active: record.active,
         created_at: record.created_at,
+        balance: record.mountpay.balance,
       }
     end
   end

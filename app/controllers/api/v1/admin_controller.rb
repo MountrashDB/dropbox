@@ -170,4 +170,19 @@ class Api::V1::AdminController < AdminController
       render json: { message: "Record not found" }, status: :not_found
     end
   end
+
+  def banksampah_datatable
+    render json: BanksampahDatatable.new(params)
+  end
+
+  def manual_transfer
+    bsi = Banksampah.find_by(uuid: params[:banksampah_uuid])
+    if params[:amount] >= 10000 && bsi
+      description = "Manual Tf, #{params[:description]}"
+      bsi.mountpay_creditkan(params[:amount], description)
+      render json: { message: "Success", balance: bsi.mountpay.balance }
+    else
+      render json: { message: "Record not found or amount cannot below 10000" }, status: :not_found
+    end
+  end
 end
