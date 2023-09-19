@@ -188,7 +188,7 @@ class Api::V1::AdminController < AdminController
     bsi = Banksampah.find_by(uuid: params[:banksampah_uuid])
     if params[:amount].to_i >= 10000 && bsi
       description = "Manual Tf, #{params[:description]}"
-      bsi.mountpay_creditkan(params[:amount], description)
+      bsi.mountpay_creditkan(params[:amount].to_i, description)
       render json: { message: "Success", balance: bsi.mountpay.balance }
     else
       render json: { message: "Record not found or amount cannot below 10000" }, status: :not_found
