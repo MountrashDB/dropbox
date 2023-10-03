@@ -313,21 +313,27 @@ class Api::V1::UsersController < AdminController
 
   def get_rss
     require "rss"
-    # require 'open-uri'
-    url = "https://news.mountrash.com/feed/"
-    arr_items = []
-    URI.open(url) do |rss|
-      puts rss
-      feed = RSS::Parser.parse(rss)
-      feed.items.each do |item|
-        puts item
-        data = {
-          title: item.title,
-          link: item.link,
-          description: item.description,
-        }
-        arr_items.push(data)
+    cache_name = "Rss-news"
+    arr_items = Rails.cache.fetch(cache_name, expires_in: 5.hours) do
+      temp_items = []
+      url = "https://news.mountrash.com/feed/"
+      URI.open(url) do |rss|
+        feed = RSS::Parser.parse(rss)
+        feed.items.each do |item|
+          page = MetaInspector.new(item.link)
+          data = {
+            title: item.title,
+            link: item.link,
+            description: item.description,
+            image: page.images.best,
+          }
+          temp_items.push(data)
+        end
       end
+      temp_items
+    end
+    if !arr_items
+      Rails.cache.delete(cache_name)
     end
     render json: arr_items
   end
