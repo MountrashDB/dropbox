@@ -437,7 +437,6 @@ DEPENDENCIES
   jwt
   metainspector
   mysql2
-  nokogiri
   pagy
   phonelib
   puma (~> 5.0)
