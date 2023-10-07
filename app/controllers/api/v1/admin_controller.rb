@@ -203,6 +203,16 @@ class Api::V1::AdminController < AdminController
     end
   end
 
+  def bsi_destroy
+    bsi = Banksampah.find_by(uuid: params[:uuid])
+    if bsi
+      bsi.destroy!
+      render json: { message: "Deleted" }
+    else
+      render json: { message: "Record not found" }, status: :not_found
+    end
+  end
+
   private
 
   def bsi_params

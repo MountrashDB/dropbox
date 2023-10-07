@@ -52,8 +52,10 @@ class Banksampah < ApplicationRecord
   belongs_to :district, optional: true
   before_create :set_init
   after_create :send_email
-  has_many :order_sampahs
-  has_many :sampahs
+  has_many :order_sampah, dependent: :destroy
+  has_many :sampah, dependent: :destroy
+  has_many :harga_sampah, dependent: :destroy
+  has_many :bsi_va, dependent: :destroy
   has_many :mountpay, dependent: :destroy
 
   @@bank_code = "002" # 002 = Bank BRI

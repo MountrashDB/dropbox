@@ -105,8 +105,12 @@ Rails.application.routes.draw do
         get "withdraw/:id", to: "admin#withdrawl_read"
         patch "withdraw/:id", to: "admin#withdrawl_proses"
         scope "banksampah" do
+          get ":banksampah_uuid", to: "admin#bsi_show"
+          delete ":uuid", to: "admin#bsi_destroy"
           post "datatable", to: "admin#banksampah_datatable"
           post "transfer/:banksampah_uuid", to: "admin#manual_transfer"
+          patch "password/:banksampah_uuid", to: "admin#bsi_update_password"
+          patch "profile/:banksampah_uuid", to: "admin#bsi_update"
         end
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"

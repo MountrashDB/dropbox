@@ -21,6 +21,6 @@
 #  fk_rails_...  (tipe_sampah_id => tipe_sampahs.id)
 #
 class HargaSampah < ApplicationRecord
-  belongs_to :banksampah
-  belongs_to :tipe_sampah
+  belongs_to :banksampah, optional: true
+  belongs_to :tipe_sampah, optional: true
 end
