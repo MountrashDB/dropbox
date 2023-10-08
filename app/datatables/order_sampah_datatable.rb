@@ -32,6 +32,10 @@ class OrderSampahDatatable < AjaxDatatablesRails::ActiveRecord
   end
 
   def get_raw_records
-    OrderSampah.where(banksampah: options[:current_banksampah]).joins(:banksampah, :user)
+    if options[:current_banksampah]
+      OrderSampah.where(banksampah: options[:current_banksampah]).joins(:banksampah, :user)
+    else
+      OrderSampah.all.joins(:banksampah, :user)
+    end
   end
 end
