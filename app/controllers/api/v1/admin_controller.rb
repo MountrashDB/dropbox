@@ -184,6 +184,10 @@ class Api::V1::AdminController < AdminController
     render json: BanksampahDatatable.new(params)
   end
 
+  def order_datatable
+    render json: OrderSampahDatatable.new(params)
+  end
+
   def manual_transfer
     bsi = Banksampah.find_by(uuid: params[:banksampah_uuid])
     if params[:amount].to_i >= 10000 && bsi
