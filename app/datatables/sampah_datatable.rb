@@ -8,6 +8,7 @@ class SampahDatatable < AjaxDatatablesRails::ActiveRecord
       harga_kg: { source: "Sampah.harga_kg", searchable: false },
       harga_satuan: { source: "Sampah.harga_satuan", searchable: false },
       active: { source: "Sampah.active", cond: :like },
+      description: { source: "Sampah.description", cond: :like },
       tipe_sampah: { source: "TipeSampah.name", cond: :like },
       created_at: { source: "Sampah.created_at", cond: :like, searchable: true },
       updated_at: { source: "Sampah.updated_at", cond: :like, searchable: true },
@@ -22,7 +23,9 @@ class SampahDatatable < AjaxDatatablesRails::ActiveRecord
         harga_kg: record.harga_kg,
         harga_satuan: record.harga_satuan,
         tipe_sampah: record.tipe_sampah.name,
+        tipe_sampah_id: record.tipe_sampah.id,
         active: record.active,
+        description: record.description,
         created_at: record.created_at,
         updated_at: record.updated_at,
       }
