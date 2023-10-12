@@ -5,6 +5,7 @@ class SampahDatatable < AjaxDatatablesRails::ActiveRecord
     @view_columns ||= {
       uuid: { source: "Sampah.uuid", cond: :eq, searchable: true },
       name: { source: "Sampah.name", cond: :like },
+      code: { source: "Sampah.code", cond: :like },
       harga_kg: { source: "Sampah.harga_kg", searchable: false },
       harga_satuan: { source: "Sampah.harga_satuan", searchable: false },
       active: { source: "Sampah.active", cond: :like },
@@ -20,6 +21,7 @@ class SampahDatatable < AjaxDatatablesRails::ActiveRecord
       {
         uuid: record.uuid,
         name: record.name,
+        code: record.code,
         harga_kg: record.harga_kg,
         harga_satuan: record.harga_satuan,
         tipe_sampah: record.tipe_sampah.name,
