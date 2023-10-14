@@ -299,7 +299,7 @@ class Api::V1::BanksampahController < AdminController
   end
 
   def va_create_multi
-    bsiva = BsiVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(banksampah_id: @current_banksampah.id, kodeBank: @@bank_code)
+    bsiva = BsiVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(banksampah_id: @current_banksampah.id, kodeBank: params[:bank_code])
     if bsiva
       render json: bsiva
     else
@@ -314,13 +314,13 @@ class Api::V1::BanksampahController < AdminController
       )
       # $path.$method.$bank_code.$customer_id.$customer_name.$customer_email.$client-id
       customer_id = "va|bsi|" + @current_banksampah.uuid + "|" + rand(10000..99999).to_s
-      second_value = "#{@@bank_code}#{customer_id}#{@current_banksampah.name}#{@current_banksampah.email}#{@@client_id}"
+      second_value = "#{params[:bank_code]}#{customer_id}#{@current_banksampah.name}#{@current_banksampah.email}#{@@client_id}"
       signature = Banksampah.signature("/transaction/create/vadedicated/add", "POST", second_value)
       response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
         req.body = {
           username: @@username,
           pin: @@pin,
-          bank_code: @@bank_code,
+          bank_code: params[:bank_code],
           customer_id: customer_id,
           customer_name: @current_banksampah.name,
           customer_phone: @current_banksampah.phone,
@@ -332,7 +332,7 @@ class Api::V1::BanksampahController < AdminController
       result = JSON.parse(response.body)
       hasil = BsiVa.create!(
         banksampah_id: @current_banksampah.id,
-        kodeBank: @@bank_code,
+        kodeBank: params[:bank_code],
         name: result["customer_name"],
         rekening: result["virtual_account"],
         fee: result["feeadmin"],
