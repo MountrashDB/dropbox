@@ -343,7 +343,7 @@ class Api::V1::BanksampahController < AdminController
   end
 
   def va_list
-    render json: BsiVa.select(:bank_name, :rekening, :kodeBank, :name).where(banksampah_id: @current_banksampah.id).last
+    render json: BsiVa.select(:bank_name, :rekening, :kodeBank, :name).where(banksampah_id: @current_banksampah.id)
   end
 
   def balance
