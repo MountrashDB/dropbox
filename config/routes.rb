@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      get "jemputan/alamat_jemput"
       scope "callback" do
         post "payment-linkqu", to: "callback#payment_linkqu"
         post "va-user", to: "callback#va_user"
@@ -158,6 +159,7 @@ Rails.application.routes.draw do
         get "tipe-sampah", to: "banksampah#tipe_sampah"
         post "sampah", to: "banksampah#sampah_create"
         get "sampah/:uuid", to: "banksampah#sampah_read"
+        get "order-sampah/last", to: "banksampah#order_sampah_last"
         get "order-sampah/:uuid", to: "banksampah#order_sampah_read"
         patch "order-sampah/:uuid", to: "banksampah#order_sampah_update"
         patch "sampah/:uuid", to: "banksampah#sampah_update"
@@ -177,6 +179,13 @@ Rails.application.routes.draw do
           get "", to: "banksampah#inventory_list"
         end
         get ":uuid", to: "banksampah#show"
+      end
+
+      scope "jemput" do
+        get "alamat-jemput", to: "jemputan#alamat_jemput"
+        delete "alamat-jemput/:id", to: "jemputan#alamat_jemput_delete"
+        post "alamat-jemput", to: "jemputan#alamat_jemput_create"
+        get "jam-list", to: "jemputan#jam_list"
       end
 
       # Form KYC

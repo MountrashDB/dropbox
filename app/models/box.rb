@@ -66,8 +66,8 @@ class Box < ApplicationRecord
       failed = box.failed || 0
       total = failed + 1
       box.update!(failed: total)
-      if total > MAX_FAILED
-        box.update(type_progress: NON_ACTIVE, failed: 0)
+      if total > MAX_FAILED        
+        box.update(user_id: nil, ype_progress: NON_ACTIVE, failed: 0)
       end
     end
   end

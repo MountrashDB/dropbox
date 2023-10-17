@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -54,6 +54,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
     t.string "uuid"
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "alamat_jemputs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "latitude"
+    t.string "longitude"
+    t.string "kodepos"
+    t.string "catatan"
+    t.string "alamat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_alamat_jemputs_on_user_id"
   end
 
   create_table "banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -221,6 +233,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "jam_jemputs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "label"
+    t.integer "urut"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "jemputans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "status"
+    t.string "catatan"
+    t.bigint "alamat_jemput_id", null: false
+    t.bigint "jam_jemput_id", null: false
+    t.string "uuid"
+    t.string "phone"
+    t.float "sub_total"
+    t.float "fee"
+    t.float "total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alamat_jemput_id"], name: "index_jemputans_on_alamat_jemput_id"
+    t.index ["jam_jemput_id"], name: "index_jemputans_on_jam_jemput_id"
+    t.index ["user_id"], name: "index_jemputans_on_user_id"
   end
 
   create_table "kycs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -450,6 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
     t.string "status", default: "in"
     t.integer "botol_id"
     t.string "gambar"
+    t.string "phash"
   end
 
   create_table "user_banks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -527,6 +565,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "alamat_jemputs", "users"
   add_foreign_key "banksampahs", "cities"
   add_foreign_key "banksampahs", "districts"
   add_foreign_key "banksampahs", "provinces"
@@ -540,6 +579,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_09_113931) do
   add_foreign_key "harga_sampahs", "banksampahs"
   add_foreign_key "harga_sampahs", "tipe_sampahs"
   add_foreign_key "histories", "users"
+  add_foreign_key "jemputans", "alamat_jemputs"
+  add_foreign_key "jemputans", "jam_jemputs"
+  add_foreign_key "jemputans", "users"
   add_foreign_key "kycs", "cities"
   add_foreign_key "kycs", "districts"
   add_foreign_key "kycs", "mitras"

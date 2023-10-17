@@ -1,0 +1,1 @@
+rails g model Jemput user:references catatan:text jam tanggal:date phone city:references district:references kodepos

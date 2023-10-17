@@ -1,0 +1,18 @@
+# == Schema Information
+#
+# Table name: jam_jemputs
+#
+#  id         :bigint           not null, primary key
+#  label      :string(255)
+#  urut       :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+one:
+  label: MyString
+  urut: 1
+
+two:
+  label: MyString
+  urut: 1

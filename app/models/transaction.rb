@@ -7,6 +7,7 @@
 #  gambar       :string(255)
 #  harga        :float(24)
 #  mitra_amount :float(24)
+#  phash        :string(255)
 #  status       :string(255)      default("in")
 #  user_amount  :float(24)
 #  uuid         :string(255)
@@ -29,11 +30,24 @@ class Transaction < ApplicationRecord
 
   after_create :set_balance
   before_create :send_notify
+  before_create :check_duplicate_gambar
   scope :berhasil, -> { where(diterima: true) }
   after_update :reverse_balance
   before_destroy :reverse_user_balance
   after_commit :remove_gambar!, on: :destroy
 
+  def check_duplicate_gambar
+    if trx = Transaction.last 
+      last_phash = trx.phash.to_i        
+      jarak = Phashion.hamming_distance self.phash.to_i, last_phash      
+      if jarak < 10                
+        raise ActiveRecord::Rollback, "Duplicate image"
+      else
+        puts "=== Success ==="
+      end
+    end
+  end
+  
   def set_foto_folder(folder_name)
     # This method sets the folder for the foto attachment
     if foto.attached?
@@ -43,7 +57,7 @@ class Transaction < ApplicationRecord
   end
 
   def set_uuid
-    self.uuid = SecureRandom.uuid
+    self.uuid = SecureRandom.uuid    
   end
 
   def send_notify

@@ -43,6 +43,8 @@ class User < ApplicationRecord
   has_many :usertransactions, dependent: :destroy
   has_many :mountpay, dependent: :destroy
   has_many :histories, dependent: :destroy
+  has_many :alamat_jemputs, dependent: :destroy
+  has_many :jemputans, dependent: :destroy
   has_one :user_bank, dependent: :destroy
   before_create :set_uuid
 

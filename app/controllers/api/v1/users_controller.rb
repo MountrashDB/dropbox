@@ -230,7 +230,9 @@ class Api::V1::UsersController < AdminController
       transaction.mitra_amount = mitra_amount
       transaction.user_amount = user_amount
       transaction.gambar = params[:foto]
-      # image = params[:foto]
+      image = params[:foto]
+      gambar_phash = Phashion::Image.new(image.tempfile.path).fingerprint      
+      transaction.phash = gambar_phash.to_i     
       # if image.present?
       #   result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
       #   transaction.set_foto_folder("transaction")
@@ -239,7 +241,8 @@ class Api::V1::UsersController < AdminController
       if transaction.save
         render json: { message: "Checking...", foto: transaction.gambar.url }
       else
-        render json: transaction.errors
+        Box.insert_failed(box.id)
+        render json: transaction.errors, status: :bad_request
       end
     else
       render json: { message: "Not found" }, status: :not_found

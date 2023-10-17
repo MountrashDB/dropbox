@@ -7,6 +7,7 @@
 #  gambar       :string(255)
 #  harga        :float(24)
 #  mitra_amount :float(24)
+#  phash        :string(255)
 #  status       :string(255)      default("in")
 #  user_amount  :float(24)
 #  uuid         :string(255)

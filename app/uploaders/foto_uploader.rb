@@ -1,6 +1,6 @@
 class FotoUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
-  # include CarrierWave::RMagick
+  include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
@@ -49,4 +49,10 @@ class FotoUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
+  def md5
+    file = model.send(mounted_as)
+    @md5 ||= Digest::MD5.hexdigest(
+      Magick::Image.from_blob(file.read).extract_pixels.join
+    )
+  end
 end
