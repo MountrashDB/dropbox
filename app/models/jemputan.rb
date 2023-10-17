@@ -29,7 +29,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class Jemputan < ApplicationRecord
-  include AASM
+  # include AASM
 
   belongs_to :user
   belongs_to :alamat_jemput
@@ -40,24 +40,24 @@ class Jemputan < ApplicationRecord
     self.uuid = SecureRandom.uuid
   end
 
-  aasm column: :status do
-    state :requested, initial: true
-    state :checked, :rejected, :paid
+  # aasm column: :status do
+  #   state :requested, initial: true
+  #   state :checked, :rejected, :paid
 
-    event :checking do
-      transitions from: :requested, to: :checked
-    end
+  #   event :checking do
+  #     transitions from: :requested, to: :checked
+  #   end
 
-    event :jemput_sampah do
-      transactions from: :checked, to: :jemput
-    end
+  #   event :jemput_sampah do
+  #     transactions from: :checked, to: :jemput
+  #   end
 
-    event :rejecting do
-      transactions from: :checked, to: :rejected
-    end
+  #   event :rejecting do
+  #     transactions from: :checked, to: :rejected
+  #   end
 
-    event :paying do
-      transactions from: :jemput, to: :paid
-    end
-  end
+  #   event :paying do
+  #     transactions from: :jemput, to: :paid
+  #   end
+  # end
 end
