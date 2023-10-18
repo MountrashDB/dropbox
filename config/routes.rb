@@ -183,8 +183,10 @@ Rails.application.routes.draw do
 
       scope "jemput" do
         get "alamat-jemput", to: "jemputan#alamat_jemput"
+        get "alamat-jemput/:id", to: "jemputan#alamat_jemput_show"        
         delete "alamat-jemput/:id", to: "jemputan#alamat_jemput_delete"
         post "alamat-jemput", to: "jemputan#alamat_jemput_create"
+        patch "alamat-jemput/:id", to: "jemputan#alamat_jemput_update"
         get "jam-list", to: "jemputan#jam_list"
       end
 
