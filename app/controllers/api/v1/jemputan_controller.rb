@@ -97,8 +97,25 @@ class Api::V1::JemputanController < AdminController
         data.save
         render json: JemputanBlueprint.render(data)
       else
-        render json: { message: "Failed", error: data.error}
+        render json: { message: "Failed", error: data.error}, status: :bad_request
       end
     end # Transaction
+  end
+
+  def jemputan_show
+    if Jemputan.find(params[:id])
+      render json: JemputanBlueprint.render(jemputan)
+    else
+      render json: { message: "Not found"}, status: :not_found
+    end
+  end
+
+  def jemputan_delete
+    if jemputan = @current_user.jemputans.find_by(id: params[:id])
+      jemputan.destroy
+      render json: { message: "Deleted"}
+    else
+      render json: { message: "Not found"}, status: :not_found
+    end
   end
 end
