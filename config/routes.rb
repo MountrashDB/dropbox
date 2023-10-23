@@ -188,6 +188,7 @@ Rails.application.routes.draw do
         post "alamat-jemput", to: "jemputan#alamat_jemput_create"
         patch "alamat-jemput/:id", to: "jemputan#alamat_jemput_update"
         get "jam-list", to: "jemputan#jam_list"
+        post "penjemputan", to:"jemputan#jemputan_create"
       end
 
       # Form KYC

@@ -8,6 +8,7 @@
 #  kodepos    :string(255)
 #  latitude   :string(255)
 #  longitude  :string(255)
+#  phone      :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null

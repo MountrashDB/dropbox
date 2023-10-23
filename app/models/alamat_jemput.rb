@@ -8,6 +8,7 @@
 #  kodepos    :string(255)
 #  latitude   :string(255)
 #  longitude  :string(255)
+#  phone      :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null
@@ -22,4 +23,5 @@
 #
 class AlamatJemput < ApplicationRecord
   belongs_to :user
+  validates :phone, presence: true, phone: { possible: true, allow_blank: true, types: [:mobile] }
 end

@@ -8,6 +8,7 @@
 #  phone            :string(255)
 #  status           :string(255)
 #  sub_total        :float(24)
+#  tanggal          :date
 #  total            :float(24)
 #  uuid             :string(255)
 #  created_at       :datetime         not null

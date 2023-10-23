@@ -8,6 +8,7 @@
 #  phone            :string(255)
 #  status           :string(255)
 #  sub_total        :float(24)
+#  tanggal          :date
 #  total            :float(24)
 #  uuid             :string(255)
 #  created_at       :datetime         not null
@@ -30,11 +31,13 @@
 #
 class Jemputan < ApplicationRecord
   include AASM
+  mount_uploader :gambar, JemputanUploader
 
   belongs_to :user
   belongs_to :alamat_jemput
   belongs_to :jam_jemput
   before_create :set_uuid
+  has_many :jemputan_details, dependent: :destroy
 
   def set_uuid
     self.uuid = SecureRandom.uuid

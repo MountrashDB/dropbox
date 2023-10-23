@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_144748) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
     t.string "alamat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "phone"
     t.index ["user_id"], name: "index_alamat_jemputs_on_user_id"
   end
 
@@ -242,6 +243,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "jemputan_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "jemputan_id", null: false
+    t.bigint "tipe_sampah_id", null: false
+    t.integer "qty"
+    t.float "harga"
+    t.float "sub_total"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jemputan_id"], name: "index_jemputan_details_on_jemputan_id"
+    t.index ["tipe_sampah_id"], name: "index_jemputan_details_on_tipe_sampah_id"
+  end
+
   create_table "jemputans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "status"
@@ -255,6 +268,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
     t.float "total"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "tanggal"
     t.index ["alamat_jemput_id"], name: "index_jemputans_on_alamat_jemput_id"
     t.index ["jam_jemput_id"], name: "index_jemputans_on_jam_jemput_id"
     t.index ["user_id"], name: "index_jemputans_on_user_id"
@@ -471,6 +485,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "harga"
   end
 
   create_table "transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -579,6 +594,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_125701) do
   add_foreign_key "harga_sampahs", "banksampahs"
   add_foreign_key "harga_sampahs", "tipe_sampahs"
   add_foreign_key "histories", "users"
+  add_foreign_key "jemputan_details", "jemputans"
+  add_foreign_key "jemputan_details", "tipe_sampahs"
   add_foreign_key "jemputans", "alamat_jemputs"
   add_foreign_key "jemputans", "jam_jemputs"
   add_foreign_key "jemputans", "users"
