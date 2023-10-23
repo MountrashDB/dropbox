@@ -37,12 +37,13 @@ class Transaction < ApplicationRecord
   after_commit :remove_gambar!, on: :destroy
 
   def check_duplicate_gambar
-    if trx = Transaction.where(box_id: self.box_id).last
-      trx = trx.last
-      last_phash = trx.phash.to_i        
-      jarak = Phashion.hamming_distance self.phash.to_i, last_phash      
-      if jarak < 10                
-        raise ActiveRecord::Rollback, "Duplicate image"
+    if trx = Transaction.where(box_id: self.box_id)
+      if trx = trx.last
+        last_phash = trx.phash.to_i        
+        jarak = Phashion.hamming_distance self.phash.to_i, last_phash      
+        if jarak < 10                
+          raise ActiveRecord::Rollback, "Duplicate image"
+        end
       end
     end
   end
