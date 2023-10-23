@@ -37,7 +37,7 @@ class Transaction < ApplicationRecord
   after_commit :remove_gambar!, on: :destroy
 
   def check_duplicate_gambar
-    if trx = Transaction.where(box_id: self.box_id)
+    if trx = Transaction.where(box_id: self.box_id).last
       trx = trx.last
       last_phash = trx.phash.to_i        
       jarak = Phashion.hamming_distance self.phash.to_i, last_phash      
