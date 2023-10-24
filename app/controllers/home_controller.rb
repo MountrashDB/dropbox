@@ -4,6 +4,6 @@ class HomeController < ApplicationController
   end
 
   def version
-    render json: { version: 3 }
+    render json: { version: 2 }
   end
 end
