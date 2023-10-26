@@ -29,7 +29,7 @@ class Transaction < ApplicationRecord
   belongs_to :botol, optional: true
 
   after_create :set_balance
-  before_create :send_notify
+  after_create :send_notify
   before_create :check_duplicate_gambar
   scope :berhasil, -> { where(diterima: true) }
   after_update :reverse_balance
@@ -62,12 +62,12 @@ class Transaction < ApplicationRecord
 
   def send_notify
     # NotifyChannel.broadcast_to self.user.uuid, status: "process"
+    trx = Transaction.find(self.id)
     ActionCable.server.broadcast("NotifyChannel_#{self.user.uuid}", {
       status: "process",
       message: "Memvalidasi...",
       point: self.user_amount,
-      # image: self.foto.url,
-      image: self.gambar.url,
+      image: trx.gambar.url,
     })
     # NotifyChannel.broadcast_to self.user.uuid,
     #                            status: "process",
@@ -113,7 +113,7 @@ class Transaction < ApplicationRecord
 
       ActionCable.server.broadcast("NotifyChannel_#{self.user.uuid}", {
         status: "complete",
-        image: self.foto.url,
+        image: self.gambar.url,
         point: user_amount,
         diterima: true,
         balance: user.usertransactions.balance,
