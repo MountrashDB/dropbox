@@ -239,9 +239,9 @@ class Api::V1::UsersController < AdminController
       #   # transaction.foto.attach(image)
       # end
       if transaction.save
-        render json: { message: "Checking...", foto: transaction.gambar.url }
+        render json: { message: "Checking..."}
       else
-        Box.insert_failed(box.id)
+        # Box.insert_failed(box.id)
         render json: transaction.errors, status: :bad_request
       end
     else
