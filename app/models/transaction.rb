@@ -28,8 +28,8 @@ class Transaction < ApplicationRecord
   belongs_to :box
   belongs_to :botol, optional: true
 
-  after_create :set_balance
-  after_create :send_notify
+  after_create :set_balance, :send_notify
+  # after_create :send_notify
   before_create :check_duplicate_gambar
   scope :berhasil, -> { where(diterima: true) }
   after_update :reverse_balance
@@ -62,7 +62,7 @@ class Transaction < ApplicationRecord
 
   def send_notify
     # NotifyChannel.broadcast_to self.user.uuid, status: "process"
-    trx = Transaction.find(self.id)
+    trx = Transaction.find(self.id)    
     ActionCable.server.broadcast("NotifyChannel_#{self.user.uuid}", {
       status: "process",
       message: "Memvalidasi...",
@@ -77,7 +77,20 @@ class Transaction < ApplicationRecord
   end
 
   def set_balance
-    BotolDetectionJob.perform_at(2.seconds.from_now, self.id)
+    # BotolDetectionJob.perform_at(2.seconds.from_now, self.id)
+    # Karena tdk ada pengecekan transaction update otomatis
+    transaction = Transaction.find(self.id)
+    transaction.diterima = true
+    transaction.save
+    user = User.find(self.user.id)
+    ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
+        status: "complete",
+        image: transaction.gambar_url,
+        point: transaction.user_amount,
+        diterima: true,
+        balance: user.usertransactions.balance,
+        message: "Congratulations you get a point of",
+    })
   end
 
   def botol_info
