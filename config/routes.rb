@@ -114,6 +114,10 @@ Rails.application.routes.draw do
           patch "password/:banksampah_uuid", to: "admin#bsi_update_password"
           patch "profile/:banksampah_uuid", to: "admin#bsi_update"
         end
+        scope "penjemputan" do
+          post "datatable", to: "admin#jemputan_datatable"
+          patch "status/:id", to: "jemputan_admin#jemputan_update"
+        end
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
         patch ":uuid", to: "admin#update"
@@ -232,6 +236,7 @@ Rails.application.routes.draw do
       post "google-login", to: "users#google_login"
       scope :dropbox do
         get "views/:uuid", to: "users#scan"
+        get "insert/:uuid", to: "users#insert"
         post "insert/:uuid", to: "users#insert"
       end
 
