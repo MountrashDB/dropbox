@@ -231,8 +231,10 @@ class Api::V1::UsersController < AdminController
       transaction.user_amount = user_amount
       transaction.gambar = params[:foto]
       image = params[:foto]
-      gambar_phash = Phashion::Image.new(image.tempfile.path).fingerprint      
-      transaction.phash = gambar_phash.to_i     
+      if image.tempfile
+        gambar_phash = Phashion::Image.new(image.tempfile.path).fingerprint      
+        transaction.phash = gambar_phash.to_i     
+      end
       # if image.present?
       #   result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
       #   transaction.set_foto_folder("transaction")
