@@ -217,7 +217,7 @@ class Api::V1::UsersController < AdminController
 
   def insert
     box = Box.find_by(uuid: params[:uuid], type_progress: "active")
-    if box
+    if box && params[:foto]
       harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
       mitra_amount = box.mitra_share * harga_botol / 100
       user_amount = box.user_share * harga_botol / 100
@@ -235,11 +235,6 @@ class Api::V1::UsersController < AdminController
         gambar_phash = Phashion::Image.new(image.tempfile.path).fingerprint      
         transaction.phash = gambar_phash.to_i     
       end
-      # if image.present?
-      #   result = transaction.foto.attach(io: image.tempfile, filename: image.original_filename)
-      #   transaction.set_foto_folder("transaction")
-      #   # transaction.foto.attach(image)
-      # end
       if transaction.save
         render json: { message: "Checking..."}
       else
