@@ -131,8 +131,8 @@ class Api::V1::UsersController < AdminController
         user.active = true
         user.google_id = params[:google_id]
         user.username = params[:name] || "Noname"
-        user.active_code = nil
-        user.password = "blank password"
+        user.active_code = true
+        user.password = "12345678"
         user.save!
       end
       if user.active == false
