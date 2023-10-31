@@ -231,7 +231,7 @@ class Api::V1::UsersController < AdminController
       transaction.user_amount = user_amount
       transaction.gambar = params[:foto]
       image = params[:foto]
-      if image.tempfile
+      if image&.tempfile
         gambar_phash = Phashion::Image.new(image.tempfile.path).fingerprint      
         transaction.phash = gambar_phash.to_i     
       end
