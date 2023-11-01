@@ -265,6 +265,7 @@ class Api::V1::UsersController < AdminController
     if user
       user.username = params[:username] if params[:username]
       user.email = params[:email] if params[:email]
+      user.name = params[:name] || "-"
       user.phone = params[:phone] if params[:phone]
       user.reset_password(params[:password], params[:password_confirmation]) if params[:password]
       if user.save
