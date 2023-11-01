@@ -466,19 +466,24 @@ class Api::V1::UsersController < AdminController
           },
           request: { timeout: 3 },
         )
+        # $path.$method.$bank_code.$customer_id.$customer_name.$customer_email.$client-id
+
+        customer_id = "va|user|" + @current_user.id.to_s + "|" + rand(10000..99999).to_s
+        bank_code = params[:bank_code]
+        second_value = "#{bank_code}#{customer_id}#{@current_user.username}#{@current_user.email}#{ENV["linkqu_client_id"]}"
+        signature = Banksampah.signature("/transaction/create/vadedicated/add", "POST", second_value)
+        puts signature
         response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
           req.body = {
             username: @@username,
             pin: @@pin,
-            bank_code: @@bank_code,
-            customer_id: "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s,
-            customer_name: @current_user.username,
-            customer_phone: @current_user.phone,
+            bank_code: bank_code,
+            customer_id: customer_id,
+            customer_name: @current_user.username,            
             customer_email: @current_user.email,
-            signature: Banksampah.signature("POST", "/linkqu-partner/transaction/create/vadedicated/add"),
+            signature: signature,
           }.to_json
           req.options.timeout = 3
-          puts req.body
           # rescue => e
           #   logger.fatal "=== VA create failed ==="
         end
