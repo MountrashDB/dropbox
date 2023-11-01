@@ -469,7 +469,7 @@ class Api::V1::UsersController < AdminController
         )
         # $path.$method.$bank_code.$customer_id.$customer_name.$customer_email.$client-id
 
-        customer_id = "va|user|" + @current_user.id.to_s + "|" + rand(10000..99999).to_s
+        customer_id = "va|user|" + @current_user.uuid + "|" + rand(10000..99999).to_s
         bank_code = params[:bank_code]
         second_value = "#{bank_code}#{customer_id}#{@current_user.username}#{@current_user.email}#{ENV["linkqu_client_id"]}"
         signature = Banksampah.signature("/transaction/create/vadedicated/add", "POST", second_value)
