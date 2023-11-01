@@ -124,7 +124,7 @@ class Api::V1::UsersController < AdminController
   def google_login
     if params[:email] && params[:google_id]
       user = User.find_by(email: params[:email], google_id: params[:google_id])
-      if !user
+      if user.nil?
         user = User.new()
         user.username = params[:name]
         user.email = params[:email]
@@ -138,6 +138,8 @@ class Api::V1::UsersController < AdminController
       if user.active == false
         render json: { message: "Your account is not active" }, status: :unauthorized
       else
+        user.username = params[:name]
+        user.save
         payload = {
           user_uuid: user.uuid,
           exp: Time.now.to_i + @@token_expired,
