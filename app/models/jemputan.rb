@@ -5,6 +5,7 @@
 #  id               :bigint           not null, primary key
 #  catatan          :string(255)
 #  fee              :float(24)
+#  gambar           :string(255)
 #  phone            :string(255)
 #  status           :string(255)
 #  sub_total        :float(24)

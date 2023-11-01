@@ -103,7 +103,7 @@ class Api::V1::JemputanController < AdminController
   end
 
   def jemputan_show
-    if Jemputan.find(params[:id])
+    if jemputan = Jemputan.find(params[:id])
       render json: JemputanBlueprint.render(jemputan)
     else
       render json: { message: "Not found"}, status: :not_found
