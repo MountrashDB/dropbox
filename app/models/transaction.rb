@@ -69,6 +69,8 @@ class Transaction < ApplicationRecord
       point: self.user_amount,
       image: trx.gambar.url,
     })
+
+    # @current_user.history_tambahkan(harga_jual, "PPOB", ppob.desc)
     # NotifyChannel.broadcast_to self.user.uuid,
     #                            status: "process",
     #                            message: "Memvalidasi...",
@@ -83,6 +85,7 @@ class Transaction < ApplicationRecord
     transaction.diterima = true
     transaction.save
     user = User.find(self.user.id)
+    transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
     ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
         status: "complete",
         image: transaction.gambar_url,
