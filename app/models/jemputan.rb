@@ -46,7 +46,7 @@ class Jemputan < ApplicationRecord
 
   aasm column: :status do
     state :requested, initial: true
-    state :checked, :jemput, :rejected, :paid
+    state :checked, :jemput, :rejected, :complete
 
     event :checking do
       transitions from: :requested, to: :checked
@@ -60,8 +60,8 @@ class Jemputan < ApplicationRecord
       transitions from: :checked, to: :rejected
     end
 
-    event :paying do
-      transitions from: :jemput, to: :paid
+    event :complete do
+      transitions from: :jemput, to: :complete
     end
   end
 end
