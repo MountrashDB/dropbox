@@ -257,8 +257,8 @@ class Api::V1::UsersController < AdminController
     render json: { balance: user.usertransactions.balance, mountpay: user.mountpay.balance }
   end
 
-  def profile
-    render json: @current_user
+  def profile    
+    render json: UserBlueprint.render(@current_user, view: :profile)
   end
 
   def update_profile
