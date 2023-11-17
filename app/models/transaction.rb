@@ -85,7 +85,6 @@ class Transaction < ApplicationRecord
     transaction.diterima = true
     transaction.save
     user = User.find(self.user.id)
-    transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
     ActionCable.server.broadcast("NotifyChannel_#{transaction.user.uuid}", {
         status: "complete",
         image: transaction.gambar_url,
@@ -94,6 +93,7 @@ class Transaction < ApplicationRecord
         balance: user.usertransactions.balance,
         message: "Congratulations you get a point of",
     })
+    transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
   end
 
   def botol_info
