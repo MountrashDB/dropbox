@@ -2,6 +2,7 @@ class NotifyChannel < ApplicationCable::Channel
   def subscribed
     stream_from "NotifyChannel_#{params[:uuid]}"    
     logger.error "=== Connected #{params[:uuid]} ===="
+    logger.error "=== Connected #{params} ===="
     # @uuid = params[:uuid]
     # stream_for @uuid
   end
