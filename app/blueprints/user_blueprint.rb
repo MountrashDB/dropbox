@@ -14,7 +14,7 @@ class UserBlueprint < Blueprinter::Base
   end
 
   view :profile do
-    fields :email, :name, :username, :phone
+    fields :email, :name, :username, :phone, :uuid
     field :total_botol do |data|
       if data
         data.transactions.count
