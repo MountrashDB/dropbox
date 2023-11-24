@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_24_160431) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_06_142641) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -270,6 +270,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_160431) do
     t.datetime "updated_at", null: false
     t.date "tanggal"
     t.string "gambar"
+    t.float "berat"
     t.index ["alamat_jemput_id"], name: "index_jemputans_on_alamat_jemput_id"
     t.index ["jam_jemput_id"], name: "index_jemputans_on_jam_jemput_id"
     t.index ["user_id"], name: "index_jemputans_on_user_id"
@@ -401,6 +402,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_160431) do
     t.datetime "updated_at", null: false
     t.index ["box_id"], name: "index_orders_on_box_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "outlets", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.string "name"
+    t.string "phone"
+    t.integer "otp"
+    t.string "mac"
+    t.string "email"
+    t.string "alamat"
+    t.boolean "active"
+    t.bigint "city_id", null: false
+    t.bigint "province_id", null: false
+    t.bigint "district_id", null: false
+    t.float "harga"
+    t.string "contact_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_outlets_on_city_id"
+    t.index ["district_id"], name: "index_outlets_on_district_id"
+    t.index ["province_id"], name: "index_outlets_on_province_id"
   end
 
   create_table "partners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -614,6 +636,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_24_160431) do
   add_foreign_key "order_sampahs", "users"
   add_foreign_key "orders", "boxes"
   add_foreign_key "orders", "users"
+  add_foreign_key "outlets", "cities"
+  add_foreign_key "outlets", "districts"
+  add_foreign_key "outlets", "provinces"
   add_foreign_key "ppobs", "users"
   add_foreign_key "sampah_details", "order_sampahs"
   add_foreign_key "sampah_details", "sampahs"

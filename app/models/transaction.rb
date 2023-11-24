@@ -28,7 +28,7 @@ class Transaction < ApplicationRecord
   belongs_to :box
   belongs_to :botol, optional: true
 
-  after_create :set_balance, :send_notify
+  after_create :send_notify, :set_balance
   # after_create :send_notify
   before_create :check_duplicate_gambar
   scope :berhasil, -> { where(diterima: true) }
@@ -93,6 +93,8 @@ class Transaction < ApplicationRecord
         balance: user.usertransactions.balance,
         message: "Congratulations you get a point of",
     })
+    puts "=== AC ==="
+    puts transaction.user.uuid
     transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
   end
 

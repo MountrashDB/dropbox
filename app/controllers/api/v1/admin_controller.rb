@@ -217,6 +217,10 @@ class Api::V1::AdminController < AdminController
     end
   end
 
+  def jemputan_datatable
+    render json: JemputanDatatable.new(params)
+  end
+
   private
 
   def bsi_params

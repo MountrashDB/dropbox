@@ -3,6 +3,7 @@
 # Table name: jemputans
 #
 #  id               :bigint           not null, primary key
+#  berat            :float(24)
 #  catatan          :string(255)
 #  fee              :float(24)
 #  gambar           :string(255)

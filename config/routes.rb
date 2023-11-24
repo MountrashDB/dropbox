@@ -116,7 +116,7 @@ Rails.application.routes.draw do
         end
         scope "penjemputan" do
           post "datatable", to: "admin#jemputan_datatable"
-          patch "status/:id", to: "jemputan_admin#jemputan_update"
+          patch "status/:id", to: "jemputan_admin#jemputan_update"          
         end
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
