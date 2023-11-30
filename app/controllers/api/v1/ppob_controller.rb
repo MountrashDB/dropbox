@@ -193,7 +193,10 @@ class Api::V1::PpobController < AdminController
       ppob = Ppob.find_by(tr_id: params[:tr_id])
       harga_jual = ppob.vendor_price + @@profit
       if ppob
-        if harga_jual < balance
+        if harga_jual < balance 
+          if !check_iak_balance(ppob.vendor_price)
+            return
+          end
           @current_user.mountpay_debitkan(harga_jual, ppob.desc)
           @current_user.history_tambahkan(harga_jual, "PPOB", ppob.desc)
           PostPaymentJob.perform_at(2.seconds.from_now, ppob.id)
@@ -300,6 +303,9 @@ class Api::V1::PpobController < AdminController
     if harga
       harga_jual = harga + @@profit
       if harga_jual < balance
+        if !check_iak_balance(harga)
+          return
+        end
         ref_id = "user-#{@current_user.uuid}-prepaid-#{Time.now.to_i}"
         record = Ppob.create!(
           amount: harga_jual,
@@ -316,7 +322,7 @@ class Api::V1::PpobController < AdminController
         render json: { ref_id: ref_id, status: 0, message: "PROCESS" }
       else
         render json: { message: "Insuffient balance. Please select smaller price or product", balance: balance, price: harga_jual }, status: :bad_request
-      end
+      end      
     else
       render json: { message: "Price not found or parameter is not correct" }, status: :bad_request
     end
@@ -338,6 +344,35 @@ class Api::V1::PpobController < AdminController
   end
 
   private
+
+  def check_iak_balance(harga_jual) #Check last balance
+    begin
+      conn = Faraday.new(
+        url: Rails.application.credentials.iak.prepaid,
+        headers: { "Content-Type" => "application/json" },
+        request: { timeout: 5 },
+      )
+      username = Rails.application.credentials.iak.username
+      api_key = Rails.application.credentials.iak.api_key
+      sign = Digest::MD5.hexdigest username + api_key + "bl"
+      check_body = {
+        username: username,
+        sign: sign,
+      }
+      response = conn.post("/api/check-balance") do |req|
+        req.body = check_body.to_json
+      end
+      result = response.body
+      hasil = JSON.parse(response.body)
+      balance = hasil["data"]["balance"]
+      true
+    rescue Exception => e
+      logger.error "=== FAILED Get IAK Balance ==="
+      logger.error e
+      render json: { message: "There is something in server. Please contact Customer Service" }, status: :bad_request
+      false
+    end
+  end
 
   def permit_prepaid
     params.permit(:customer_id, :type, :operator, :product_code, :ppob, :price)
