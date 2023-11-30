@@ -369,7 +369,7 @@ class Api::V1::PpobController < AdminController
     rescue Exception => e
       logger.error "=== FAILED Get IAK Balance ==="
       logger.error e
-      render json: { message: "There is something in server. Please contact Customer Service" }, status: :bad_request
+      render json: { message: "There is something error in server. Please contact Customer Service" }, status: :bad_request
       false
     end
   end
