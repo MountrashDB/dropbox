@@ -4,8 +4,11 @@ class Api::V1::HistoryController < AdminController
                                    ]
 
   def index
-    history = @current_user.histories.order(created_at: :desc).limit(20)
-    # render json: HistoryBlueprint.render(history)
+    if params[:title]
+      history = @current_user.histories.where(title: params[:title]).order(created_at: :desc).limit(20)
+    else
+      history = @current_user.histories.order(created_at: :desc).limit(20)
+    end
     render json: history
   end
 end
