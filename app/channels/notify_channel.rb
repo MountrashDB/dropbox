@@ -1,7 +1,8 @@
 class NotifyChannel < ApplicationCable::Channel
   def subscribed
     stream_from "NotifyChannel_#{params[:uuid]}"    
-    # logger.error "=== Connected #{params} ===="
+    puts "=== Subscribe ==="
+    logger.error "=== Connected #{params} ===="
     # @uuid = params[:uuid]
     # stream_for @uuid
   end
@@ -14,8 +15,9 @@ class NotifyChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    @uuid = params[:uuid]
-    # Box.where(user: User.find_by(uuid: @uuid)).update(user_id: nil)
+    @uuid = params[:uuid]    
+    puts "=== Unsubscribe ==="
+    Box.where(user: User.find_by(uuid: @uuid)).update(user_id: nil)
     # Any cleanup needed when channel is unsubscribed
   end
 end

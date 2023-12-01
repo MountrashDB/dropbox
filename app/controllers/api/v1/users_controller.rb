@@ -217,7 +217,8 @@ class Api::V1::UsersController < AdminController
   end
 
   def insert
-    box = Box.find_by(uuid: params[:uuid], type_progress: "active")
+    # box = Box.find_by(uuid: params[:uuid], type_progress: "active")
+    box = Box.where(uuid: params[:uuid], type_progress: "active").where.not(user_id: nil).first
     if box && params[:foto]
       harga_botol = box.price_pcs || 65 # Nanti disesuaikan sesuai botol yang masuk
       mitra_amount = box.mitra_share * harga_botol / 100
@@ -374,7 +375,7 @@ class Api::V1::UsersController < AdminController
     else
       if userbank = UserBank.create!(
         user_id: @current_user.id,
-        nama: params[:nama],
+        nama: params[:nama] || "-",
         nama_bank: params[:nama_bank],
         rekening: params[:rekening],
         kodeBank: params[:kodeBank],
