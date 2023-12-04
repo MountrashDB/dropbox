@@ -5,7 +5,7 @@ class TipeSampahDatatable < AjaxDatatablesRails::ActiveRecord
       id: { source: "TipeSampah.id", cond: :eq, searchable: true },
       name: { source: "TipeSampah.name", cond: :like, searchable: true },
       harga: { source: "TipeSampah.harga", cond: :like },
-      image: { source: "TipeSampah.image.url.", searchable: false },         
+      image: { source: "TipeSampah.image.url", searchable: false },         
       created_at: { source: "TipeSampah.created_at", cond: :like, searchable: true },
       updated_at: { source: "TipeSampah.updated_at", cond: :like, searchable: true },      
     }
