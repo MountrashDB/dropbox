@@ -3,6 +3,7 @@
 # Table name: tipe_sampahs
 #
 #  id         :bigint           not null, primary key
+#  active     :boolean
 #  harga      :float(24)
 #  image_url  :string(255)
 #  name       :string(255)

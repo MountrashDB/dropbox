@@ -1,7 +1,7 @@
 class Api::V1::HistoryController < AdminController
   before_action :check_user_token, only: [
                                      :index,
-                                   ]
+                                   ]  
 
   def index
     if params[:title]

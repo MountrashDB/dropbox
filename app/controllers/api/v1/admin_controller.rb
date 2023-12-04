@@ -184,6 +184,7 @@ class Api::V1::AdminController < AdminController
     render json: BanksampahDatatable.new(params)
   end
 
+
   def order_datatable
     render json: OrderSampahDatatable.new(params)
   end
@@ -220,6 +221,8 @@ class Api::V1::AdminController < AdminController
   def jemputan_datatable
     render json: JemputanDatatable.new(params)
   end
+
+ 
 
   private
 

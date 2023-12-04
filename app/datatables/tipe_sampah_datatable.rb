@@ -1,0 +1,31 @@
+class TipeSampahDatatable < AjaxDatatablesRails::ActiveRecord
+
+  def view_columns
+    @view_columns ||= {
+      id: { source: "TipeSampah.id", cond: :eq, searchable: true },
+      name: { source: "TipeSampah.name", cond: :like, searchable: true },
+      harga: { source: "TipeSampah.harga", cond: :like },
+      image_url: { source: "TipeSampah.image_url", searchable: false },            
+      created_at: { source: "TipeSampah.created_at", cond: :like, searchable: true },
+      updated_at: { source: "TipeSampah.updated_at", cond: :like, searchable: true },      
+    }
+  end
+
+  def data
+    records.map do |record|
+      {
+        id: record.id,
+        name: record.name,
+        harga: record.harga,
+        image_url: record.image_url,
+        created_at: record.created_at,
+        updated_at: record.updated_at,
+      }
+    end
+  end
+
+  def get_raw_records
+    TipeSampah.all
+  end
+
+end
