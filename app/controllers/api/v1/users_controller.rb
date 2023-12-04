@@ -556,7 +556,7 @@ class Api::V1::UsersController < AdminController
   end
 
   def tipe_sampah
-    tipes = TipeSampah.order(name: :asc)
+    tipes = TipeSampah.where(active: true).order(name: :asc)
     orderan = OrderSampah.where(user_id: @current_user.id, status: "requested").last
     total = orderan != nil ? orderan.total : 0
     render json: { total: total, data: TipeSampahBlueprint.render_as_json(tipes) }
