@@ -390,43 +390,48 @@ class Api::V1::UsersController < AdminController
 
   def withdraw
     user = User.find(@current_user.id)
-    balance = user.usertransactions.balance
-    total = params[:amount].to_f + @@fee
-    if !HOLD_WITHDRAW
-      if user.user_bank&.is_valid?
-        if total < balance
-          if total >= MIN_WITHDRAW
-            Withdrawl.transaction do
-              User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
-              trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
+    last_request = Withdrawl.where(user: user, status: "requesting").count
+    if last_request > 0
+      render json: { message: "Sorry, you cannot request another withdraw. Last withdraw still in process" }, status: :bad_request
+    else
+      balance = user.usertransactions.balance
+      total = params[:amount].to_f + @@fee
+      if !HOLD_WITHDRAW
+        if user.user_bank&.is_valid?
+          if total < balance
+            if total >= MIN_WITHDRAW
+              Withdrawl.transaction do
+                User.find(@current_user.id).debitkan(@@fee, "Withdraw Fee")
+                trx = User.find(@current_user.id).debitkan(params[:amount].to_f, "Withdraw")
 
-              process = Withdrawl.new()
-              process.amount = params[:amount]
-              process.kodeBank = user.user_bank.kodeBank
-              process.nama = user.user_bank.nama
-              process.rekening = user.user_bank.rekening
-              process.user = @current_user
-              process.usertransaction_id = trx.id
-              if process.save
-                desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
-                User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
-                render json: { message: "You withdraw is waiting approval" }
-              else
-                render json: { error: process.errors }, status: :bad_request
-                raise ActiveRecord::Rollback
+                process = Withdrawl.new()
+                process.amount = params[:amount]
+                process.kodeBank = user.user_bank.kodeBank
+                process.nama = user.user_bank.nama
+                process.rekening = user.user_bank.rekening
+                process.user = @current_user
+                process.usertransaction_id = trx.id
+                if process.save
+                  desc = "Ke #{user.user_bank.nama_bank} - #{user.user_bank.rekening}"
+                  User.find(@current_user.id).history_tambahkan(params[:amount].to_f, "Withdraw", desc)
+                  render json: { message: "You withdraw is waiting approval" }
+                else
+                  render json: { error: process.errors }, status: :bad_request
+                  raise ActiveRecord::Rollback
+                end
               end
+            else
+              render json: { message: "Minimum withdraw is #{MIN_WITHDRAW}" }, status: :bad_request
             end
           else
-            render json: { message: "Minimum withdraw is #{MIN_WITHDRAW}" }, status: :bad_request
+            render json: { message: "Insuffient Balance" }, status: :bad_request
           end
         else
-          render json: { message: "Insuffient Balance" }, status: :bad_request
+          render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
         end
       else
-        render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
+        render json: { message: "Sorry, withdraw system is on HOLD. Please contact admin" }, status: :bad_request
       end
-    else
-      render json: { message: "Sorry, withdraw system is on HOLD. Please contact admin" }, status: :bad_request
     end
   end
 

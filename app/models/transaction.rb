@@ -32,9 +32,31 @@ class Transaction < ApplicationRecord
   # after_create :send_notify
   before_create :check_duplicate_gambar
   scope :berhasil, -> { where(diterima: true) }
-  after_update :reverse_balance
+  # after_update :reverse_balance
+  after_save :check_diterima
   before_destroy :reverse_user_balance
   after_commit :remove_gambar!, on: :destroy
+
+  # aasm column: :status do
+  #   state :in, initial: true
+  #   state :requested, :payment_processed, :paid
+
+  #   event :requesting do
+  #     transitions from: :in, to: :requested
+  #   end
+
+  #   event :payment do
+  #     transitions from: :requested, to: :payment_processed
+  #   end
+
+  #   event :rejecting do
+  #     transitions from: :requested, to: :in
+  #   end
+
+  #   event :completing do
+  #     transitions from: :payment_processed, to: :paid
+  #   end
+  # end
 
   def check_duplicate_gambar
     if trx = Transaction.where(box_id: self.box_id)
@@ -93,8 +115,6 @@ class Transaction < ApplicationRecord
         balance: user.usertransactions.balance,
         message: "Congratulations you get a point of",
     })
-    puts "=== AC ==="
-    puts transaction.user.uuid
     transaction.user.history_tambahkan(transaction.user_amount, "Botol", "Diterima")
   end
 
@@ -112,19 +132,12 @@ class Transaction < ApplicationRecord
   end
 
   def reverse_balance
-    if self.diterima
-      # Investor.debitkan(investor_amount, "Trx rejected")
-      # User.find(self.user_id).debitkan(self.user_amount, "Trx rejected")
-      # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx rejected")
-      # Transaction.find(self.id).destroy
+    # Auto diterima karena tidak ada validasi botol
+    # if self.diterima
       box = Box.find(self.box_id)
       mitra_amount = box.mitra_share * self.harga / 100
       user_amount = box.user_share * self.harga / 100
       investor_amount = self.harga - user_amount - mitra_amount
-      # transaction = Transaction.find(self.id)
-      # transaction.mitra_amount = mitra_amount
-      # transaction.user_amount = user_amount
-      # transaction.save
       Investor.creditkan(investor_amount, "Trx accepted")
       User.find(self.user_id).creditkan(user_amount, "Trx accepted")
       Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
@@ -137,7 +150,7 @@ class Transaction < ApplicationRecord
         balance: user.usertransactions.balance,
         message: "Congratulations you get a point of",
       })
-    end
+    # end
   end
 
   def reverse_user_balance
@@ -149,6 +162,26 @@ class Transaction < ApplicationRecord
       Investor.debitkan(investor_amount, "Trx destroyed")
       User.find(self.user_id).debitkan(self.user_amount, "Trx destroyed")
       Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx destroyed")
+    end
+  end
+
+  def check_diterima
+    # Only effect when status still IN
+    if saved_change_to_attribute?(:diterima) && self.status == "in"
+      if self.diterima
+        box = Box.find(self.box_id)
+        mitra_amount = box.mitra_share * self.harga / 100
+        user_amount = box.user_share * self.harga / 100
+        investor_amount = self.harga - user_amount - mitra_amount
+        Investor.creditkan(investor_amount, "Trx accepted")
+        User.find(self.user_id).creditkan(user_amount, "Trx accepted")
+        Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+      else
+        investor_amount = self.harga - self.user_amount - self.mitra_amount
+        Investor.debitkan(investor_amount, "Trx destroyed")
+        User.find(self.user_id).debitkan(self.user_amount, "Trx destroyed")
+        Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx destroyed")
+      end
     end
   end
 end

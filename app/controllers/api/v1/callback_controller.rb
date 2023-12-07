@@ -17,12 +17,12 @@ class Api::V1::CallbackController < ActionController::API
     )
     data = params[:partner_reff].split("|")
     id = data[1]
-    trx = Withdrawl.find(id)
+    withdraw = Withdrawl.find(id)
     status = params[:status]
     if status == "SUCCESS"
-      trx.success!
+      withdraw.success!
     elsif status == "FAILED"
-      trx.gagal!
+      withdraw.gagal!
     end
     render json: { response: "ok" }
   end
@@ -34,12 +34,12 @@ class Api::V1::CallbackController < ActionController::API
     )
     data = params[:partner_reff].split("|")
     id = data[1]
-    trx = Withdrawl.find(id)
+    withdraw = Withdrawl.find(id)
     status = params[:status]
     if status == "SUCCESS"
-      trx.success!
+      withdraw.success!
     elsif status == "FAILED"
-      trx.gagal!
+      withdraw.gagal!
     end
     render json: { response: "ok" }
   end

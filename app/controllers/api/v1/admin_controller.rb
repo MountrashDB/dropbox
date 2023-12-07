@@ -120,22 +120,12 @@ class Api::V1::AdminController < AdminController
     end
   end
 
-  # def transaction_delete
-  #   trx = Transaction.find_by(uuid: params[:uuid])
-  #   if trx
-  #     trx.destroy
-  #     render json: { message: "Deleted" }
-  #   else
-  #     render json: { message: "Not found" }
-  #   end
-  # end
-
   def transaction_delete
     if params[:uuids]
-      Transaction.where(uuid: params[:uuids]).destroy_all
+      Transaction.where(uuid: params[:uuids], status: "in").destroy_all
       render json: { message: "Deleted" }
     else
-      render json: { message: "Parameter not complete" }
+      render json: { message: "Parameter not complete or Cannot deleted" }
     end
   end
 
@@ -155,11 +145,19 @@ class Api::V1::AdminController < AdminController
     if withdraw = Withdrawl.find_by(id: params[:id])
       begin
         if params[:status] == "approved"
-          withdraw.approved!
-          render json: withdraw
+          if withdraw.status == "requesting" 
+            withdraw.approved!
+            render json: withdraw
+          else
+            render json: { message: "Status update failed" }, status: :bad_request
+          end
         elsif params[:status] == "rejected"
-          withdraw.rejected!
-          render json: withdraw
+          if withdraw.status == "requesting" 
+            withdraw.rejecting!
+            render json: withdraw
+          else
+            render json: { message: "Status update failed" }, status: :bad_request
+          end
         else
           render json: { message: "Wrong parameter or value" }, status: :bad_request
         end

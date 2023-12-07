@@ -37,6 +37,7 @@ class Withdrawl < ApplicationRecord
   validates_numericality_of :amount, greater_than_or_equal_to: 10000
 
   # after_create :send_money
+  after_create :lock_transaction
 
   @@fee = ENV["linkqu_fee"].to_f
 
@@ -48,7 +49,7 @@ class Withdrawl < ApplicationRecord
       transitions from: :sending, to: :failed
     end
 
-    event :rejected, after_commit: :refund_point do
+    event :rejecting, after_commit: :refund_point do
       transitions from: :requesting, to: :rejected
     end
 
@@ -56,27 +57,19 @@ class Withdrawl < ApplicationRecord
       transitions from: :requesting, to: :sending
     end
 
-    event :success do
+    event :success, after_commit: :paid_transaction do
       transitions from: :sending, to: :complete
     end
   end
 
+  # Rejection
   def reverse_balance
-    puts "=== Reverse Balance ==="
     user = User.find(self.user_id)
     desc = "Failed withdraw"
     total = self.amount + @@fee
     user.creditkan(total, desc)
     user.history_tambahkan(self.amount, "Withdraw failed", desc)
-    # user = User.find(self.user_id)
-    # balance = user.usertransactions.balance
-    # trx = Usertransaction.create!(
-    #   user_id: self.user_id,
-    #   credit: self.amount + @@fee,
-    #   debit: 0,
-    #   balance: balance + self.amount + @@fee,
-    #   description: "Failed Withdraw",
-    # )
+    Transaction.where(user: user, status: "requested").update(status: "in") # Rollback   
   end
 
   def refund_point
@@ -85,9 +78,22 @@ class Withdrawl < ApplicationRecord
     total = self.amount + @@fee
     user.creditkan(total, desc)
     user.history_tambahkan(self.amount, "Withdraw rejected", desc)
+    Transaction.where(user: user, status: "requested").update(status: "in")
   end
 
   def send_money
+    user = User.find(self.user_id)
+    Transaction.where(user: user, status: "requested").update(status: "sending")
     SendMoneyJob.perform_at(2.seconds.from_now, self.id)
+  end
+
+  def lock_transaction
+    user = User.find(self.user_id)
+    transactions = Transaction.where(user: user, status: "in").update(status: "requested")
+  end
+
+  def paid_transaction
+    user = User.find(self.user_id)
+    transactions = Transaction.where(user: user, status: "requested").update(status: "paid")
   end
 end
