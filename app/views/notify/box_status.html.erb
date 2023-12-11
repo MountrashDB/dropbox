@@ -20,10 +20,10 @@ Status
            }
            chatWebSocket.onmessage = (event) => {
              var server_data = JSON.parse(event.data)
-             console.log(server_data.message)
              var online = '<div style="color: #34b934">ONLINE</div>'
              var offline = '<div style="color: #ff0000">OFFLINE</div>'
              if (typeof server_data.message === 'object') {
+                console.log(server_data.message)
                if (server_data.message.online) {
                  var status = online
                } else {
