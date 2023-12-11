@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_01_065900) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_11_020937) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -152,6 +152,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_01_065900) do
     t.float "price_pcs"
     t.float "price_kg"
     t.integer "failed", default: 0
+    t.boolean "online"
+    t.datetime "last_online"
   end
 
   create_table "bsi_transactions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -317,6 +319,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_01_065900) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["mitra_id"], name: "index_mitra_banks_on_mitra_id"
+  end
+
+  create_table "mitra_vas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "mitra_id", null: false
+    t.string "kodeBank"
+    t.boolean "active"
+    t.float "fee"
+    t.string "rekening"
+    t.string "bank_name"
+    t.string "name"
+    t.datetime "expired"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mitra_id"], name: "index_mitra_vas_on_mitra_id"
   end
 
   create_table "mitras", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -628,6 +644,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_01_065900) do
   add_foreign_key "kycs", "mitras"
   add_foreign_key "kycs", "provinces"
   add_foreign_key "mitra_banks", "mitras"
+  add_foreign_key "mitra_vas", "mitras"
   add_foreign_key "mitratransactions", "mitras"
   add_foreign_key "mountpays", "mitras"
   add_foreign_key "mountpays", "users"

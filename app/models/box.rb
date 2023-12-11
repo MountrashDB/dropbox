@@ -8,12 +8,14 @@
 #  dates         :datetime
 #  failed        :integer          default(0)
 #  jenis         :string(255)
+#  last_online   :datetime
 #  latitude      :string(255)
 #  longitude     :string(255)
 #  max           :integer
 #  mitra_info    :string(255)
 #  mitra_share   :float(24)
 #  nama          :string(255)
+#  online        :boolean
 #  price_kg      :float(24)
 #  price_pcs     :float(24)
 #  qr_code       :string(255)
@@ -60,6 +62,14 @@ class Box < ApplicationRecord
     end
   end
 
+  def self.remove_botol(id)
+    box = Box.find(id)
+    if box
+      total = box.botol_total || 0
+      box.update!(botol_total: total - 1)
+    end
+  end
+
   def self.insert_failed(id)
     box = Box.find(id)
     if box
@@ -76,6 +86,13 @@ class Box < ApplicationRecord
     box = Box.find(id)
     if box
       box.update!(failed: 0)
+    end
+  end
+
+  def self.clear_botol(id)
+    box = Box.find(id)
+    if box
+      box.update!(failed: 0, botol_total: 0)
     end
   end
 end

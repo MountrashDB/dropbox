@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
 
   get "notify/:uuid", to: "notify#index"
+  get "box/status/:uuid", to: "notify#box_status"
+  get "box/:uuid", to: "notify#box_index"
 
   # devise_for :mitras
   # devise_for :admins
@@ -28,6 +30,7 @@ Rails.application.routes.draw do
         get "list", to: "boxes#list"
         get ":uuid", to: "boxes#show"
         post "datatable", to: "boxes#datatable"
+        delete "clear/:uuid", to: "boxes#box_clear"        
         post "", to: "boxes#create"
         delete ":uuid", to: "boxes#destroy"
         patch ":uuid", to: "boxes#update"
@@ -104,7 +107,7 @@ Rails.application.routes.draw do
         post "transaction", to: "admin#transaction"
         post "withdraw", to: "admin#withdrawl"
         get "withdraw/:id", to: "admin#withdrawl_read"
-        patch "withdraw/:id", to: "admin#withdrawl_proses"
+        patch "withdraw/:id", to: "admin#withdrawl_proses"         
         scope "banksampah" do
           get ":banksampah_uuid", to: "admin#bsi_show"
           post "order-sampah-datatable", to: "admin#order_datatable"
@@ -150,6 +153,8 @@ Rails.application.routes.draw do
         post "withdraw", to: "mitras#withdraw"
         post "forgot-password", to: "mitras#forgot_password"
         post "reset-password/:token", to: "mitras#reset_password"
+        post "va-create", to: "mitras#va_create_multi"
+        get "va-list", to: "mitras#va_list"
         post "", to: "mitras#create"
 
         get ":uuid", to: "mitras#show"

@@ -220,8 +220,6 @@ class Api::V1::AdminController < AdminController
     render json: JemputanDatatable.new(params)
   end
 
- 
-
   private
 
   def bsi_params

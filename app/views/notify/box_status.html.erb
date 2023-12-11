@@ -1,0 +1,34 @@
+<p>Box <%= @box.nama %></p>
+Status 
+<div id="status">
+  <% if @box.online %>
+    <div style="color: #34b934">ONLINE</div>
+  <% else %>
+    <div style="color: #ff0000">OFFLINE</div>
+    <div>Last Online: <%= @box.last_online %></div>
+  <% end %>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+           const chatWebSocket = openConnection()
+           chatWebSocket.binaryType = "arraybuffer";
+           chatWebSocket.onopen = (even) => {
+               const subscribeMsg = {"command": "subscribe", "identifier": "{\"channel\":\"BoxStatusChannel\", \"uuid\":\"<%= @uuid %>\"}"}
+               chatWebSocket.send(JSON.stringify(subscribeMsg))
+           }
+           chatWebSocket.onmessage = (event) => {
+             var server_data = JSON.parse(event.data)
+             var online = '<div style="color: #34b934">ONLINE</div>'
+             var offline = '<div style="color: #ff0000">OFFLINE</div>'
+             if (typeof server_data.message === 'object') {
+               if (server_data.message.online) {
+                 var status = online
+               } else {
+                var last_online = '<div>Last Online: ' + server_data.message.last_online + '</div>';
+                 var status = offline + last_online
+               }
+               document.getElementById("status").innerHTML = status
+             }
+           }
+       })
+</script>
