@@ -53,7 +53,7 @@ class Api::V1::BanksampahController < AdminController
     if bank.save
       render json: bank
     else
-      render json: bank.errors
+      render json: bank.errors, status: :bad_request
     end
   end
 
@@ -349,6 +349,18 @@ class Api::V1::BanksampahController < AdminController
   def balance
     bsi = Banksampah.find(@current_banksampah.id)
     render json: { mountpay: bsi.mountpay.balance }
+  end
+
+  def forgot_password
+    banksampah = Banksampah.find_by(email: params[:email])
+    if banksampah
+      # newpassword = SecureRandom.base58
+      newpassword = "12345678"
+      banksampah.update(password: newpassword)
+      BanksampahMailer.forgot_password(banksampah).deliver_now!
+    end
+    render json: { message: "If email found. We will send your new password" }
+    
   end
 
   private
