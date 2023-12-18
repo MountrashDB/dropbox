@@ -11,6 +11,7 @@ class Api::V1::MitrasController < AdminController
                                       :bank_info,
                                       :bank_info_update,
                                       :withdraw,
+                                      :va_create_multi,
                                     ]
 
   before_action :check_admin_token, only: [
@@ -27,7 +28,12 @@ class Api::V1::MitrasController < AdminController
     @@token_expired = 30.days.to_i
   end
 
-  @@fee = ENV["linkqu_fee"].to_f
+  @@fee = ENV["linkqu_fee"].to_f  
+  @@url = ENV["linkqu_url"]
+  @@username = ENV["linkqu_username"]
+  @@pin = ENV["linkqu_pin"]
+  @@bank_code = "002" # 002 = Bank BRI
+  
 
   def active
     render json: { message: "active" }
@@ -362,6 +368,61 @@ class Api::V1::MitrasController < AdminController
       end
     else
       render json: { message: "Invalid user bank info. Please update correct bank information" }, status: :bad_request
+    end
+  end
+
+  def va_create_multi
+    if params[:bank_code]
+      mitrava = MitraVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(mitra_id: @current_mitra.id, kodeBank: params[:bank_code])
+      if mitrava
+        render json: { virtual_account: mitrava.rekening, status: "SUCCESS", customer_name: mitrava.name, response_desc: "Virtual Account Successfully Created" }
+      else #Create new VA
+        # begin
+        conn = Faraday.new(
+          url: @@url,
+          headers: {
+            "Content-Type" => "application/json",
+            "client-id" => ENV["linkqu_client_id"],
+            "client-secret" => ENV["linkqu_client_secret"],
+          },
+          request: { timeout: 3 },
+        )
+        # $path.$method.$bank_code.$customer_id.$customer_name.$customer_email.$client-id
+
+        customer_id = "va|mitra|" + @current_mitra.uuid + "|" + rand(10000..99999).to_s
+        bank_code = params[:bank_code]
+        second_value = "#{bank_code}#{customer_id}#{@current_mitra.name}#{@current_mitra.email}#{ENV["linkqu_client_id"]}"
+        signature = Banksampah.signature("/transaction/create/vadedicated/add", "POST", second_value)
+        response = conn.post("/linkqu-partner/transaction/create/vadedicated/add") do |req|
+          req.body = {
+            username: @@username,
+            pin: @@pin,
+            bank_code: bank_code,
+            customer_id: customer_id,
+            customer_name: @current_mitra.name,            
+            customer_email: @current_mitra.email,
+            signature: signature,
+          }.to_json
+          req.options.timeout = 3
+          # rescue => e
+          #   logger.fatal "=== VA create failed ==="
+        end
+        result = JSON.parse(response.body)
+        puts result
+        if !result["virtual_account"].empty?
+          hasil = MitraVa.create!(
+            mitra_id: @current_mitra.id,
+            kodeBank: params[:bank_code],
+            name: result["customer_name"],
+            rekening: result["virtual_account"],
+            fee: result["feeadmin"],
+            bank_name: result["bank_name"],
+          )
+        end
+        render json: { virtual_account: result["virtual_account"], status: result["status"], customer_name: result["customer_name"], response_desc: result["response_desc"] }
+      end
+    else
+      render json: { message: "Parameter not complete" }, status: :bad_request
     end
   end
 

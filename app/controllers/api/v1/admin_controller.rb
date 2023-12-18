@@ -220,6 +220,51 @@ class Api::V1::AdminController < AdminController
     render json: JemputanDatatable.new(params)
   end
 
+  def mitra_bukti_datatable
+    render json: BuktiPembayaranDatatable.new(params)
+  end
+
+  def mitra_bukti_show
+    bukti = BuktiPembayaran.includes(:admin, :mitra).find_by(id: params[:id])
+    if bukti
+      render json: BuktiPembayaranBlueprint.render(bukti)
+    else
+      render json: { message: "Record not found" }, status: :not_found
+    end
+  end
+
+  def mitra_bukti_proses
+    bukti = BuktiPembayaran.find_by(id: params[:id])
+    if bukti
+      if params[:status] == "approved"
+        bukti.admin = @current_admin
+        bukti.save
+        bukti.approving!
+        render json: { message: "Success. Balance has been added to mitra" }
+      else
+        bukti.rejecting!
+        render json: { message: "Success rejected" }
+      end
+    else
+      render json: { message: "Record not found" }, status: :not_found
+    end
+  end
+
+  def mitra_proses
+    # Menambahkan Saldo Mitra via manual
+    mitra = Mitra.find_by(id: params[:mitra_id])
+    if mitra
+      if params[:nominal]
+        mitra.creditkan(params[:nominal], 'Balance added')
+        render json: { message: "Balance successfully credited" }
+      else
+        render json: { message: "Add nominal" }, status: :bad_request
+      end
+    else
+      render json: { message: "Mitra not found" }, status: :not_found
+    end
+  end
+
   private
 
   def bsi_params

@@ -45,13 +45,13 @@ class Transaction < ApplicationRecord
   #     transitions from: :in, to: :requested
   #   end
 
-  #   event :payment do
+  #   event yebment do
   #     transitions from: :requested, to: :payment_processed
   #   end
 
   #   event :rejecting do
   #     transitions from: :requested, to: :in
-  #   end
+  #   cred
 
   #   event :completing do
   #     transitions from: :payment_processed, to: :paid
@@ -140,7 +140,8 @@ class Transaction < ApplicationRecord
       investor_amount = self.harga - user_amount - mitra_amount
       Investor.creditkan(investor_amount, "Trx accepted")
       User.find(self.user_id).creditkan(user_amount, "Trx accepted")
-      Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+      # Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+      Mitra.find(self.mitra_id).debitkan(mitra_amount, "Trx accepted")
 
       ActionCable.server.broadcast("NotifyChannel_#{self.user.uuid}", {
         status: "complete",
@@ -155,32 +156,33 @@ class Transaction < ApplicationRecord
 
   def reverse_user_balance
     if self.diterima # Reverse balance if it was accepted
-      # box = Box.find(self.box_id)
-      # mitra_amount = box.mitra_share * self.harga / 100
-      # user_amount = box.user_share * self.harga / 100
       investor_amount = self.harga - self.user_amount - self.mitra_amount
       Investor.debitkan(investor_amount, "Trx destroyed")
       User.find(self.user_id).debitkan(self.user_amount, "Trx destroyed")
-      Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx destroyed")
+      # Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx destroyed")
+      Mitra.find(self.mitra_id).creditkan(self.mitra_amount, "Trx destroyed")
+      Box.remove_botol(self.box_id)
     end
   end
 
   def check_diterima
     # Only effect when status still IN
     if saved_change_to_attribute?(:diterima) && self.status == "in"
+      box = Box.find(self.box_id)
       if self.diterima
-        box = Box.find(self.box_id)
         mitra_amount = box.mitra_share * self.harga / 100
         user_amount = box.user_share * self.harga / 100
         investor_amount = self.harga - user_amount - mitra_amount
         Investor.creditkan(investor_amount, "Trx accepted")
         User.find(self.user_id).creditkan(user_amount, "Trx accepted")
-        Mitra.find(self.mitra_id).creditkan(mitra_amount, "Trx accepted")
+        Mitra.find(self.mitra_id).debitkan(mitra_amount, "Trx accepted")
+        Box.insert_botol(self.box_id)
       else
         investor_amount = self.harga - self.user_amount - self.mitra_amount
         Investor.debitkan(investor_amount, "Trx destroyed")
         User.find(self.user_id).debitkan(self.user_amount, "Trx destroyed")
-        Mitra.find(self.mitra_id).debitkan(self.mitra_amount, "Trx destroyed")
+        Mitra.find(self.mitra_id).creditkan(self.mitra_amount, "Trx destroyed")
+        Box.remove_botol(self.box_id)
       end
     end
   end

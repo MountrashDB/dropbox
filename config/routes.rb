@@ -126,6 +126,10 @@ Rails.application.routes.draw do
           post "datatable", to: "admin#jemputan_datatable"
           patch "status/:id", to: "jemputan_admin#jemputan_update"          
         end
+        post "mitra/bukti/datatable", to: "admin#mitra_bukti_datatable"
+        get "mitra/bukti/:id", to: "admin#mitra_bukti_show"
+        post "mitra/bukti/proses", to: "admin#mitra_bukti_proses"
+        post "mitra/proses/:mitra_id", to: "admin#mitra_proses"
         post "", to: "admin#create"
         get ":uuid", to: "admin#show"
         patch ":uuid", to: "admin#update"
@@ -161,12 +165,17 @@ Rails.application.routes.draw do
         scope "box" do
           post "datatable", to: "mitras#box_datatable"
         end
+
+        scope "payment" do
+          post "create", to: "mitras_payment#create_payment"
+        end
       end
 
       scope "banksampah" do
         post "register", to: "banksampah#register"
         post "resend", to: "banksampah#resend"
         post "login", to: "banksampah#login"
+        post "forgot", to: "banksampah#forgot_password"
         post "datatable", to: "banksampah#datatable"
         post "order_datatable", to: "banksampah#order_datatable"
         get "profile", to: "banksampah#profile"
@@ -265,6 +274,5 @@ Rails.application.routes.draw do
     end
   end
   get "banksampah/activation-code/:code", to: "api/v1/banksampah#active_code", as: "active_code"
-
   mount ActionCable.server => "/cable"
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_11_020937) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -179,6 +179,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_11_020937) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["banksampah_id"], name: "index_bsi_vas_on_banksampah_id"
+  end
+
+  create_table "bukti_pembayarans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "mitra_id", null: false
+    t.float "nominal"
+    t.string "status"
+    t.bigint "admin_id"
+    t.string "keterangan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_bukti_pembayarans_on_admin_id"
+    t.index ["mitra_id"], name: "index_bukti_pembayarans_on_mitra_id"
   end
 
   create_table "callbacks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -628,6 +640,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_11_020937) do
   add_foreign_key "botol_hargas", "boxes"
   add_foreign_key "bsi_transactions", "banksampahs"
   add_foreign_key "bsi_vas", "banksampahs"
+  add_foreign_key "bukti_pembayarans", "admins"
+  add_foreign_key "bukti_pembayarans", "mitras"
   add_foreign_key "cities", "provinces"
   add_foreign_key "districts", "cities"
   add_foreign_key "districts", "provinces"
