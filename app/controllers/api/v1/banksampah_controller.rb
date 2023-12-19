@@ -302,7 +302,7 @@ class Api::V1::BanksampahController < AdminController
     bsiva = BsiVa.select(:bank_name, :kodeBank, :rekening, :name).find_by(banksampah_id: @current_banksampah.id, kodeBank: params[:bank_code])
     if bsiva
       render json: bsiva
-    else
+    else      
       conn = Faraday.new(
         url: @@url,
         headers: {
@@ -327,18 +327,22 @@ class Api::V1::BanksampahController < AdminController
           customer_email: @current_banksampah.email,
           signature: signature,
         }.to_json
-        req.options.timeout = 3
+        req.options.timeout = 10
       end
       result = JSON.parse(response.body)
-      hasil = BsiVa.create!(
-        banksampah_id: @current_banksampah.id,
-        kodeBank: params[:bank_code],
-        name: result["customer_name"],
-        rekening: result["virtual_account"],
-        fee: result["feeadmin"],
-        bank_name: result["bank_name"],
-      )
-      render json: { bank_name: hasil.bank_name, kodeBank: hasil.kodeBank, name: hasil.name, rekening: hasil.rekening }
+      if result["error"] 
+        render json: { message: "Error when saving new VA. Please contact CS", hidden_message: result }, status: :bad_request
+      else 
+        hasil = BsiVa.create!(
+          banksampah_id: @current_banksampah.id,
+          kodeBank: params[:bank_code],
+          name: result["customer_name"],
+          rekening: result["virtual_account"],
+          fee: result["feeadmin"],
+          bank_name: result["bank_name"],
+        )
+        render json: { bank_name: hasil.bank_name, kodeBank: hasil.kodeBank, name: hasil.name, rekening: hasil.rekening }
+      end
     end
   end
 
@@ -354,13 +358,11 @@ class Api::V1::BanksampahController < AdminController
   def forgot_password
     banksampah = Banksampah.find_by(email: params[:email])
     if banksampah
-      # newpassword = SecureRandom.base58
-      newpassword = "12345678"
+      newpassword = SecureRandom.base58
       banksampah.update(password: newpassword)
-      BanksampahMailer.forgot_password(banksampah).deliver_now!
+      BanksampahMailer.forgot_email(banksampah).deliver_now!
     end
-    render json: { message: "If email found. We will send your new password" }
-    
+    render json: { message: "If email found. We will send your new password" }    
   end
 
   private
