@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_20_025929) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -433,24 +433,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
   end
 
   create_table "outlets", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "uuid"
     t.string "name"
     t.string "phone"
-    t.integer "otp"
-    t.string "mac"
-    t.string "email"
-    t.string "alamat"
     t.boolean "active"
-    t.bigint "city_id", null: false
-    t.bigint "province_id", null: false
-    t.bigint "district_id", null: false
-    t.float "harga"
-    t.string "contact_name"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["city_id"], name: "index_outlets_on_city_id"
-    t.index ["district_id"], name: "index_outlets_on_district_id"
-    t.index ["province_id"], name: "index_outlets_on_province_id"
+    t.index ["email"], name: "index_outlets_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_outlets_on_reset_password_token", unique: true
   end
 
   create_table "partners", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -614,6 +608,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
     t.index ["user_id"], name: "index_usertransactions_on_user_id"
   end
 
+  create_table "vouchers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "outlet_id", null: false
+    t.integer "code"
+    t.integer "days"
+    t.string "status"
+    t.date "avai_start"
+    t.date "avai_end"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outlet_id"], name: "index_vouchers_on_outlet_id"
+  end
+
   create_table "withdrawls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "usertransaction_id"
@@ -668,9 +674,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
   add_foreign_key "order_sampahs", "users"
   add_foreign_key "orders", "boxes"
   add_foreign_key "orders", "users"
-  add_foreign_key "outlets", "cities"
-  add_foreign_key "outlets", "districts"
-  add_foreign_key "outlets", "provinces"
   add_foreign_key "ppobs", "users"
   add_foreign_key "sampah_details", "order_sampahs"
   add_foreign_key "sampah_details", "sampahs"
@@ -679,6 +682,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_15_063934) do
   add_foreign_key "user_banks", "users"
   add_foreign_key "user_vas", "users"
   add_foreign_key "usertransactions", "users"
+  add_foreign_key "vouchers", "outlets"
   add_foreign_key "withdrawls", "users"
   add_foreign_key "withdrawls", "usertransactions"
 end

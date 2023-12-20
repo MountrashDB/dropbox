@@ -85,5 +85,15 @@ class Api::V1::BoxesController < AdminController
     end
   end
 
+
+  def box_clear
+    box = Box.find_by(uuid: params[:uuid])
+    if box
+      render json: { message: "Cleared", botol_total: box.botol_total }
+    else
+      render json: { message: "Not found" }, status: :not_found
+    end
+  end 
+
   private
 end

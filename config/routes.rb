@@ -2,6 +2,7 @@ require "sidekiq/web"
 Sidekiq::Web.use ActionDispatch::Cookies
 Sidekiq::Web.use ActionDispatch::Session::CookieStore, key: "_interslice_session"
 Rails.application.routes.draw do
+  devise_for :outlets
   devise_for :banksampahs
   mount Sidekiq::Web => "/sidekiq"
 
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      get 'admin_outlet/create'
       get "jemputan/alamat_jemput"
       scope "callback" do
         post "payment-linkqu", to: "callback#payment_linkqu"
@@ -126,6 +128,14 @@ Rails.application.routes.draw do
           post "datatable", to: "admin#jemputan_datatable"
           patch "status/:id", to: "jemputan_admin#jemputan_update"          
         end
+
+        scope "outlet" do          
+          post "create", to: "admin_outlet#create"
+          post ":outlet_id/voucher", to: "admin_outlet#voucher_create"
+          get "voucher/:id", to: "admint_outlet#voucher_show"
+          get ":id", to: "admin_outlet#show"
+        end
+
         post "mitra/bukti/datatable", to: "admin#mitra_bukti_datatable"
         get "mitra/bukti/:id", to: "admin#mitra_bukti_show"
         post "mitra/bukti/proses", to: "admin#mitra_bukti_proses"

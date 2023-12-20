@@ -1,0 +1,34 @@
+# == Schema Information
+#
+# Table name: vouchers
+#
+#  id         :bigint           not null, primary key
+#  avai_end   :date
+#  avai_start :date
+#  code       :integer
+#  days       :integer
+#  expired    :boolean
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  outlet_id  :bigint           not null
+#
+# Indexes
+#
+#  index_vouchers_on_outlet_id  (outlet_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (outlet_id => outlets.id)
+#
+
+one:
+  outlet: one
+  code: 1
+  avai_start: 2023-12-20
+  avai_end: 2023-12-20
+
+two:
+  outlet: two
+  code: 1
+  avai_start: 2023-12-20
+  avai_end: 2023-12-20

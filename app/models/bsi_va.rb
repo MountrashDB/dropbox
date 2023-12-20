@@ -23,5 +23,9 @@
 #  fk_rails_...  (banksampah_id => banksampahs.id)
 #
 class BsiVa < ApplicationRecord
+  validates :rekening, presence: true
+  validates :bank_name, presence: true
+  validates :kodeBank, presence: true
+  validates :name, presence: true
   belongs_to :banksampah
 end
