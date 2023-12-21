@@ -72,6 +72,9 @@ Rails.application.routes.draw do
         get "order-sampah/:uuid", to: "users#order_read"
         get "order-status/:order_id", to: "users#order_status"
         delete "order-cancel/:order_uuid", to: "users#order_cancel"
+        scope "langganan" do
+          post "check-voucher", to: "user_langganan#check_voucher"
+        end
         post "va-create", to: "users#va_create_multi"
         get "va-list", to: "users#va_list"
         post "move", to: "user#move_mountpay"
@@ -79,6 +82,7 @@ Rails.application.routes.draw do
         get ":uuid", to: "users#show"
         delete ":uuid", to: "users#destroy"
         patch "", to: "users#update_profile"
+
       end
 
       scope "merk" do

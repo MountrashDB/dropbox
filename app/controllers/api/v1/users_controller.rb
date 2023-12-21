@@ -242,7 +242,6 @@ class Api::V1::UsersController < AdminController
       else
         # Box.insert_failed(box.id)
         logger.fatal transaction.errors
-
         render json: transaction.errors, status: :bad_request
       end
     else
