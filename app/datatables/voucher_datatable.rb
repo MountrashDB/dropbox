@@ -10,6 +10,7 @@ class VoucherDatatable < AjaxDatatablesRails::ActiveRecord
       avai_start: { source: "Voucher.avai_start", cond: :like },
       avai_end: { source: "Voucher.avai_end", cond: :like },
       expired: { source: "Voucher.avai_end", cond: :eq },
+      status: { source: "Voucher.status", cond: :eq },
       outlet: { source: "Outlet.name", cond: :eq },
     }
   end
@@ -21,6 +22,7 @@ class VoucherDatatable < AjaxDatatablesRails::ActiveRecord
         id: record.id,
         code: record.code,
         days: record.days,
+        status: record.status,
         avai_start: record.avai_start,
         avai_end: record.avai_end,
         outlet: record.outlet.name

@@ -138,6 +138,7 @@ Rails.application.routes.draw do
           post "voucher-datatable", to: "admin_outlet#voucher_datatable"          
           post ":outlet_id/voucher", to: "admin_outlet#voucher_create"
           get "voucher/:id", to: "admin_outlet#voucher_show"
+          patch "voucher/:id", to: "admin_outlet#voucher_update_status"
           delete "voucher/:id", to: "admin_outlet#voucher_destroy"
           get ":id", to: "admin_outlet#show"
         end

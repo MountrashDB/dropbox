@@ -116,6 +116,28 @@ class Api::V1::AdminOutletController < AdminController
     end
   end
 
+  def voucher_update_status
+    voucher = Voucher.find_by(id: params[:id])
+    if voucher      
+      if params[:status] == "paid" or params[:status] == "expired"
+        begin
+          if params[:status] == "paid"
+            voucher.paying!
+          else
+            voucher.expiring!
+          end 
+          render json: VoucherBlueprint.render(voucher)
+        rescue
+          render json: {message: "Failed update status"}, status: :bad_request
+        end
+      else
+        render json: {message: "Voucher not found"}, status: :not_found        
+      end
+    else
+      render json: {message: "Voucher not found"}, status: :not_found
+    end
+  end
+
   def datatable
     render json: OutletDatatable.new(params)
   end
