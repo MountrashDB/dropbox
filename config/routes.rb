@@ -131,8 +131,14 @@ Rails.application.routes.draw do
 
         scope "outlet" do          
           post "create", to: "admin_outlet#create"
+          patch "update/:id", to: "admin_outlet#update"
+          delete ":id", to: "admin_outlet#destroy"
+          patch "password/:id", to: "admin_outlet#change_password"
+          post "datatable", to: "admin_outlet#datatable"          
+          post "voucher-datatable", to: "admin_outlet#voucher_datatable"          
           post ":outlet_id/voucher", to: "admin_outlet#voucher_create"
-          get "voucher/:id", to: "admint_outlet#voucher_show"
+          get "voucher/:id", to: "admin_outlet#voucher_show"
+          delete "voucher/:id", to: "admin_outlet#voucher_destroy"
           get ":id", to: "admin_outlet#show"
         end
 

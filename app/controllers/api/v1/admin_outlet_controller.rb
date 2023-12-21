@@ -54,4 +54,73 @@ class Api::V1::AdminOutletController < AdminController
       render json: {message: "Outlet not found"}, status: :not_found
     end
   end
+
+  def update
+    outlet = Outlet.find_by(id: params[:id])
+    if outlet
+      outlet.name = params[:name]
+      outlet.email = params[:email]
+      outlet.active = params[:active]
+      outlet.phone = params[:phone]
+      if outlet.save
+        render json: outlet
+      else
+        render json: outlet.errors, status: :bad_request
+      end
+    else
+      render json: {message: "Outlet not found"}, status: :not_found
+    end
+  end
+
+  def change_password
+    outlet = Outlet.find_by(id: params[:id])
+    if outlet
+      outlet.password = params[:password]
+      outlet.password_confirmation = params[:password_confirmation]
+      if outlet.save
+        render json: {message: "Password changed"}
+      else
+        render json: outlet.errors, status: :bad_request
+      end
+    else
+      render json: {message: "Outlet not found"}, status: :not_found
+    end
+  end
+
+  def destroy
+    outlet = Outlet.find_by(id: params[:id])
+    if outlet 
+      outlet.destroy
+      render json: {message: "Success deleted"}
+    else
+      render json: {message: "Outlet not found"}, status: :not_found
+    end
+  end
+
+  def voucher_destroy
+    voucher = Voucher.find_by(id: params[:id])
+    if voucher
+      voucher.destroy
+      render json: {message: "Voucher Success deleted"}
+    else
+      render json: {message: "Voucher not found"}, status: :not_found
+    end
+  end
+
+  def voucher_show
+    voucher = Voucher.find_by(id: params[:id])
+    if voucher      
+      render json: VoucherBlueprint.render(voucher)
+    else
+      render json: {message: "Voucher not found"}, status: :not_found
+    end
+  end
+
+  def datatable
+    render json: OutletDatatable.new(params)
+  end
+
+  def voucher_datatable
+    render json: VoucherDatatable.new(params)
+  end
 end
