@@ -127,7 +127,8 @@ class Api::V1::AdminOutletController < AdminController
             voucher.expiring!
           end 
           render json: VoucherBlueprint.render(voucher)
-        rescue
+        rescue => e
+          logger.fatal e
           render json: {message: "Failed update status"}, status: :bad_request
         end
       else

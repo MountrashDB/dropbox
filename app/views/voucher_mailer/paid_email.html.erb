@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Selamat,</h1>
+    <p>Kode langganan Anda sudah diaktifkan dan dapat digunakan.</p>
+    <p>Di bawah ini adalah kode langganan Anda</p>
+    <p>Kode: <strong><%= @model.code %></strong><br />
+    Masa aktif: <%= @model.avai_start %> - <%= @model.avai_end %></p>
+    <br />
+    <p>Note:<br />
+    Mohon tidak membagikan kode langganan ini ke orang lain yang tidak berkepentingan.<br />
+    Pihak kami tidak bertanggung atas penggunaan kode ini
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>

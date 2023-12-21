@@ -35,12 +35,16 @@ class Voucher < ApplicationRecord
     state :created, initial: true
     state :paid, :expired
 
-    event :paying do
+    event :paying, after_commit: :send_paid_email do
       transitions from: :created, to: :paid
     end
 
     event :expiring do
       transitions from: :paid, to: :expired
     end
+  end
+
+  def send_paid_email   
+    VoucherMailer.paid_email(self).deliver_now!
   end
 end
