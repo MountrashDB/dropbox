@@ -5,6 +5,7 @@ class OutletDatatable < AjaxDatatablesRails::ActiveRecord
     # or in aliased_join_table.column_name format
     @view_columns ||= {
       id: { source: "Outlet.id", cond: :eq },
+      uuid: { source: "Outlet.uuid", cond: :eq },
       name: { source: "Outlet.name", cond: :like },
       email: { source: "Outlet.email", cond: :like },
       phone: { source: "Outlet.phone", cond: :like },
@@ -16,6 +17,7 @@ class OutletDatatable < AjaxDatatablesRails::ActiveRecord
     records.map do |record|
       {
         id: record.id,
+        uuid: record.uuid,
         email: record.email,
         name: record.name,
         active: record.active,

@@ -45,6 +45,7 @@ class Box < ApplicationRecord
   belongs_to :user, optional: true
   before_create :set_uuid
   scope :current_mitra, -> { where(mitra_id: @current_mitra.id) }
+  has_many :transactions
 
   MAX_FAILED = 3
   NON_ACTIVE = "nonactive"

@@ -7,7 +7,7 @@
 #  avai_start :date
 #  code       :integer
 #  days       :integer
-#  expired    :boolean
+#  status     :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  outlet_id  :bigint           not null

@@ -11,6 +11,7 @@
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string(255)
+#  uuid                   :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -25,5 +26,20 @@ class Outlet < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_many :voucher, dependent: :destroy
+  before_create :set_uuid
+
+  def set_uuid
+    self.uuid = SecureRandom.uuid
+  end
+
+  def self.get_outlet(headers)
+    token = headers["Authorization"].split(" ").last
+    begin
+      decode = JWT.decode token, ENV["secret_key_base"], true, { algorithm: ENV["token_algorithm"] }
+      @current_outlet = Outlet.find_by(uuid: decode[0]["outlet_uuid"], active: true)
+    rescue JWT::ExpiredSignature
+      false
+    end
+  end
   
 end

@@ -34,6 +34,16 @@ class AdminController < ApplicationController
     end
   end
 
+  def check_outlet_token
+    begin
+      if !@current_outlet = Outlet.get_outlet(request.headers)
+        render json: { error: true, message: t("error.admin.token_error") }, status: :unauthorized
+      end
+    rescue
+      render json: { error: true, message: t("error.admin.need_login") }, status: :unauthorized
+    end
+  end
+
   def check_banksampah_token
     begin
       if !@current_banksampah = Banksampah.get_banksampah(request.headers)

@@ -20,7 +20,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get 'admin_outlet/create'
+      namespace :outlet do
+        post 'login',             to: "outlet#login"
+        patch 'change-password',  to: "outlet#change_password"
+        post 'forgot-password',   to: "outlet#forgot_password"
+      end            
+
       get "jemputan/alamat_jemput"
       scope "callback" do
         post "payment-linkqu", to: "callback#payment_linkqu"
@@ -28,6 +33,7 @@ Rails.application.routes.draw do
         post "topup", to: "callback#topup"
         post "iak", to: "callback#iak"
       end
+
       scope "box" do
         get "list", to: "boxes#list"
         get ":uuid", to: "boxes#show"
@@ -133,10 +139,9 @@ Rails.application.routes.draw do
           patch "status/:id", to: "jemputan_admin#jemputan_update"          
         end
 
-        scope "outlet" do          
+        scope "outlet" do                    
           post "create", to: "admin_outlet#create"
           patch "update/:id", to: "admin_outlet#update"
-          delete ":id", to: "admin_outlet#destroy"
           patch "password/:id", to: "admin_outlet#change_password"
           post "datatable", to: "admin_outlet#datatable"          
           post "voucher-datatable", to: "admin_outlet#voucher_datatable"          
@@ -144,6 +149,7 @@ Rails.application.routes.draw do
           get "voucher/:id", to: "admin_outlet#voucher_show"
           patch "voucher/:id", to: "admin_outlet#voucher_update_status"
           delete "voucher/:id", to: "admin_outlet#voucher_destroy"
+          delete ":id", to: "admin_outlet#destroy"
           get ":id", to: "admin_outlet#show"
         end
 
