@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_22_042215) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -432,6 +432,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_22_042215) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "outlet_alamats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "outlet_id", null: false
+    t.string "name"
+    t.string "alamat"
+    t.string "pic"
+    t.string "phone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outlet_id"], name: "index_outlet_alamats_on_outlet_id"
+  end
+
   create_table "outlet_jams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.boolean "active"
@@ -682,6 +693,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_22_042215) do
   add_foreign_key "order_sampahs", "users"
   add_foreign_key "orders", "boxes"
   add_foreign_key "orders", "users"
+  add_foreign_key "outlet_alamats", "outlets"
   add_foreign_key "ppobs", "users"
   add_foreign_key "sampah_details", "order_sampahs"
   add_foreign_key "sampah_details", "sampahs"

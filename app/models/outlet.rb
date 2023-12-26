@@ -26,6 +26,7 @@ class Outlet < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_many :voucher, dependent: :destroy
+  has_many :outlet_alamats, dependent: :destroy
   before_create :set_uuid
 
   def set_uuid
@@ -40,6 +41,5 @@ class Outlet < ApplicationRecord
     rescue JWT::ExpiredSignature
       false
     end
-  end
-  
+  end  
 end
