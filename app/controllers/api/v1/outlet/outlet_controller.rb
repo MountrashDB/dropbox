@@ -64,6 +64,36 @@ class Api::V1::Outlet::OutletController < AdminController
     render json: OutletAlamatBlueprint.render(@current_outlet.outlet_alamats)
   end
 
+  def alamat_show
+    alamat = OutletAlamat.find_by(id: params[:id], outlet: @current_outlet)
+    if alamat
+      render json: OutletAlamatBlueprint.render(alamat)
+    else
+      render json: {message: "Record not found"}, status: :not_found
+    end
+  end
+
+  def alamat_update
+    alamat = OutletAlamat.find_by(id: params[:id], outlet: @current_outlet)
+    if alamat
+      alamat.name = params[:name]
+      alamat.alamat = params[:alamat]
+      alamat.pic = params[:pic]
+      alamat.phone = params[:phone]
+      alamat.outlet = @current_outlet
+      if params[:foto]
+        alamat.foto = params[:foto]
+      end
+      if alamat.save
+        render json: alamat
+      else
+        render json: alamat.errors, status: :bad_request
+      end
+    else
+      render json: {message: "Record not found"}, status: :not_found
+    end
+  end
+
   def alamat_destroy
     alamat = OutletAlamat.find_by(id: params[:id], outlet: @current_outlet)
     if alamat 

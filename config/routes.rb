@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         post 'login',             to: "outlet#login"
         patch 'change-password',  to: "outlet#change_password"
         post 'forgot-password',   to: "outlet#forgot_password"
+        get 'alamat/:id',         to: "outlet#alamat_show"
+        patch 'alamat/:id',       to: "outlet#alamat_update"
         get 'alamat',             to: "outlet#alamat_list"
         delete 'alamat/:id',      to: "outlet#alamat_destroy"
         post 'alamat',            to: "outlet#alamat_create"
