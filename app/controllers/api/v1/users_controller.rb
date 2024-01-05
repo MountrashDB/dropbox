@@ -212,7 +212,7 @@ class Api::V1::UsersController < AdminController
       box.update!(user_id: @current_user.id)
       render json: BoxBlueprint.render(box)
     else
-      render json: { message: "Not found" }, status: :not_found
+      render json: { message: "Dropbox tidak ditemukan" }, status: :not_found
     end
   end
 
