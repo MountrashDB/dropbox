@@ -19,8 +19,8 @@ Rails.application.routes.draw do
   get "version", to: "home#version"
 
   namespace :api do
-    namespace :v1 do
-      namespace :outlet do
+    namespace :v2 do
+      namespace :outlet do        
         post 'login',             to: "outlet#login"
         patch 'change-password',  to: "outlet#change_password"
         post 'forgot-password',   to: "outlet#forgot_password"
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
         get 'alamat',             to: "outlet#alamat_list"
         delete 'alamat/:id',      to: "outlet#alamat_destroy"
         post 'alamat',            to: "outlet#alamat_create"
-      end            
+      end
 
       get "jemputan/alamat_jemput"
       scope "callback" do
@@ -85,6 +85,8 @@ Rails.application.routes.draw do
         delete "order-cancel/:order_uuid", to: "users#order_cancel"
         scope "langganan" do
           post "check-voucher", to: "user_langganan#check_voucher"
+          get "tipe-sampah", to: "user_langganan#tipe_sampah"
+          get "alamat-jemput", to: "user_langganan#alamat-jemput"
         end
         post "va-create", to: "users#va_create_multi"
         get "va-list", to: "users#va_list"
