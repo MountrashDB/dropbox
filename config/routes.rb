@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get "version", to: "home#version"
 
   namespace :api do
-    namespace :v2 do
+    namespace :v1 do
       namespace :outlet do        
         post 'login',             to: "outlet#login"
         patch 'change-password',  to: "outlet#change_password"
