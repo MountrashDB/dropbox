@@ -13,6 +13,7 @@
 #  tanggal          :date
 #  total            :float(24)
 #  uuid             :string(255)
+#  voucher          :string(255)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  alamat_jemput_id :bigint           not null

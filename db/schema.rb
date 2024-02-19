@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_19_085623) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -269,6 +269,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
     t.index ["tipe_sampah_id"], name: "index_jemputan_details_on_tipe_sampah_id"
   end
 
+  create_table "jemputan_tipe_sampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "jemputan_id", null: false
+    t.bigint "tipe_sampah_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jemputan_id"], name: "index_jemputan_tipe_sampahs_on_jemputan_id"
+    t.index ["tipe_sampah_id"], name: "index_jemputan_tipe_sampahs_on_tipe_sampah_id"
+  end
+
   create_table "jemputans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "status"
@@ -285,6 +294,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
     t.date "tanggal"
     t.string "gambar"
     t.float "berat"
+    t.string "voucher"
     t.index ["alamat_jemput_id"], name: "index_jemputans_on_alamat_jemput_id"
     t.index ["jam_jemput_id"], name: "index_jemputans_on_jam_jemput_id"
     t.index ["user_id"], name: "index_jemputans_on_user_id"
@@ -448,6 +458,31 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "outlet_order_tipe_sampahs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "outlet_orders_id", null: false
+    t.bigint "tipe_sampahs_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outlet_orders_id"], name: "index_outlet_order_tipe_sampahs_on_outlet_orders_id"
+    t.index ["tipe_sampahs_id"], name: "index_outlet_order_tipe_sampahs_on_tipe_sampahs_id"
+  end
+
+  create_table "outlet_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "voucher_id", null: false
+    t.bigint "user_id", null: false
+    t.float "berat"
+    t.bigint "outlet_alamat_id", null: false
+    t.string "catatan"
+    t.date "tanggal"
+    t.string "jam"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["outlet_alamat_id"], name: "index_outlet_orders_on_outlet_alamat_id"
+    t.index ["user_id"], name: "index_outlet_orders_on_user_id"
+    t.index ["voucher_id"], name: "index_outlet_orders_on_voucher_id"
   end
 
   create_table "outlets", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -675,6 +710,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
   add_foreign_key "histories", "users"
   add_foreign_key "jemputan_details", "jemputans"
   add_foreign_key "jemputan_details", "tipe_sampahs"
+  add_foreign_key "jemputan_tipe_sampahs", "jemputans"
+  add_foreign_key "jemputan_tipe_sampahs", "tipe_sampahs"
   add_foreign_key "jemputans", "alamat_jemputs"
   add_foreign_key "jemputans", "jam_jemputs"
   add_foreign_key "jemputans", "users"
@@ -694,6 +731,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_041705) do
   add_foreign_key "orders", "boxes"
   add_foreign_key "orders", "users"
   add_foreign_key "outlet_alamats", "outlets"
+  add_foreign_key "outlet_order_tipe_sampahs", "outlet_orders", column: "outlet_orders_id"
+  add_foreign_key "outlet_order_tipe_sampahs", "tipe_sampahs", column: "tipe_sampahs_id"
+  add_foreign_key "outlet_orders", "outlet_alamats"
+  add_foreign_key "outlet_orders", "users"
+  add_foreign_key "outlet_orders", "vouchers"
   add_foreign_key "ppobs", "users"
   add_foreign_key "sampah_details", "order_sampahs"
   add_foreign_key "sampah_details", "sampahs"

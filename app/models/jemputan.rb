@@ -13,6 +13,7 @@
 #  tanggal          :date
 #  total            :float(24)
 #  uuid             :string(255)
+#  voucher          :string(255)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  alamat_jemput_id :bigint           not null
@@ -39,15 +40,27 @@ class Jemputan < ApplicationRecord
   belongs_to :alamat_jemput
   belongs_to :jam_jemput
   before_create :set_uuid
+  validates :voucher, presence: true
+  validates :tanggal, presence: true
+
   has_many :jemputan_details, dependent: :destroy
+  has_many :jemputan_tipe_sampahs, dependent: :destroy
 
   def set_uuid
     self.uuid = SecureRandom.uuid
   end
 
   aasm column: :status do
-    state :requested, initial: true
-    state :checked, :jemput, :rejected, :complete
+    state :created, initial: true
+    state :requested, :cancelled, :checked, :jemput, :rejected, :complete
+
+    event :sending do
+      transitions from: :created, to: :requested
+    end
+
+    event :cancelling do
+      transitions from: [:requested, :created], to: :cancelled
+    end
 
     event :checking do
       transitions from: :requested, to: :checked
