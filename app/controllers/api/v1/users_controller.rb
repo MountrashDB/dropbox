@@ -256,7 +256,8 @@ class Api::V1::UsersController < AdminController
 
   def balance
     user = User.find(@current_user.id)
-    render json: { balance: user.usertransactions.balance, mountpay: user.mountpay.balance }
+    user_balance =  user.usertransactions.balance > 0 ? user.usertransactions.balance : 0
+    render json: { balance: user_balance, mountpay: user.mountpay.balance }
   end
 
   def profile    
