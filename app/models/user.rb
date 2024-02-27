@@ -115,11 +115,12 @@ class User < ApplicationRecord
 
   def debitkan(amount, description)
     balance = self.usertransactions.balance
+    user_balance = balance - amount > 0 ? balance - amount : 0
     Usertransaction.create!(
       user_id: self.id,
       credit: 0,
       debit: amount,
-      balance: balance - amount,
+      balance: user_balance,
       description: description,
     )
   end
