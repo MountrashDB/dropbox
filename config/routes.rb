@@ -41,6 +41,7 @@ Rails.application.routes.draw do
 
       scope "box" do
         get "list", to: "boxes#list"
+        get "carbon/:uuid", to: "boxes#carbon"
         get ":uuid", to: "boxes#show"
         post "datatable", to: "boxes#datatable"
         delete "clear/:uuid", to: "boxes#box_clear"        
@@ -310,8 +311,10 @@ Rails.application.routes.draw do
         end
       end
       get "settings/:field", to: "setting#info"
+      get "carbon/list", to: "carbon#list"
     end
   end
   get "banksampah/activation-code/:code", to: "api/v1/banksampah#active_code", as: "active_code"
+
   mount ActionCable.server => "/cable"
 end
