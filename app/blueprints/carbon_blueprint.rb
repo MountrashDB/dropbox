@@ -32,7 +32,7 @@ class CarbonBlueprint < Blueprinter::Base
 
     field :total_carbon do |box|
       trx = Transaction.where(box_id: box.id).count        
-      hasil = trx * 0.02
+      hasil = trx * 0.2
     end
   end
 end
