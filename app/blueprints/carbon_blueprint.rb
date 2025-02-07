@@ -4,10 +4,7 @@ class CarbonBlueprint < Blueprinter::Base
   view :carbon do
     fields :nama, :botol_total
     field :location do |box|
-        {
-          latitude: box.latitude,
-          longitude: box.longitude
-        }
+        "#{box.latitude}, #{box.longitude}"
     end
     field :total_trx do |box|
       Transaction.where(box_id: box.id).count    
